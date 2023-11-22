@@ -1,10 +1,25 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom"
+
+import {firebaseAuth} from '../../libs/Firebase'
 
 const SignUp = () => {
 
+    const signUp = async (e) => {
+        e.preventDefault();
+
+        try {
+            const resp = await createUserWithEmailAndPassword(firebaseAuth, 'brunoserkwi@gmail.com', 'brunoserkwi@gmail.com');
+            console.log(resp);
+        } catch (e) {
+            console.error(e);
+        }
+
+    }
+
     return (
         <div className={'flex justify-center pt-20 pb-32'}>
-            <form className={'w-[400px]'}>
+            <form onSubmit={signUp} className={'w-[400px]'}>
                 <h1 className={'mb-10 text-[28px] font-bold'}>{'Create Account'}</h1>
 
                 <div className={'flex flex-col gap-6 [&>.form-control]:flex [&>.form-control]:flex-col [&>.form-control>.input]:bg-red-transparent [&>.form-control>.input]:border-2 [&>.form-control>.input]:border-accent [&>.form-control>.input]:px-3 [&>.form-control>.input]:py-2 [&>.form-control>.input]:outline-none [&>.form-control>.input]:rounded-xl'}>
