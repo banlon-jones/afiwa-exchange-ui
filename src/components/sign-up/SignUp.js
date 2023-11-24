@@ -2,15 +2,19 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom"
 
 import {firebaseAuth} from '../../libs/Firebase'
+import { useState } from "react";
 
 const SignUp = () => {
     const navigate = useNavigate();
+
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
 
     const signUp = async (e) => {
         e.preventDefault();
 
         try {
-            const resp = await createUserWithEmailAndPassword(firebaseAuth, '', '');
+            await createUserWithEmailAndPassword(firebaseAuth, email, password);
             navigate('/login');
         } catch (e) {
             console.error(e);
@@ -26,7 +30,7 @@ const SignUp = () => {
                 <div className={'flex flex-col gap-6 [&>.form-control]:flex [&>.form-control]:flex-col [&>.form-control>.input]:bg-red-transparent [&>.form-control>.input]:border-2 [&>.form-control>.input]:border-accent [&>.form-control>.input]:px-3 [&>.form-control>.input]:py-2 [&>.form-control>.input]:outline-none [&>.form-control>.input]:rounded-xl'}>
                     <div className={'form-control'}>
                         <label className={'label'}>{'Email Address'}</label>
-                        <input className={'input'} type="email" />
+                        <input value={email} onChange={event => setEmail(event.target.value)} className={'input'} type="email" />
                     </div>
 
                     <div className={'form-control'}>
@@ -34,7 +38,7 @@ const SignUp = () => {
                             <span>{'Password'}</span>
                         </label>
                         <div className={'input flex fled'}>
-                            <input className={'flex-auto py-1'} type="password" />
+                            <input value={password} onChange={event => setPassword(event.target.value)} className={'flex-auto py-1'} type="password" />
                             <button>EYE</button>
                         </div>
                     </div>
