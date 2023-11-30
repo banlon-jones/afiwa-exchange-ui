@@ -23,7 +23,7 @@ const SignUp = () => {
     }
 
     return (
-        <div className={'flex justify-center pt-20 pb-32'}>
+        <div className={'flex justify-center pt-20 pb-32 flex items-center min-h-[80vh]'}>
             <form onSubmit={signUp} className={'w-[400px]'}>
                 <h1 className={'mb-10 text-[28px] font-bold'}>{'Create Account'}</h1>
 
