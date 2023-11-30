@@ -1,7 +1,7 @@
-import Hero from "./Hero";
-import { RecentExchanges } from "./recent-exchanges/RecentExchanges";
-import Reserve from "./reserve/Reserve";
-import Reviews from "./reviews/Reviews";
+import Hero from "./components/hero/Hero";
+import { RecentExchanges } from "./components/recent-exchanges/RecentExchanges";
+import Reserve from "./components/reserve/Reserve";
+import Reviews from "./components/reviews/Reviews";
 
 const Home = () => (
     <div>
