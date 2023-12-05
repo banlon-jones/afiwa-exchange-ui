@@ -1,8 +1,8 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom"
 
-import {firebaseAuth} from '../../libs/Firebase'
 import { useState } from "react";
+import { useMutation } from "react-query";
+import { signUpRequest } from "../../data/api";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -10,11 +10,15 @@ const SignUp = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
+    const signUpMutation = useMutation((credentials) => {
+        return signUpRequest(credentials)
+    })
+
     const signUp = async (e) => {
         e.preventDefault();
 
         try {
-            await createUserWithEmailAndPassword(firebaseAuth, email, password);
+            signUpMutation.mutate({ email, password, phoneNumber: '', displayName: '' })
             navigate('/login');
         } catch (e) {
             console.error(e);
