@@ -1,7 +1,7 @@
 import { ExchangeForm } from "../ExchangeForm";
 import { Chip } from "./Chip";
 
-const Hero = () => {
+const Hero = ({currencies}) => {
 
     return (
         <section className={'min-h-[95vh] py-16 gap-32 flex items-center justify-center'}>
@@ -18,7 +18,7 @@ const Hero = () => {
                         <Chip fill='bg-green-500'><span className="opacity-80">Online</span></Chip>
                     </div>
                 </div>
-                <ExchangeForm/>
+                <ExchangeForm currencies={currencies} />
             </div>
 
         </section>

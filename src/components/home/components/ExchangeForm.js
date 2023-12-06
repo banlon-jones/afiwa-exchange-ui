@@ -1,6 +1,13 @@
 import { Icon } from "@iconify/react"
+import {useState} from "react";
 
-export const ExchangeForm = () => {
+export const ExchangeForm = ({currencies}) => {
+
+    const [currency, setCurrency] = useState({})
+    const onSelect = (e) => {
+        setCurrency(currencies.find((currency) => currency.id === e.target.value))
+    }
+
     return (
         <div>
             <form className={'flex items-center flex-col gap-8 border-2 rounded-3xl px-[60px] py-[50px] w-full'}>
@@ -9,12 +16,11 @@ export const ExchangeForm = () => {
                     <div className="flex flex-col gap-6">
                         <div className="relative border rounded-2xl flex items-center px-3 py-1 overflow-hidden">
                             <div className="w-[51px] h-[30px] rounded-xl bg-secondary-1"></div>
-                            <select id="sourceCurrency" className="bg-transparent outline-none text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected>Choose a country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
+                            <select id="sourceCurrency" className="bg-transparent outline-none text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onChange={onSelect}>
+                                <option selected>Choose a Currency</option>
+                                {
+                                    currencies.map((currency, i) => <option key={currency.id + i} value={currency.id}> {currency.name} </option>)
+                                }
                             </select>
 
                             <div className="w-[51px] h-full bg-secondary-1 absolute right-0 -z-10">
@@ -26,7 +32,7 @@ export const ExchangeForm = () => {
                             <input type="number" className="outline-none w-full text-[35px] font-bold" />
 
                             <p className="opacity-60 pt-1 text-[16px]">
-                                1 USD = 590 FCFA
+                                {(currency.name)? `1 ${currency?.name} = ${currency?.rate} USD`: ''}
                             </p>
                         </div>
                     </div>
@@ -40,11 +46,10 @@ export const ExchangeForm = () => {
                         <div className="relative border rounded-2xl flex items-center px-3 py-1 overflow-hidden">
                             <div className="w-[51px] h-[30px] rounded-xl bg-orange-500"></div>
                             <select id="sourceCurrency" className="bg-transparent outline-none text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected>Choose a country</option>
-                                <option value="US">United States</option>
-                                <option value="CA">Canada</option>
-                                <option value="FR">France</option>
-                                <option value="DE">Germany</option>
+                                <option selected>Choose a Currency</option>
+                                {
+                                    currencies.map((currency) => <option value={currency}> {currency.name} </option>)
+                                }
                             </select>
 
                             <div className="w-[51px] h-full bg-secondary-1 absolute right-0 -z-10">
