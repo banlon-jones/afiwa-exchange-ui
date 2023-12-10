@@ -1,72 +1,86 @@
 import { Icon } from "@iconify/react"
-import {useState} from "react";
+import { useState } from "react";
+import { CurrencyDropDownSelect } from "../../CurrencyDropDownSelect";
+import { useForm } from "react-hook-form";
+import { InputField } from "../../InputField";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { SelectAuth } from "../../login/AuthSlice";
+import { useSelector } from "react-redux";
+import { useAxios } from "../../../data/api";
 
-export const ExchangeForm = ({currencies}) => {
 
-    const [currency, setCurrency] = useState({})
-    const onSelect = (e) => {
-        setCurrency(currencies.find((currency) => currency.id === e.target.value))
+export const ExchangeForm = ({ currencies }) => {
+    const {initiateTransactionRequest} = useAxios()
+    const navigate = useNavigate();
+    const auth = useSelector(SelectAuth);
+
+    const initiateTransactionMutation = useMutation((transaction) => {
+        return initiateTransactionRequest(transaction);
+    })
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    const [data, setData] = useState({});
+    const [sourceCurrency, setSourceCurrency] = useState({});
+
+    const onValueChanged = (e) => {
+        const control = {};
+        control[e.target.name] = e.target.value;
+        if (e.target.name === 'fromCurrency') {
+            setSourceCurrency(currencies.find(currency => currency.id === e.target.value));
+        }
+
+        setData({ ...data, ...control });
+    }
+
+    const makeExchange = (data) => {
+        const { fromCurrency, toCurrency, fromValue, toValue, ...walletInfo } = data;
+        const formData = {
+            from: fromCurrency,
+            to: toCurrency,
+            amount: parseFloat(fromValue),
+            ...walletInfo
+        }
+
+        if(!auth.accessToken) {
+            // cache the transaction details
+            navigate('/login')
+        } else {
+            initiateTransactionMutation.mutate(formData, {
+                onSuccess: (response) => {
+                    navigate('/dashboard/exchanges')
+                }
+            })
+        }
+
+       
     }
 
     return (
         <div>
-            <form className={'flex items-center flex-col gap-8 border-2 rounded-3xl px-[60px] py-[50px] w-full'}>
-                <div className="w-full flex flex-col gap-2">
-                    <h3 className="font-bold">Send</h3>
-                    <div className="flex flex-col gap-6">
-                        <div className="relative border rounded-2xl flex items-center px-3 py-1 overflow-hidden">
-                            <div className="w-[51px] h-[30px] rounded-xl bg-secondary-1"></div>
-                            <select id="sourceCurrency" className="bg-transparent outline-none text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" onChange={onSelect}>
-                                <option selected>Choose a Currency</option>
-                                {
-                                    currencies.map((currency, i) => <option key={currency.id + i} value={currency.id}> {currency.name} </option>)
-                                }
-                            </select>
-
-                            <div className="w-[51px] h-full bg-secondary-1 absolute right-0 -z-10">
-
-                            </div>
-                        </div>
-
-                        <div className="border rounded-2xl py-2 px-4">
-                            <input type="number" className="outline-none w-full text-[35px] font-bold" />
-
-                            <p className="opacity-60 pt-1 text-[16px]">
-                                {(currency.name)? `1 ${currency?.name} = ${currency?.rate} USD`: ''}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+            <form onSubmit={handleSubmit(makeExchange)} className={'flex items-center flex-col gap-8 border-2 rounded-3xl px-[60px] py-[50px] w-full'}>
+                <CurrencyDropDownSelect
+                    name={register('fromCurrency', { required: true, onChange: onValueChanged })}
+                    value={register('fromValue', { required: true, onChange: onValueChanged })}
+                    label={'Send'} data={currencies}
+                    current={{ key: data?.fromCurrency, value: data?.fromValue }}
+                    defaultValueLabel={'Choose a Currency'}
+                />
 
                 <Icon height={24} className="opacity-60" icon="fontisto:arrow-down-l" />
 
-                <div className="w-full flex flex-col gap-2">
-                    <h3 className="font-bold">Receive</h3>
-                    <div className="flex flex-col gap-6">
-                        <div className="relative border rounded-2xl flex items-center px-3 py-1 overflow-hidden">
-                            <div className="w-[51px] h-[30px] rounded-xl bg-orange-500"></div>
-                            <select id="sourceCurrency" className="bg-transparent outline-none text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option selected>Choose a Currency</option>
-                                {
-                                    currencies.map((currency) => <option value={currency}> {currency.name} </option>)
-                                }
-                            </select>
+                <CurrencyDropDownSelect
+                    name={register('toCurrency', { required: true, onChange: onValueChanged })}
+                    value={register('toValue', { required: true, onChange: onValueChanged })}
+                    label={'Receive'} data={currencies}
+                    current={{ key: data?.toCurrency, value: data?.fromValue, rate: sourceCurrency?.rate }}
+                    editable={false}
+                    defaultValueLabel={'Choose a Currency'}
+                />
 
-                            <div className="w-[51px] h-full bg-secondary-1 absolute right-0 -z-10">
-
-                            </div>
-                        </div>
-
-                        <div className="border rounded-2xl py-2 px-4">
-                            <input type="number" className="outline-none w-full text-[35px] font-bold" />
-
-                            <p className="opacity-60 pt-1 text-[16px]">
-                                1 USD = 590 FCFA
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
+                <InputField formProps={register('email', { required: false })} name="email" label={'Your Email Address'} />
+                <InputField formProps={register('walletAddress', { required: true })} name="walletAddress" label={"Recepient's Wallet Address"} />
+                <InputField formProps={register('walletName', { required: true })} name="walletName" label={"Recepient's Wallet Name"} />
 
                 <button className="w-full py-[20px] px-[30px] bg-accent text-white font-bold drop-shadow rounded-full text-[20px]">
                     Exchange

@@ -1,13 +1,14 @@
 import { Link, useNavigate } from "react-router-dom"
 
 import { useMutation } from "react-query";
-import { signUpRequest } from "../../data/api";
 import { InputField } from "../InputField";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useAxios } from "../../data/api";
 
 const SignUp = () => {
     const navigate = useNavigate();
+    const {signUpRequest} = useAxios();
     const [showPassword, setShowPassword]=useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
 
