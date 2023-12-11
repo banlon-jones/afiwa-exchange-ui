@@ -41,10 +41,10 @@ const Reviews = () => {
         }
     ]
     return (
-        <div className="flex items-center flex-col gap-10 py-[120px]">
+        <div className="flex items-center flex-col gap-10 py-[120px] px-[30px]">
             <h2 className={'w-full text-center text-[40px] font-bold mb-16'}>{'Reviews'}</h2>
 
-            <div className="grid grid-cols-2 gap-y-16 gap-x-14 max-w-[1424px]">
+            <div className="grid lg:grid-cols-2 gap-y-12 lg:gap-y-16 gap-x-14 max-w-[1424px]">
                 {reviews.map(review => <Review review={review} key={review.id} />)}
             </div>
 

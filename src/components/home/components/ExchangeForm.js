@@ -58,7 +58,7 @@ export const ExchangeForm = ({ currencies }) => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit(makeExchange)} className={'flex items-center flex-col gap-8 border-2 rounded-3xl px-[60px] py-[50px] w-full'}>
+            <form onSubmit={handleSubmit(makeExchange)} className={'flex items-center flex-col gap-8 border-2 rounded-3xl px-[15px] lg:px-[60px] py-[25px] lg:py-[50px] w-full'}>
                 <CurrencyDropDownSelect
                     name={register('fromCurrency', { required: true, onChange: onValueChanged })}
                     value={register('fromValue', { required: true, onChange: onValueChanged })}
@@ -67,7 +67,7 @@ export const ExchangeForm = ({ currencies }) => {
                     defaultValueLabel={'Choose a Currency'}
                 />
 
-                <Icon height={24} className="opacity-60" icon="fontisto:arrow-down-l" />
+                <Icon height={14} className="opacity-60" icon="fontisto:arrow-down-l" />
 
                 <CurrencyDropDownSelect
                     name={register('toCurrency', { required: true, onChange: onValueChanged })}

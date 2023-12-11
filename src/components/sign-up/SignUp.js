@@ -32,7 +32,7 @@ const SignUp = () => {
 
     return (
         <div className={'flex justify-center pt-20 pb-32 flex items-center min-h-[80vh]'}>
-            <form onSubmit={handleSubmit(signUp)} className={'w-[400px]'}>
+            <form onSubmit={handleSubmit(signUp)} className={'w-[80vw] md:w-[400px]'}>
                 <h1 className={'mb-8 text-[28px] font-bold'}>{'Create Account'}</h1>
 
                 <div className="flex flex-col gap-3">

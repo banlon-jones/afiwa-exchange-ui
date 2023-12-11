@@ -47,7 +47,7 @@ const Login = () => {
 
     return (
         <div className={'flex justify-center pt-20 flex items-center pb-32 min-h-[85vh]'}>
-            <div className={'w-[400px]'}>
+            <div className={'md:w-[400px]'}>
                 <h1 className={'mb-10 text-[28px] font-bold'}>{'Login'}</h1>
 
                 <form onSubmit={signIn} className={'flex flex-col gap-6 [&>.form-control]:flex [&>.form-control]:flex-col [&>.form-control>.input]:bg-red-transparent [&>.form-control>.input]:border-2 [&>.form-control>.input]:border-accent [&>.form-control>.input]:px-3 [&>.form-control>.input]:py-2 [&>.form-control>.input]:outline-none [&>.form-control>.input]:rounded-xl'}>

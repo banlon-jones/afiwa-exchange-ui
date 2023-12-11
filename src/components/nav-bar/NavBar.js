@@ -15,34 +15,70 @@ const NavBar = () => {
             path: '/rates'
         },
         {
-            name: 'Reviews', 
+            name: 'Reviews',
             path: '/reviews'
         },
         {
-            name: 'News', 
+            name: 'News',
             path: '/news'
         }
     ]
+    // return (
+    //     <header className={'text-xl bg-white drop-shadow-xl h-[6.25rem] flex items-center px-[12.5rem]'}>
+    //         <Link to={'/'}>
+    //             <img alt="Afiwa logo" src={logo} />
+    //         </Link>
+
+    //         <nav className={'text-secondary-2 ml-auto h-full flex [&>*]:w-[5.9rem] [&>*]:text-center [&>*]:h-full [&>*]:flex [&>*]:items-center [&>*]:border-b-4 [&>*]:justify-center'}>
+    //             {navs.map(nav => <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} key={`nav-${nav.name}`} to={nav.path}>{nav.name}</NavLink>)}
+    //         </nav>
+
+
+    //         {
+    //             isAuthenticated ? <></>
+    //                 : <div className={'ml-auto [&>*]:px-[30px] [&>*]:h-[55px] [&>*]:rounded-full flex gap-8'}>
+    //                     <Link to={'login'} className={'text-accent border-2 border-accent flex items-center'}>{'Login'}</Link>
+    //                     <Link to={'signup'} className={'bg-accent text-white flex items-center'}>{'Create Account'}</Link>
+    //                 </div>
+    //         }
+
+    //     </header>
+    // )
+
+
     return (
-        <header className={'text-xl bg-white drop-shadow-xl h-[6.25rem] flex items-center px-[12.5rem]'}>
-            <Link to={'/'}>
-                <img alt="Afiwa logo" src={logo} />
-            </Link>
-
-            <nav className={'text-secondary-2 ml-auto h-full flex [&>*]:w-[5.9rem] [&>*]:text-center [&>*]:h-full [&>*]:flex [&>*]:items-center [&>*]:border-b-4 [&>*]:justify-center'}>
-                {navs.map(nav => <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} key={`nav-${nav.name}`} to={nav.path}>{nav.name}</NavLink>)}
-            </nav>
 
 
-            {
-                isAuthenticated ? <></>
-                    : <div className={'ml-auto [&>*]:px-[30px] [&>*]:h-[55px] [&>*]:rounded-full flex gap-8'}>
-                        <Link to={'login'} className={'text-accent border-2 border-accent flex items-center'}>{'Login'}</Link>
-                        <Link to={'signup'} className={'bg-accent text-white flex items-center'}>{'Create Account'}</Link>
-                    </div>
-            }
+        <nav class={'text-xl bg-white drop-shadow-xl min-h-[6.25rem] flex items-center lg:px-[12.5rem]'}>
+            <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
+                <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src={logo} className="h-8" alt="Afiwa Logo" />
+                </a>
+                <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-default" aria-expanded="false">
+                    <span className="sr-only">Open main menu</span>
+                    <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+                    </svg>
+                </button>
+                <div className="hidden ml-auto w-full md:flex md:w-auto" id="navbar-default">
+                    <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+                        {
+                            navs.map(nav => <li className="[&>*]:py-2 [&>*]:block">
+                                <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} key={`nav-${nav.name}`} to={nav.path}>{nav.name}</NavLink>
+                            </li>)
+                        }
+                    </ul>
 
-        </header>
+                    {
+                        isAuthenticated ? <></>
+                            : <div className={'md:ml-20 [&>*]:px-[30px] [&>*]:h-[55px] [&>*]:rounded-full flex flex-col md:flex-row gap-4 lg:gap-8'}>
+                                <Link to={'login'} className={'text-accent border-2 border-accent flex items-center'}>{'Login'}</Link>
+                                <Link to={'signup'} className={'bg-accent text-white flex items-center'}>{'Create Account'}</Link>
+                            </div>
+                    }
+                </div>
+            </div>
+        </nav>
     )
 }
 
