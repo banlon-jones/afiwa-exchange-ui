@@ -5,10 +5,12 @@ import { firebaseAuth } from "../../libs/Firebase";
 import { useDispatch } from "react-redux";
 import { login } from "./AuthSlice";
 import { Icon } from "@iconify/react";
+import { Spinner } from "../spinner/Spinner";
 
 const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
+    const [loading, setLoading] = useState(false)
 
     const [passwordFieldType, setPasswordFieldType] = useState('password');
     const [email, setEmail] = useState();
@@ -22,6 +24,7 @@ const Login = () => {
         // validate inputs
 
         try {
+            setLoading(true)
             const creds = await signInWithEmailAndPassword(firebaseAuth, email, password);
             const auth = {
                 email: creds.user.email,
@@ -37,6 +40,8 @@ const Login = () => {
             navigate('/dashboard')
         } catch (e) {
             console.log(e);
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -64,7 +69,7 @@ const Login = () => {
                         <div className={'input flex fled'}>
                             <input onChange={event => setPassword(event.target.value)} className={'flex-auto py-1 outline-none bg-transparent'} type={passwordFieldType} />
                             <button className={'px-2 text-2xl'} type="button" onClick={togglePasswordIndicator}>
-                                <Icon icon={passwordFieldType === 'password'? 'mdi:eye' : 'mdi:eye-off'} />
+                                <Icon icon={passwordFieldType === 'password' ? 'mdi:eye' : 'mdi:eye-off'} />
                             </button>
                         </div>
                     </div>
@@ -74,7 +79,10 @@ const Login = () => {
                         <label htmlFor="accept-terms">{'I agree to the'} <Link>{'Terms & Privacy'}</Link></label>
                     </div>
 
-                    <button disabled={!terms} type="submit" className={'bg-accent disabled:opacity-60 text-white rounded-lg py-2 px-4'}>{'Login'}</button>
+                    <button disabled={!terms || loading} type="submit" className={'bg-accent disabled:opacity-60 flex items-center justify-center gap-4 text-white rounded-lg py-2 px-4'}>
+                        <span>{'Login'}</span>
+                        {loading && <Spinner/>}
+                    </button>
                 </form>
 
                 <p className={'mt-8 opacity-70'}>{'Don\'t have an account?'} <Link to={'/signup'} className={'text-accent'}>{'Create account'}</Link></p>

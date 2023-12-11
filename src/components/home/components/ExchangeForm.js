@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { SelectAuth } from "../../login/AuthSlice";
 import { useSelector } from "react-redux";
 import { useAxios } from "../../../data/api";
+import { Spinner } from "../../spinner/Spinner";
 
 
 export const ExchangeForm = ({ currencies }) => {
@@ -15,7 +16,7 @@ export const ExchangeForm = ({ currencies }) => {
     const navigate = useNavigate();
     const auth = useSelector(SelectAuth);
 
-    const initiateTransactionMutation = useMutation((transaction) => {
+    const {mutate, isLoading} = useMutation((transaction) => {
         return initiateTransactionRequest(transaction);
     })
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -46,7 +47,7 @@ export const ExchangeForm = ({ currencies }) => {
             // cache the transaction details
             navigate('/login')
         } else {
-            initiateTransactionMutation.mutate(formData, {
+            mutate(formData, {
                 onSuccess: (response) => {
                     navigate('/dashboard/exchanges')
                 }
@@ -82,8 +83,9 @@ export const ExchangeForm = ({ currencies }) => {
                 <InputField formProps={register('walletAddress', { required: true })} name="walletAddress" label={"Recepient's Wallet Address"} />
                 <InputField formProps={register('walletName', { required: true })} name="walletName" label={"Recepient's Wallet Name"} />
 
-                <button className="w-full py-[20px] px-[30px] bg-accent text-white font-bold drop-shadow rounded-full text-[20px]">
-                    Exchange
+                <button className="w-full py-[20px] px-[30px] bg-accent text-white font-bold drop-shadow rounded-full text-[20px] flex items-center justify-center gap-4">
+                    <span>{'Exchange'}</span>
+                    {isLoading && <Spinner/>}
                 </button>
             </form>
         </div>
