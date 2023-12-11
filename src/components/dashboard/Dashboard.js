@@ -8,7 +8,7 @@ const Dashboard = () => {
                 <Sidebar />
             </div>
 
-            <div>
+            <div className="w-full">
                 <DashboardViews />
             </div>
         </div>
