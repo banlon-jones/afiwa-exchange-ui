@@ -3,11 +3,12 @@ import { RecentExchanges } from "./components/recent-exchanges/RecentExchanges";
 import Reserve from "./components/reserve/Reserve";
 import Reviews from "./components/reviews/Reviews";
 import {useEffect, useState} from "react";
-import {getCurrencies} from "../../data/api";
 import {recentExhangeRate} from "../../libs/appUtil";
+import { useAxios } from "../../data/api";
 
 const Home = () => {
   const [currencies, setCurrencies] = useState([]);
+  const {getCurrencies} = useAxios();
 
   const fetchCurrencies = async () => {
     try {
