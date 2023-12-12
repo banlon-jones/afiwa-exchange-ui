@@ -1,24 +1,31 @@
 import { Link, useNavigate } from "react-router-dom"
 
 import { useMutation } from "react-query";
-import { signUpRequest } from "../../data/api";
 import { InputField } from "../InputField";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { useAxios } from "../../data/api";
+import { Spinner } from "../spinner/Spinner";
 
 const SignUp = () => {
     const navigate = useNavigate();
+    const {signUpRequest} = useAxios();
+    const [acceptTerms, setAcceptTerms] = useState(false);
+
     const [showPassword, setShowPassword]=useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const signUpMutation = useMutation((credentials) => {
+    const {mutate, isLoading} = useMutation((credentials) => {
         return signUpRequest(credentials)
     })
 
+    const onInputChange = (e) => {
+        setAcceptTerms(e.target.checked)
+    }
+
     const signUp = async (data) => {
-        console.log(data, errors);
         try {
-            signUpMutation.mutate(data, {
+            mutate(data, {
                 onSuccess: () => {
                     navigate('/login');
                 }
@@ -31,11 +38,11 @@ const SignUp = () => {
 
     return (
         <div className={'flex justify-center pt-20 pb-32 flex items-center min-h-[80vh]'}>
-            <form onSubmit={handleSubmit(signUp)} className={'w-[400px]'}>
+            <form onSubmit={handleSubmit(signUp)} className={'w-[80vw] md:w-[400px]'}>
                 <h1 className={'mb-8 text-[28px] font-bold'}>{'Create Account'}</h1>
 
                 <div className="flex flex-col gap-3">
-                    <InputField formProps={register('email', { required: true })} name="email" label='Email Address' />
+                    <InputField formProps={register('email', { required: true})} name="email" label='Email Address' />
                     <InputField formProps={register('phoneNumber', { required: true })} name="phoneNumber" label='Phone Number' />
                     <InputField formProps={register('displayName', { required: true })} name="displayName" label={'Display Name'} />
                     <InputField formProps={register('password', { required: true })} name="password" type="password" label={'Password'}/>
@@ -50,11 +57,14 @@ const SignUp = () => {
 
 
                     <div className={'flex gap-2 items-center'}>
-                        <input {...register('acceptTerms', { required: true })} id={'accept-terms'} type="checkbox" />
+                        <input {...register('acceptTerms', { required: true,  onChange: onInputChange })} id={'accept-terms'} type="checkbox" />
                         <label htmlFor="accept-terms">{'I agree to the'} <Link>{'Terms & Privacy'}</Link></label>
                     </div>
 
-                    <button className={'bg-accent text-white rounded-lg py-2 px-4 mt-4'}>{'Register'}</button>
+                    <button disabled={isLoading || !acceptTerms} type="submit" className={'bg-accent disabled:opacity-60 flex items-center justify-center gap-4 text-white rounded-lg py-2 px-4'}>
+                        <span>{'Register'}</span>
+                        {isLoading && <Spinner/>}
+                    </button>
 
                     <p className={'text-center '+ ( errors == {}? 'opacity-100 text-red-500' : 'opacity-0')}>There are form errors</p>
                 </div>
