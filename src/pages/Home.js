@@ -1,10 +1,10 @@
-import Hero from "./components/hero/Hero";
-import { RecentExchanges } from "./components/recent-exchanges/RecentExchanges";
-import Reserve from "./components/reserve/Reserve";
-import Reviews from "./components/reviews/Reviews";
+import Hero from "../components/home/hero/Hero";
+import { RecentExchanges } from "../components/home/recent-exchanges/RecentExchanges";
+import Reserve from "../components/home/reserve/Reserve";
+import Reviews from "../components/home/reviews/Reviews";
 import {useEffect, useState} from "react";
-import {recentExhangeRate} from "../../libs/appUtil";
-import { useAxios } from "../../data/api";
+import {recentExhangeRate} from "../libs/appUtil";
+import { useAxios } from "../data/api";
 
 const Home = () => {
   const [currencies, setCurrencies] = useState([]);

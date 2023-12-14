@@ -10,7 +10,7 @@ export const RecentExchanges = ({currencies}) => {
                 <div className="flex flex-col gap-10">
                         {currencies.map((exchange, i ) => {
                             return (
-                                <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-8 justify-between">
+                                <div key={`exchange-${i}`} className="flex flex-col lg:flex-row items-center gap-2 lg:gap-8 justify-between">
                                     <Exchange exchange={exchange}/>
                                     <Icon height={32} className="text-white rotate-90 lg:rotate-0" icon="ic:baseline-arrow-right-alt" />
                                     <Exchange reverse={true} exchange={exchange}/>

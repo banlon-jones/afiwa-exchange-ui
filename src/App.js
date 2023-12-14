@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import './App.css';
-import Footer from './components/footer/Footer';
-import NavBar from './components/nav-bar/NavBar';
-import Views from './components/views/Views';
 import { useDispatch } from 'react-redux';
-import { login } from './components/login/AuthSlice';
+import { login } from './store/slices/AuthSlice';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
+import Views from './routes/Views';
 
 const App = () => {
   const dispatch = useDispatch();

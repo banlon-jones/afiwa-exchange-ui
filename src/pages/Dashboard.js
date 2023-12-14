@@ -1,5 +1,5 @@
-import DashboardViews from "../views/DashboardViews";
-import Sidebar from "./Sidebar";
+import DashboardViews from "../routes/DashboardViews";
+import Sidebar from "../components/dashboard/Sidebar";
 
 const Dashboard = () => {
     return (

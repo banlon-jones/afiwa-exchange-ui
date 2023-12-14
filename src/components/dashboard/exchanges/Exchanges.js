@@ -13,7 +13,6 @@ export const Exchanges = () => {
         { name: 'Completed', value: 'Completed' },
         { name: 'Cancelled', value: 'Cancelled' },
     ]
-    console.log(data.data);
     const [selectedStatus, setSelected] = useState([]);
 
     const chooseStatus = (status) => {
