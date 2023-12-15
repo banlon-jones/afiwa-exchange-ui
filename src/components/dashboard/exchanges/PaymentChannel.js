@@ -5,7 +5,7 @@ const PaymentChannel = ({currentId}) => {
 
   const [currency, setCurrent] = useState();
 
-  const { getCurrent } = useAxios();
+  const { getCurrency: getCurrent } = useAxios();
   const getCurrency = async () => {
     try {
       setCurrent((await getCurrent(currentId)).data)

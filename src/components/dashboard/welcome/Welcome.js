@@ -7,7 +7,7 @@ import {recentEntities} from "../../../libs/appUtil";
 const Welcome = () => {
     const [transactions, setTransaction] = useState([]);
 
-    const {getUserTransactions} = useAxios();
+    const {getCurrentUser: getUserTransactions} = useAxios();
 
     const fetchTransactions = async () => {
         try {

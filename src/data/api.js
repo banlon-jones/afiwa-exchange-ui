@@ -25,8 +25,8 @@ export const useAxios = () => {
     return {
         getCurrencies: () => axios.get(`${apiUrl}/public/currency`),
         signUpRequest: (credentials) => axios.post(`${apiUrl}/public/user/signup`, credentials),
-        getUserTransactions: () => axios.get(`${apiUrl}/protected/user`),
-        getCurrent: (currentId) => axios.get(`${apiUrl}/public/currency/${currentId}`),
+        getCurrentUser: () => axios.get(`${apiUrl}/protected/user`),
+        getCurrency: (currentId) => axios.get(`${apiUrl}/public/currency/${currentId}`),
         initiateTransactionRequest: (transaction) => axios.post(`${apiUrl}/protected/transactions`, transaction),
         getAllTransactions: () => axios.get(`${apiUrl}/protected/transactions/all`)
     }
