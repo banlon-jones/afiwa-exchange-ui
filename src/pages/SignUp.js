@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
 
 import { useMutation } from "react-query";
-import { InputField } from "../InputField";
+import { InputField } from "../components/InputField";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useAxios } from "../../data/api";
-import { Spinner } from "../spinner/Spinner";
+import { useAxios } from "../data/api";
+import { Spinner } from "../components/spinner/Spinner";
 
 const SignUp = () => {
     const navigate = useNavigate();

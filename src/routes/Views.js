@@ -1,10 +1,11 @@
-import Dashboard from "../dashboard/Dashboard";
-import Home from "../home/Home";
-import Login from "../login/Login";
-import SignUp from "../sign-up/SignUp";
-import { useAuthenticated } from "../../hooks/useAuthenticated";
+import Dashboard from "../pages/Dashboard";
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import SignUp from "../pages/SignUp";
+import { useAuthenticated } from "../hooks/useAuthenticated";
 import { QueryClientProvider } from "react-query";
-import { queryClient } from "../../libs/ReactQuery";
+import { queryClient } from "../libs/ReactQuery";
+import { NewExchange } from "../pages/NewExchange";
 
 const { Routes, Route, Navigate } = require("react-router-dom");
 
@@ -17,6 +18,7 @@ const Views = () => {
                 <Route index element={<Home />} />
                 <Route path="login" element={<AuthRoute isAuthenticated={isAuthenticated}><Login /></AuthRoute>} />
                 <Route path="signup" element={<AuthRoute isAuthenticated={isAuthenticated}><SignUp /></AuthRoute>} />
+                <Route path="/new_exchange" element={<PrivateRoute isAuthenticated={isAuthenticated}><NewExchange /></PrivateRoute>} />
                 <Route path="/dashboard/*" element={<PrivateRoute isAuthenticated={isAuthenticated}><Dashboard /></PrivateRoute>} />
             </Routes>
         </QueryClientProvider>

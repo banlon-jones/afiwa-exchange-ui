@@ -1,4 +1,4 @@
-import { ExchangeForm } from "../ExchangeForm";
+import { ExchangeForm } from "../../ExchangeForm";
 import { Chip } from "./Chip";
 
 const Hero = ({currencies}) => {
@@ -18,7 +18,7 @@ const Hero = ({currencies}) => {
                         <Chip fill='bg-green-500'><span className="opacity-80">Online</span></Chip>
                     </div>
                 </div>
-                <ExchangeForm currencies={currencies} />
+                <ExchangeForm redirect={'/new_exchange'} currencies={currencies} />
             </div>
 
         </section>
