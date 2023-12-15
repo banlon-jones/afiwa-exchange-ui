@@ -3,7 +3,7 @@ import { RecentExchanges } from "./components/recent-exchanges/RecentExchanges";
 import Reserve from "./components/reserve/Reserve";
 import Reviews from "./components/reviews/Reviews";
 import {useEffect, useState} from "react";
-import {recentExhangeRate} from "../../libs/appUtil";
+import {recentEntities} from "../../libs/appUtil";
 import { useAxios } from "../../data/api";
 
 const Home = () => {
@@ -26,7 +26,7 @@ const Home = () => {
       <Hero currencies={currencies}/>
       <Reserve currencies={currencies}/>
       <Reviews/>
-      <RecentExchanges currencies={recentExhangeRate(currencies)} />
+      <RecentExchanges currencies={recentEntities(currencies)} />
     </div>
   )
 }

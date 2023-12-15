@@ -1,10 +1,10 @@
 import PaymentChannel from "./PaymentChannel";
 import PaymentStatus from "./PaymentStatus";
 
-const RecentExchanges = () => {
+const RecentExchanges = ({transactions}) => {
 
     const exchanges = ['In Progress', 'Cancelled', 'Cancelled', 'Completed', 'Completed']
-
+    console.log(transactions);
     return (
         <div className={'rounded-xl overflow-hidden border-2'}>
             <table className={'w-full text-left'}>
@@ -20,27 +20,27 @@ const RecentExchanges = () => {
 
                 <tbody className={'[&>*]:border'}>
                     {
-                        exchanges.map(ex => {
-                            return (<tr className={'[&>*]:px-5 [&>*]:py-3'} key={ex}>
-                                <td><PaymentChannel name={'Orange Money Burkina'} /></td>
-                                <td><PaymentChannel name={'TRON'} /></td>
-                                <td><PaymentStatus status={ex} /></td>
+                        transactions.map(transaction => {
+                            return (<tr className={'[&>*]:px-5 [&>*]:py-3'} key={transaction.id}>
+                                <td><PaymentChannel currentId={transaction?.from} /></td>
+                                <td><PaymentChannel currentId={transaction?.to} /></td>
+                                <td><PaymentStatus status={transaction?.status} /></td>
                                 <td>
                                     <ul>
                                         <li>
-                                            <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{87951819}</span>
+                                            <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.id}</span>
 
                                         </li>
                                         <li>
-                                            <span>{'Date:'} </span> <span className={'text-secondary-2'}>{'Nov 9, 2023'}</span>
+                                            <span>{'Date:'} </span> <span className={'text-secondary-2'}>{transaction?.createdAt}</span>
 
                                         </li>
                                         <li>
-                                            <span>{'Exchange rate:'} </span> <span className={'text-secondary-2'}>{'65 FCFA - 1 TRON'}</span>
+                                            <span>{'Exchange rate:'} </span> <span className={'text-secondary-2'}>{transaction?.exchangeRate}</span>
 
                                         </li>
                                         <li>
-                                            <span>{'Email Address:'} </span> <span className={'text-secondary-2'}>{'example@email.com'}</span>
+                                            <span>{'Email Address:'} </span> <span className={'text-secondary-2'}>{transaction?.email}</span>
 
                                         </li>
                                         <li>

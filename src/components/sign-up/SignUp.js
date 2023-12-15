@@ -66,7 +66,7 @@ const SignUp = () => {
                         {isLoading && <Spinner/>}
                     </button>
 
-                    <p className={'text-center '+ ( errors == {}? 'opacity-100 text-red-500' : 'opacity-0')}>There are form errors</p>
+                    <p className={'text-center '+ ( errors === {}? 'opacity-100 text-red-500' : 'opacity-0')}>There are form errors</p>
                 </div>
 
                 <p className={'mt-8 opacity-70'}>{'Have an account?'} <Link to={'/login'} className={'text-accent'}>{'Sign in'}</Link></p>
