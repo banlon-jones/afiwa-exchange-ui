@@ -1,22 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TableViewExchanges } from "./TableViewExchanges"
+import { TransactionStatus } from "../../../constants/TransactionStatus";
 
-export const FilterExchanges = ({exchanges, onStatusChange}) => {
+export const FilterExchanges = ({ exchanges, onStatusChange }) => {
     const statuses = [
-        { name: 'All Exchanges', value: '' },
-        { name: 'In Progress', value: 'In Progress' },
-        { name: 'Completed', value: 'Completed' },
-        { name: 'Cancelled', value: 'Cancelled' },
+        { name: 'All Exchanges', value: null },
+        { name: 'In Progress', value: TransactionStatus.PENDING },
+        { name: 'Completed', value: TransactionStatus.COMPLETED },
+        { name: 'Cancelled', value: TransactionStatus.CANCELED },
+        { name: 'Failed', value: TransactionStatus.FAILED }
     ]
-    const [selectedStatus, setSelected] = useState([]);
+    const [selectedStatus, setSelected] = useState([null]);
+    const [visibleExchanges, setVisibleExchanges] = useState(exchanges)
 
     const chooseStatus = (status) => {
         if (selectedStatus.includes(status.value)) {
             setSelected([...selectedStatus.filter(st => st !== status.value)])
         } else {
-            setSelected([...selectedStatus, status.value])
+            if (!status.value) {
+                setSelected([null])
+            } else {
+                setSelected([...(selectedStatus.filter(st => !!st)), status.value])
+            }
         }
+
     }
+
+    useEffect(() => {
+        if (selectedStatus.length == 0) {
+            setSelected([null])
+        }
+
+        if (selectedStatus.includes(null)) {
+            setVisibleExchanges([...exchanges])
+        } else {
+            setVisibleExchanges([...(exchanges.filter(exchange => selectedStatus.includes(exchange.status)))])
+        }
+    }, [selectedStatus])
 
 
     return (
@@ -25,7 +45,7 @@ export const FilterExchanges = ({exchanges, onStatusChange}) => {
                 {statuses.map(status => <button key={`status-${status.name}${status.value}`} onClick={() => chooseStatus(status)} className={' py-2 px-6 ' + (selectedStatus.includes(status.value) ? 'text-accent bg-secondary-1 font-bold rounded-full' : ' opacity-70')}>{status.name}</button>)}
             </nav>
             <div>
-                <TableViewExchanges onStatusChange={onStatusChange} transactions={exchanges} />
+                <TableViewExchanges onStatusChange={onStatusChange} transactions={visibleExchanges} />
             </div>
         </div>
     )

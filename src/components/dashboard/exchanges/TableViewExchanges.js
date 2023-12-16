@@ -2,7 +2,7 @@ import PaymentChannel from "./PaymentChannel"
 import PaymentStatus from "./PaymentStatus"
 import { TransactionStatusForm } from "./TransactionStatusForm"
 
-export const TableViewExchanges = ({ transactions, onStatusChange }) => {
+export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
     return (
         <div className={'rounded-xl overflow-hidden border-2 w-full'}>
             <table className={'w-full text-left'}>
@@ -47,12 +47,22 @@ export const TableViewExchanges = ({ transactions, onStatusChange }) => {
                                         </ul>
 
                                         {
-                                            onStatusChange && <TransactionStatusForm transaction={transaction} onSubmit={onStatusChange}/>
+                                            onStatusChange && <TransactionStatusForm transaction={transaction} onSubmit={onStatusChange} />
                                         }
                                     </div>
                                 </td>
                             </tr>)
                         })
+                    }
+
+                    {
+                        transactions.length == 0 && <tr>
+                            <td colSpan={4}>
+                                <div className="flex items-center justify-center py-8 text-secondary-2">
+                                    {'No items'}
+                                </div>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
