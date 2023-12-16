@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom"
 
 import { useMutation } from "react-query";
-import { InputField } from "../InputField";
+import { InputField } from "../components/InputField";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { useAxios } from "../../data/api";
-import { Spinner } from "../spinner/Spinner";
+import { useAxios } from "../data/api";
+import { Spinner } from "../components/spinner/Spinner";
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -66,7 +66,7 @@ const SignUp = () => {
                         {isLoading && <Spinner/>}
                     </button>
 
-                    <p className={'text-center '+ ( errors == {}? 'opacity-100 text-red-500' : 'opacity-0')}>There are form errors</p>
+                    <p className={'text-center '+ ( errors === {}? 'opacity-100 text-red-500' : 'opacity-0')}>There are form errors</p>
                 </div>
 
                 <p className={'mt-8 opacity-70'}>{'Have an account?'} <Link to={'/login'} className={'text-accent'}>{'Sign in'}</Link></p>

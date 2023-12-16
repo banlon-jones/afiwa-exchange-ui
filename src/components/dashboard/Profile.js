@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { logout } from "../../login/AuthSlice";
+import { logout } from "../../store/slices/AuthSlice";
 
 
 export const Profile = () => {

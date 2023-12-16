@@ -1,13 +1,14 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useState } from "react";
-import { firebaseAuth } from "../../libs/Firebase";
+import { firebaseAuth } from "../libs/Firebase";
 import { useDispatch } from "react-redux";
-import { login } from "./AuthSlice";
+import { login } from "../store/slices/AuthSlice";
 import { Icon } from "@iconify/react";
-import { Spinner } from "../spinner/Spinner";
+import { Spinner } from "../components/spinner/Spinner";
 
 const Login = () => {
+    const [searchParams]=useSearchParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false)
@@ -16,7 +17,6 @@ const Login = () => {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [terms, setTerms] = useState(false);
-
 
     const signIn = async (e) => {
         e.preventDefault();
@@ -35,9 +35,9 @@ const Login = () => {
             }
 
             dispatch(login(auth))
-            localStorage.setItem('user', JSON.stringify(auth))
 
-            navigate('/dashboard')
+            const redirectUrl = searchParams.get('redirectTo');
+            navigate(redirectUrl || '/dashboard')
         } catch (e) {
             console.log(e);
         } finally {
