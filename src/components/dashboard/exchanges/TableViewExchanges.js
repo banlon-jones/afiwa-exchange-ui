@@ -1,7 +1,8 @@
 import PaymentChannel from "./PaymentChannel"
 import PaymentStatus from "./PaymentStatus"
+import { TransactionStatusForm } from "./TransactionStatusForm"
 
-export const TableViewExchanges = ({ transactions }) => {
+export const TableViewExchanges = ({ transactions, onStatusChange }) => {
     return (
         <div className={'rounded-xl overflow-hidden border-2 w-full'}>
             <table className={'w-full text-left'}>
@@ -21,28 +22,34 @@ export const TableViewExchanges = ({ transactions }) => {
                                 <td><PaymentChannel currentId={transaction?.to} /></td>
                                 <td><PaymentStatus status={transaction?.status} /></td>
                                 <td>
-                                    <ul>
-                                        <li>
-                                            <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.id}</span>
+                                    <div>
+                                        <ul>
+                                            <li>
+                                                <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.id}</span>
 
-                                        </li>
-                                        <li>
-                                            <span>{'Date:'} </span> <span className={'text-secondary-2'}>{transaction?.createdAt}</span>
+                                            </li>
+                                            <li>
+                                                <span>{'Date:'} </span> <span className={'text-secondary-2'}>{transaction?.createdAt}</span>
 
-                                        </li>
-                                        <li>
-                                            <span>{'Exchange rate:'} </span> <span className={'text-secondary-2'}>{transaction?.exchangeRate}</span>
+                                            </li>
+                                            <li>
+                                                <span>{'Exchange rate:'} </span> <span className={'text-secondary-2'}>{transaction?.exchangeRate}</span>
 
-                                        </li>
-                                        <li>
-                                            <span>{'Email Address:'} </span> <span className={'text-secondary-2'}>{transaction?.email}</span>
+                                            </li>
+                                            <li>
+                                                <span>{'Email Address:'} </span> <span className={'text-secondary-2'}>{transaction?.email}</span>
 
-                                        </li>
-                                        <li>
-                                            <span>{'Our TRON Address:'} </span> <span className={'text-secondary-2'}>{'iuiuouopioioio'}</span>
+                                            </li>
+                                            {/* <li>
+                                                <span>{'Our TRON Address:'} </span> <span className={'text-secondary-2'}>{'iuiuouopioioio'}</span>
 
-                                        </li>
-                                    </ul>
+                                            </li> */}
+                                        </ul>
+
+                                        {
+                                            onStatusChange && <TransactionStatusForm transaction={transaction} onSubmit={onStatusChange}/>
+                                        }
+                                    </div>
                                 </td>
                             </tr>)
                         })

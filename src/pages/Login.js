@@ -35,7 +35,6 @@ const Login = () => {
             }
 
             dispatch(login(auth))
-            localStorage.setItem('user', JSON.stringify(auth))
 
             const redirectUrl = searchParams.get('redirectTo');
             navigate(redirectUrl || '/dashboard')

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TableViewExchanges } from "./TableViewExchanges"
 
-export const FilterExchanges = ({exchanges}) => {
+export const FilterExchanges = ({exchanges, onStatusChange}) => {
     const statuses = [
         { name: 'All Exchanges', value: '' },
         { name: 'In Progress', value: 'In Progress' },
@@ -25,7 +25,7 @@ export const FilterExchanges = ({exchanges}) => {
                 {statuses.map(status => <button key={`status-${status.name}${status.value}`} onClick={() => chooseStatus(status)} className={' py-2 px-6 ' + (selectedStatus.includes(status.value) ? 'text-accent bg-secondary-1 font-bold rounded-full' : ' opacity-70')}>{status.name}</button>)}
             </nav>
             <div>
-                <TableViewExchanges transactions={exchanges} />
+                <TableViewExchanges onStatusChange={onStatusChange} transactions={exchanges} />
             </div>
         </div>
     )

@@ -9,7 +9,6 @@ const PaymentChannel = ({currentId}) => {
   const getCurrency = async () => {
     try {
       setCurrent((await getCurrent(currentId)).data)
-      console.log(currency)
     } catch (e) {
 
     }
