@@ -1,5 +1,5 @@
-import DashboardViews from "../views/DashboardViews";
-import Sidebar from "./Sidebar";
+import DashboardViews from "../routes/DashboardViews";
+import Sidebar from "../components/dashboard/Sidebar";
 
 const Dashboard = () => {
     return (
@@ -8,7 +8,7 @@ const Dashboard = () => {
                 <Sidebar />
             </div>
 
-            <div>
+            <div className="w-full">
                 <DashboardViews />
             </div>
         </div>

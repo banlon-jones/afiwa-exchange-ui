@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { SelectAuth } from "../components/login/AuthSlice";
+import { SelectAuth } from "../store/slices/AuthSlice";
 import { useEffect } from "react";
 
 const apiUrl = 'http://ec2-3-92-51-85.compute-1.amazonaws.com:8080/api'
@@ -18,15 +18,15 @@ export const useAxios = () => {
                 return config;
             }
         );
-
-        console.log(axios.interceptors.request);
     }, [auth])
 
 
 
     return {
-        initiateTransactionRequest: (transaction) => axios.post(`${apiUrl}/protected/transactions`, transaction),
         getCurrencies: () => axios.get(`${apiUrl}/public/currency`),
-        signUpRequest: (credentials) => axios.post(`${apiUrl}/public/user/signup`, credentials)
+        signUpRequest: (credentials) => axios.post(`${apiUrl}/public/user/signup`, credentials),
+
+        initiateTransactionRequest: (transaction) => axios.post(`${apiUrl}/protected/transactions`, transaction),
+        getAllTransactions: () => axios.get(`${apiUrl}/protected/transactions/all`)
     }
 }

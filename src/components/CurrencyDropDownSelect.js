@@ -17,7 +17,7 @@ export const CurrencyDropDownSelect = ({ data, current, defaultValueLabel, label
                             : <div className="w-[41px] h-[30px] rounded-xl bg-orange-500"></div>
                         }
                         <select {...name} id="sourceCurrency" className="bg-transparent outline-none text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                            <option selected>{defaultValueLabel}</option>
+                            <option value={null}>{defaultValueLabel}</option>
                             {
                                 data.map((entry) => <option key={`${label}-${entry.id}`} value={entry.id}> {entry.name} </option>)
                             }
@@ -28,7 +28,7 @@ export const CurrencyDropDownSelect = ({ data, current, defaultValueLabel, label
                     </div>
 
                     <div className="border rounded-2xl py-2 px-4">
-                        <input editable value={(editable || !editable && !selectedValue?.id)? undefined : (current?.value * current?.rate / (selectedValue?.rate || 1))} {...value} type="number" className="outline-none w-full text-[35px] font-bold" />
+                        <input disabled={!editable} value={(editable || (!editable && !selectedValue?.id))? undefined : (current?.value * current?.rate / (selectedValue?.rate || 1))} {...value} type="number" className="outline-none w-full text-[35px] font-bold" />
 
                         <p className="opacity-60 pt-1 text-[16px] min-h-[12px]">
                             {selectedValue?.id ? (selectedValue?.name) ? `1 ${selectedValue?.name} = ${selectedValue?.rate} USD` : '': 'No currency chosen'}
