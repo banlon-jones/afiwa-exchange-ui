@@ -1,3 +1,4 @@
+import { AllExchanges } from "../components/dashboard/exchanges/AllExchanges";
 import { Exchanges } from "../components/dashboard/exchanges/Exchanges";
 import { Profile } from "../components/dashboard/Profile";
 import { RatesSettings } from "../components/dashboard/settings/rates/RatesSettings";
@@ -11,6 +12,7 @@ const DashboardViews = () => (
         <Route index element={<Welcome />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/exchanges" element={<Exchanges />} />
+        <Route path="/all_exchanges" element={<AllExchanges />} />
         <Route path="/rates" element={<RatesSettings />} />
         <Route path="/wallets" element={<WalletsSettings />} />
     </Routes>

@@ -1,12 +1,30 @@
 import RecentExchanges from "../exchanges/RecentExchanges";
 import StatisticEntry from "./StatisticEntry";
+import {useAxios} from "../../../data/api";
+import {useEffect, useState} from "react";
+import {recentEntities} from "../../../libs/appUtil";
 
 const Welcome = () => {
+    const [transactions, setTransaction] = useState([]);
+
+    const {getCurrentUser: getUserTransactions} = useAxios();
+
+    const fetchTransactions = async () => {
+        try {
+            setTransaction((await getUserTransactions())?.data[0]?.transactions)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    useEffect(() => {
+        fetchTransactions();
+    }, []);
 
     const stats = [
         {
             name: 'Total exchanges',
-            value: '5',
+            value: transactions.length || 0,
             extra: <button className={'py-2 px-5 text-accent border-2 rounded-full hover:bg-accent hover:text-white'}>{'New Exchange'}</button>
         },
         {
@@ -33,7 +51,7 @@ const Welcome = () => {
 
             <div>
                 <h2 className={'text-lg text-secondary-2 pb-3'}>{'Last Exchanges'}</h2>
-                <RecentExchanges/>
+                <RecentExchanges transactions={recentEntities(transactions)}/>
             </div>
         </div>
     )

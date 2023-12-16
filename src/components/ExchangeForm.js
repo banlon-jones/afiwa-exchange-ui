@@ -44,12 +44,14 @@ export const ExchangeForm = ({ currencies, redirect, from, to }) => {
         }
 
         if (!auth.accessToken) {
-            // cache the transaction details
             navigate({
                 pathname: '/login',
-                search: `?${createSearchParams({redirectTo: `${redirect}?from=${formData.from}&to=${formData.to}`})}`
+                search: `?${createSearchParams({redirectTo: `${redirect}`})}`
             })
-        } else {
+        } else if(redirect) {
+            navigate(redirect)
+        }
+         else {
             mutate(formData, {
                 onSuccess: () => {
                     navigate('/dashboard/exchanges')
