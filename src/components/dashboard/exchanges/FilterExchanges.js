@@ -27,7 +27,7 @@ export const FilterExchanges = ({ exchanges, onStatusChange }) => {
     }
 
     useEffect(() => {
-        if (selectedStatus.length == 0) {
+        if (selectedStatus.length === 0) {
             setSelected([null])
         }
 
@@ -36,7 +36,7 @@ export const FilterExchanges = ({ exchanges, onStatusChange }) => {
         } else {
             setVisibleExchanges([...(exchanges.filter(exchange => selectedStatus.includes(exchange.status)))])
         }
-    }, [selectedStatus])
+    }, [selectedStatus, exchanges])
 
 
     return (

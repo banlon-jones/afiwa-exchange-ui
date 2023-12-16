@@ -56,7 +56,7 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                     }
 
                     {
-                        transactions.length == 0 && <tr>
+                        transactions.length === 0 && <tr>
                             <td colSpan={4}>
                                 <div className="flex items-center justify-center py-8 text-secondary-2">
                                     {'No items'}

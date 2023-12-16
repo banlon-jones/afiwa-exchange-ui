@@ -40,6 +40,11 @@ const NavBar = () => {
                 </button>
                 <div className="hidden ml-auto w-full md:flex md:w-auto" id="navbar-default">
                     <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
+                        {isAuthenticated &&
+                            <li className="[&>*]:py-2 [&>*]:block">
+                                <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} to={'/dashboard'}>{'Dashboard'}</NavLink>
+                            </li>
+                        }
                         {
                             navs.map(nav => <li key={`${nav.name}-${nav.path}`} className="[&>*]:py-2 [&>*]:block">
                                 <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} to={nav.path}>{nav.name}</NavLink>
