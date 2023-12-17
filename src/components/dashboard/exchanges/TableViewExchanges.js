@@ -18,14 +18,20 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                     {
                         transactions.map(transaction => {
                             return (<tr className={'[&>*]:px-5 [&>*]:py-3'} key={transaction.id}>
-                                <td><PaymentChannel currentId={transaction?.from} /></td>
-                                <td><PaymentChannel currentId={transaction?.to} /></td>
+                                <td>
+                                    <PaymentChannel currentId={transaction?.from} />
+                                    <span> {transaction?.amount} </span>
+                                </td>
+                                <td>
+                                    <PaymentChannel currentId={transaction?.to} />
+                                    <span> {transaction?.receivedAmount} </span>
+                                </td>
                                 <td><PaymentStatus status={transaction?.status} /></td>
                                 <td>
                                     <div>
                                         <ul>
                                             <li>
-                                                <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.id}</span>
+                                                <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.transactionId}</span>
 
                                             </li>
                                             <li>
@@ -40,10 +46,6 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                                                 <span>{'Email Address:'} </span> <span className={'text-secondary-2'}>{transaction?.email}</span>
 
                                             </li>
-                                            {/* <li>
-                                                <span>{'Our TRON Address:'} </span> <span className={'text-secondary-2'}>{'iuiuouopioioio'}</span>
-
-                                            </li> */}
                                         </ul>
 
                                         {

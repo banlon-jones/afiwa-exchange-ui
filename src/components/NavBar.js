@@ -18,10 +18,10 @@ const NavBar = () => {
             name: 'Reviews',
             path: '/reviews'
         },
-        {
+        /*{
             name: 'News',
             path: '/news'
-        }
+        }*/
     ]
 
     return (

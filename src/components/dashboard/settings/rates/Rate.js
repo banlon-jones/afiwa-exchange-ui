@@ -11,8 +11,6 @@ export const Rate = ({ rate, adding = false, removeTemoporary }) => {
     const [editing, setEditing] = useState(adding)
     const { register, handleSubmit } = useForm();
     const { mutate: editMutation, isLoading: isEditing } = useMutation(({ id, ...rateData }) => {
-        console.log(id, rateData);
-
         return editRate(rateData, id)
     })
     const { mutate: addMutation, isLoading: isAdding } = useMutation((rateData) => {
@@ -20,7 +18,7 @@ export const Rate = ({ rate, adding = false, removeTemoporary }) => {
     })
 
     const submit = (formData) => {
-        isAdding ? addMutation(formData) : editMutation(formData)
+        adding ? addMutation(formData) : editMutation(formData)
     }
     
     const handleCancelEdit = () => {
