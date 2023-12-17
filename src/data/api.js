@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { SelectAuth } from "../store/slices/AuthSlice";
 import { useEffect } from "react";
 
-const apiUrl = 'http://localhost:3500/api'
+const apiUrl = 'http://ec2-3-92-51-85.compute-1.amazonaws.com:8080/api'
 
 export const useAxios = () => {
     const auth = useSelector(SelectAuth);
