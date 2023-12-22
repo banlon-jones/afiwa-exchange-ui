@@ -22,7 +22,7 @@ const Sidebar = () => {
     useEffect(() => {
         const user = data?.data
         if (user) {
-            setIsAdmin(user.role.includes(Roles.USER))
+            setIsAdmin(user.role.includes(Roles.ADMIN))
         }
     }, [data])
 
