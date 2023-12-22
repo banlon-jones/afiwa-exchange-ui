@@ -41,7 +41,7 @@ export const FilterExchanges = ({ exchanges, onStatusChange }) => {
 
     return (
         <div className="w-full flex flex-col gap-12">
-            <nav className="flex gap-4">
+            <nav className="flex gap-2 flex-wrap md:gap-4">
                 {statuses.map(status => <button key={`status-${status.name}${status.value}`} onClick={() => chooseStatus(status)} className={' py-2 px-6 ' + (selectedStatus.includes(status.value) ? 'text-accent bg-secondary-1 font-bold rounded-full' : ' opacity-70')}>{status.name}</button>)}
             </nav>
             <div>

@@ -3,7 +3,9 @@
 import { Link, NavLink } from "react-router-dom"
 import logo from '../assets/logo.png'
 import { useAuthenticated } from "../hooks/useAuthenticated"
-import { Navbar } from 'flowbite-react';
+import { Dropdown, Navbar } from 'flowbite-react';
+import Sidebar from "./dashboard/Sidebar";
+import { Icon } from "@iconify/react";
 
 const NavBar = () => {
 
@@ -29,17 +31,26 @@ const NavBar = () => {
     ]
 
     return (
-        <Navbar fluid rounded className="text-xl bg-white drop-shadow-xl py-8 px-4 lg:px-[12.5rem]">
+        <Navbar fluid rounded className="text-xl relative z-40 bg-white drop-shadow-xl py-8 px-4 lg:px-[12.5rem]">
+            
+            <div className="flex md:order-2 relative">
+                <Dropdown className="bg-white" label="Dropdown button" dismissOnClick={true} renderTrigger={() => <Icon className="lg:hidden" height={50} width={50} icon={'ion:menu'}/>}>
+                    <Dropdown.Item>
+                        <div className="z-40 bg-white min-w-[70vw]">
+                            <Sidebar />
+                        </div>
+                    </Dropdown.Item>
+                </Dropdown>
+            </div>
+
             <Navbar.Brand href="/">
                 <img src={logo} className="h-12" alt="AFIWA Exchange Logo" />
             </Navbar.Brand>
-            <div className="flex md:order-2">
-                <Navbar.Toggle className="ml-auto" />
-            </div>
+
             <Navbar.Collapse className="lg:ml-auto">
 
                 {isAuthenticated &&
-                    <NavLink end className={(({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent')+ ' py-2 text-xl'} to={'/dashboard'}>{'Dashboard'}</NavLink>
+                    <NavLink end className={(({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent') + ' py-2 text-xl'} to={'/dashboard'}>{'Dashboard'}</NavLink>
                 }
 
                 {
@@ -54,6 +65,8 @@ const NavBar = () => {
                         </div>
                 }
             </Navbar.Collapse>
+
+
         </Navbar>
     )
 }
