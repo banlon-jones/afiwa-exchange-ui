@@ -65,11 +65,14 @@ const Login = () => {
                 <form onSubmit={handleSubmit(signIn)} className={'flex flex-col gap-6 [&>.form-control]:flex [&>.form-control]:flex-col [&>.form-control>.input]:bg-red-transparent [&>.form-control>.input]:border-2 [&>.form-control>.input]:border-accent [&>.form-control>.input]:px-3 [&>.form-control>.input]:py-2 [&>.form-control>.input]:outline-none [&>.form-control>.input]:rounded-xl'}>
                     <InputField errors={errors.email?.message} formProps={register('email')} name="email" label='Email Address' />
 
-                    <InputField errors={errors.password?.message} formProps={register('password')} type={passwordFieldType} name="password" label='Password'>
-                        <button className={'text-2xl'} type="button" onClick={togglePasswordIndicator}>
-                            <Icon icon={passwordFieldType === 'password' ? 'mdi:eye' : 'mdi:eye-off'} />
-                        </button>
-                    </InputField>
+                    <div>
+                        <InputField errors={errors.password?.message} formProps={register('password')} type={passwordFieldType} name="password" label='Password'>
+                            <button className={'text-2xl'} type="button" onClick={togglePasswordIndicator}>
+                                <Icon icon={passwordFieldType === 'password' ? 'mdi:eye' : 'mdi:eye-off'} />
+                            </button>
+                        </InputField>
+                        <p className={'opacity-90 text-right'}><Link to={'/reset_password'} className={'text-accent'}>{'Forgot Password?'}</Link></p>
+                    </div>
 
                     <div className={'flex gap-2 items-center'}>
                         <input value={terms} onChange={event => setTerms(event.target.value)} id={'accept-terms'} type="checkbox" />
