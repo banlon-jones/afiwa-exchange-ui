@@ -1,3 +1,5 @@
+import { ValidationError } from "./ValidationError"
+
 export const InputField = ({formProps, errors , label, children, name='', placeholder = '', type = 'text', clazz = ' '}) => {
     return (
         <div className="w-full">
@@ -8,9 +10,7 @@ export const InputField = ({formProps, errors , label, children, name='', placeh
                    {children}
                 </div>
             </div>
-            <div className="min-h-3 px-2 text-red-500">
-                {errors && <p>{errors}</p>}
-            </div>
+            <ValidationError>{errors}</ValidationError>
         </div>
     )
 }
