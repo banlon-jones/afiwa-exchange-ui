@@ -1,8 +1,14 @@
+'use client';
+
 import { Link, NavLink } from "react-router-dom"
 import logo from '../assets/logo.png'
 import { useAuthenticated } from "../hooks/useAuthenticated"
+import { Dropdown, Navbar } from 'flowbite-react';
+import Sidebar from "./dashboard/Sidebar";
+import { Icon } from "@iconify/react";
 
 const NavBar = () => {
+
     const isAuthenticated = useAuthenticated();
 
     const navs = [
@@ -25,44 +31,43 @@ const NavBar = () => {
     ]
 
     return (
-
-
-        <nav className={'text-xl bg-white drop-shadow-xl min-h-[6.25rem] flex items-center lg:px-[12.5rem]'}>
-            <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src={logo} className="h-8" alt="Afiwa Logo" />
-                </a>
-                <button data-collapse-toggle="navbar-default" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200" aria-controls="navbar-default" aria-expanded="false">
-                    <span className="sr-only">Open main menu</span>
-                    <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
-                    </svg>
-                </button>
-                <div className="hidden ml-auto w-full md:flex md:w-auto" id="navbar-default">
-                    <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0">
-                        {isAuthenticated &&
-                            <li className="[&>*]:py-2 [&>*]:block">
-                                <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} to={'/dashboard'}>{'Dashboard'}</NavLink>
-                            </li>
-                        }
-                        {
-                            navs.map(nav => <li key={`${nav.name}-${nav.path}`} className="[&>*]:py-2 [&>*]:block">
-                                <NavLink end className={({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent'} to={nav.path}>{nav.name}</NavLink>
-                            </li>)
-                        }
-                    </ul>
-
-                    {
-                        isAuthenticated ? <></>
-                            : <div className={'md:ml-20 [&>*]:px-[30px] [&>*]:h-[55px] [&>*]:rounded-full flex flex-col md:flex-row gap-4 lg:gap-8'}>
-                                <Link to={'login'} className={'text-accent border-2 border-accent flex items-center'}>{'Login'}</Link>
-                                <Link to={'signup'} className={'bg-accent text-white flex items-center'}>{'Create Account'}</Link>
-                            </div>
-                    }
-                </div>
+        <Navbar fluid rounded className="text-xl relative z-40 bg-white drop-shadow-xl py-8 px-4 lg:px-[12.5rem]">
+            
+            <div className="flex md:order-2 relative">
+                <Dropdown className="bg-white" label="Dropdown button" dismissOnClick={true} renderTrigger={() => <Icon className="lg:hidden" height={50} width={50} icon={'ion:menu'}/>}>
+                    <Dropdown.Item>
+                        <div className="z-40 bg-white min-w-[70vw]">
+                            <Sidebar />
+                        </div>
+                    </Dropdown.Item>
+                </Dropdown>
             </div>
-        </nav>
+
+            <Navbar.Brand href="/">
+                <img src={logo} className="h-12" alt="AFIWA Exchange Logo" />
+            </Navbar.Brand>
+
+            <Navbar.Collapse className="lg:ml-auto">
+
+                {isAuthenticated &&
+                    <NavLink end className={(({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent') + ' py-2 text-xl'} to={'/dashboard'}>{'Dashboard'}</NavLink>
+                }
+
+                {
+                    navs.map(nav => <NavLink key={`${nav.name}-${nav.path}`} end className={(({ isActive }) => isActive ? 'border-b-black text-accent' : 'border-b-transparent') + ' py-2 text-xl'} to={nav.path}>{nav.name}</NavLink>)
+                }
+
+                {
+                    isAuthenticated ? <></>
+                        : <div className={'md:ml-20 [&>*]:px-[30px] [&>*]:h-[55px] [&>*]:rounded-full flex flex-col md:flex-row gap-6 mt-4 md:mt-0 lg:gap-8'}>
+                            <Link to={'login'} className={'text-accent border-2 border-accent flex items-center text-xl'}>{'Login'}</Link>
+                            <Link to={'signup'} className={'bg-accent text-white flex items-center text-xl'}>{'Create Account'}</Link>
+                        </div>
+                }
+            </Navbar.Collapse>
+
+
+        </Navbar>
     )
 }
-
 export default NavBar;

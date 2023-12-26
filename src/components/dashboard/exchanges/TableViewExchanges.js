@@ -4,8 +4,8 @@ import { TransactionStatusForm } from "./TransactionStatusForm"
 
 export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
     return (
-        <div className={'rounded-xl overflow-hidden border-2 w-full'}>
-            <table className={'w-full text-left'}>
+        <div className={'rounded-xl overflow-hidden border-2 overflow-x-scroll lg:overflow-x-hidden'}>
+            <table className={'min-w-[700px] lg:min-w-[1500px] text-left'}>
                 <thead>
                     <tr className={'bg-secondary-1 [&>*]:px-5 [&>*]:py-3'}>
                         <th>{'Send'}</th>
@@ -69,5 +69,6 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                 </tbody>
             </table>
         </div>
+
     )
 }
