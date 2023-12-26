@@ -85,8 +85,6 @@ export const ExchangeForm = ({ currencies, redirect}) => {
             ...walletInfo
         }
 
-        console.log(formData);
-        return;
 
         if (!auth.accessToken) {
             navigate({
@@ -97,9 +95,9 @@ export const ExchangeForm = ({ currencies, redirect}) => {
             navigate(redirect)
         }
         else {
-            mutate(formData, {
-                onSuccess: () => {
-                    navigate('/dashboard/exchanges')
+            const tes = mutate(formData, {
+                onSuccess: (res) => {
+                    window.location.href = `https://api.whatsapp.com/send?phone=+237673433272&text=transactionId: ${res?.data?.transactionId}`
                 }
             })
         }

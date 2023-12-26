@@ -20,10 +20,10 @@ const NavBar = () => {
             name: 'Rates',
             path: '/rates'
         },
-        {
+        /*{
             name: 'Reviews',
             path: '/reviews'
-        },
+        },*/
         /*{
             name: 'News',
             path: '/news'
@@ -64,8 +64,12 @@ const NavBar = () => {
                             <Link to={'signup'} className={'bg-accent text-white flex items-center text-xl'}>{'Create Account'}</Link>
                         </div>
                 }
+              {isAuthenticated &&
+                <div className={'md:ml-20 [&>*]:px-[30px] [&>*]:h-[55px] [&>*]:rounded-full flex flex-col md:flex-row gap-6 mt-4 md:mt-0 lg:gap-8'}>
+                  <Link to={'signup'} className={'bg-accent text-white flex items-center text-xl'}>{'Logout'}</Link>
+                </div>
+              }
             </Navbar.Collapse>
-
 
         </Navbar>
     )
