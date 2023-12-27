@@ -5,14 +5,32 @@ import { useForm } from "react-hook-form";
 import { Spinner } from "../../../spinner/Spinner";
 import { useMutation } from "react-query";
 import { useAxios } from "../../../../data/api";
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as Yup from "yup"
+import { InputField } from "../../../InputField";
 
 export const Rate = ({ rate, adding = false, removeTemoporary }) => {
     const { editRate, addRate } = useAxios();
     const [editing, setEditing] = useState(adding)
-    const { register, handleSubmit } = useForm();
-    const { mutate: editMutation, isLoading: isEditing } = useMutation(({ id, ...rateData }) => {
-        console.log(id, rateData);
 
+
+    const schema = Yup.object().shape({
+        id: Yup.string()
+            .required('ID is required'),
+        logo: Yup.string()
+            .url('Invalid Url')
+            .required('Logo is required'),
+        name: Yup.string()
+            .required('A name is required'),
+        wallet: Yup.string()
+            .required("Wallet address is required"),
+        rate: Yup.number()
+            .moreThan(0, 'Rate cannot be less than or equal to 0')
+            .required("Rate is required")
+    });
+
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(schema) });
+    const { mutate: editMutation, isLoading: isEditing } = useMutation(({ id, ...rateData }) => {
         return editRate(rateData, id)
     })
     const { mutate: addMutation, isLoading: isAdding } = useMutation((rateData) => {
@@ -20,9 +38,9 @@ export const Rate = ({ rate, adding = false, removeTemoporary }) => {
     })
 
     const submit = (formData) => {
-        isAdding ? addMutation(formData) : editMutation(formData)
+        adding ? addMutation(formData) : editMutation(formData)
     }
-    
+
     const handleCancelEdit = () => {
         setEditing(false);
         adding && removeTemoporary(rate)
@@ -30,13 +48,13 @@ export const Rate = ({ rate, adding = false, removeTemoporary }) => {
 
     return (
         <>
-            <tr className={(editing ? 'border-2 ' : '') + ' [&>*]:py-3'} key={rate.id}>
-                <td>
+            <tr className={(editing ? 'border-2 ' : '') + ' [&>*]:py-4'} key={rate.id}>
+                <td className="align-top">
                     <div className={'flex gap-3 items-start px-2'}>
                         {
                             !adding &&
                             <fieldset hidden>
-                                <input name="id" {...register('id', { value: rate.id, required: true })} />
+                                <input name="id" {...register('id', { value: rate.id})} />
                             </fieldset>
                         }
                         {rate.logo &&
@@ -45,26 +63,26 @@ export const Rate = ({ rate, adding = false, removeTemoporary }) => {
 
                         <div className="flex-1 flex flex-col gap-1">
                             <fieldset disabled={!editing} className="w-full">
-                                <input placeholder="Logo URL" className={'w-full py-1 px-2 outline-accent disabled:bg-transparent '} name="logo" {...register('logo', { value: rate.logo, required: true })} />
+                                <InputField clazz={(editing ? 'border': 'border-none py-0 ')+' disabled:bg-transparent'} errors={errors.logo?.message} placeholder="Logo URL" name="logo" formProps={register('logo', { value: rate.logo })} />
                             </fieldset>
                             <fieldset disabled={!editing}>
-                                <input placeholder="Name" className={'py-1 px-2 disabled:bg-transparent '} name="name" {...register('name', { value: rate.name, required: true })} />
+                                <InputField clazz={(editing ? 'border': 'border-none py-0')+' disabled:bg-transparent'} errors={errors.name?.message} placeholder="Name" name="name" formProps={register('name', { value: rate.name })} />
                             </fieldset>
                         </div>
                     </div>
                 </td>
-                <td>
+                <td className="align-top">
                     <fieldset disabled={!editing}>
-                        <input placeholder="Wallet address" className={'py-1 px-2 disabled:bg-transparent'} name="wallet" {...register('wallet', { value: rate.wallet, required: true })} />
+                        <InputField clazz={(editing ? 'border': 'border-none py-0')+' disabled:bg-transparent'} placeholder="Wallet address" errors={errors.wallet?.message} name="wallet" formProps={register('wallet', { value: rate.wallet })} />
                     </fieldset>
                 </td>
-                <td>
+                <td className="align-top">
                     <fieldset disabled={!editing}>
-                        <input placeholder="Rate" type="number" className={'py-1 px-2 disabled:bg-transparent'} name="rate" {...register('rate', { value: rate.rate, required: true })} />
+                        <InputField clazz={(editing ? 'border': 'border-none py-0')+' disabled:bg-transparent'} placeholder="Rate" errors={errors.wallet?.message} type="number" name="rate" formProps={register('rate', { value: rate.rate })} />
                     </fieldset>
                 </td>
-                <td>
-                    <div className="px-2">
+                <td className="align-top">
+                    <div className="px-2 pt-2">
                         {
                             !editing &&
                             <button onClick={() => setEditing(true)} type="button" className="bg-secondary-1 py-2 px-4 rounded-xl"><Icon height={24} icon={'mdi:edit-outline'} /></button>

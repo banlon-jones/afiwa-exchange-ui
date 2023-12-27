@@ -11,7 +11,7 @@ const Welcome = () => {
 
     const fetchTransactions = async () => {
         try {
-            setTransaction((await getUserTransactions())?.data[0]?.transactions)
+            setTransaction((await getUserTransactions()).data?.transactions)
         } catch (e) {
             console.log(e)
         }
@@ -24,7 +24,7 @@ const Welcome = () => {
     const stats = [
         {
             name: 'Total exchanges',
-            value: transactions.length || 0,
+            value: transactions?.length || 0,
             extra: <button className={'py-2 px-5 text-accent border-2 rounded-full hover:bg-accent hover:text-white'}>{'New Exchange'}</button>
         },
         {

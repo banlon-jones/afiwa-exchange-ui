@@ -9,7 +9,7 @@ export const Exchanges = () => {
     return (
         <>
             {isLoading && <div className="flex w-full min-h-[100%] items-center justify-center"> <Spinner /></div> }
-            {data && <FilterExchanges exchanges={data?.data[0]?.transactions} />}
+            {data && <FilterExchanges exchanges={data?.data?.transactions} />}
         </>
     )
 }

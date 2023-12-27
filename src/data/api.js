@@ -30,7 +30,7 @@ export const useAxios = () => {
         initiateTransactionRequest: (transaction) => axios.post(`${apiUrl}/protected/transactions`, transaction),
         getAllTransactions: () => axios.get(`${apiUrl}/protected/transactions/all`),
         editRate: (rate, id) => axios.put(`${apiUrl}/protected/currency/${id}`, rate),
-        addRate: (rate) => axios.put(`${apiUrl}/protected/currency`, rate),
+        addRate: (rate) => axios.post(`${apiUrl}/protected/currency`, rate),
         updateTransactionStatus: (newStatus, id) => axios.put(`${apiUrl}/protected/transactions/${id}`, newStatus)
     }
 }

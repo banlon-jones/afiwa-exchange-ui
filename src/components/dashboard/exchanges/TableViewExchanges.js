@@ -4,8 +4,8 @@ import { TransactionStatusForm } from "./TransactionStatusForm"
 
 export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
     return (
-        <div className={'rounded-xl overflow-hidden border-2 w-full'}>
-            <table className={'w-full text-left'}>
+        <div className={'rounded-xl overflow-hidden border-2 overflow-x-scroll lg:overflow-x-hidden'}>
+            <table className={'min-w-[700px] lg:min-w-[1500px] text-left'}>
                 <thead>
                     <tr className={'bg-secondary-1 [&>*]:px-5 [&>*]:py-3'}>
                         <th>{'Send'}</th>
@@ -18,14 +18,20 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                     {
                         transactions.map(transaction => {
                             return (<tr className={'[&>*]:px-5 [&>*]:py-3'} key={transaction.id}>
-                                <td><PaymentChannel currentId={transaction?.from} /></td>
-                                <td><PaymentChannel currentId={transaction?.to} /></td>
+                                <td>
+                                    <PaymentChannel currentId={transaction?.from} />
+                                    <span> {transaction?.amount} </span>
+                                </td>
+                                <td>
+                                    <PaymentChannel currentId={transaction?.to} />
+                                    <span> {transaction?.receivedAmount} </span>
+                                </td>
                                 <td><PaymentStatus status={transaction?.status} /></td>
                                 <td>
                                     <div>
                                         <ul>
                                             <li>
-                                                <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.id}</span>
+                                                <span>{'Transaction ID:'} </span> <span className={'text-secondary-2'}>{transaction?.transactionId}</span>
 
                                             </li>
                                             <li>
@@ -40,10 +46,6 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                                                 <span>{'Email Address:'} </span> <span className={'text-secondary-2'}>{transaction?.email}</span>
 
                                             </li>
-                                            {/* <li>
-                                                <span>{'Our TRON Address:'} </span> <span className={'text-secondary-2'}>{'iuiuouopioioio'}</span>
-
-                                            </li> */}
                                         </ul>
 
                                         {
@@ -67,5 +69,6 @@ export const TableViewExchanges = ({ transactions = [], onStatusChange }) => {
                 </tbody>
             </table>
         </div>
+
     )
 }
