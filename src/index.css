@@ -3,6 +3,43 @@
 @tailwind utilities;
 
 * {
-    font-family: 'Inter', sans-serif;
-    font-family: 'Open Sans', sans-serif;
+  font-family: "Inter", sans-serif;
+  font-family: "Open Sans", sans-serif;
+  box-sizing: border-box;
+  transition: all 0.03s linear;
+}
+
+[data-radix-popper-content-wrapper] {
+  top: 8px !important;
+}
+
+input {
+  --tw-ring-shadow: 0 0 #000 !important;
+}
+
+.spinner {
+  animation-name: spin;
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
 }

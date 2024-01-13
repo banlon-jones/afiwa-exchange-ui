@@ -1,31 +1,69 @@
-import { useEffect } from 'react';
-import './App.css';
-import { useDispatch } from 'react-redux';
-import { login } from './store/slices/AuthSlice';
-import NavBar from './components/NavBar';
-import Footer from './components/Footer';
-import Views from './routes/Views';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+import { Suspense, lazy } from "react";
 
-const App = () => {
-  const dispatch = useDispatch();
+import routes from "./common/routes";
+import appStore from "./store/appStore";
+import Notification, { ToastProvider, ToastViewport } from "./components/Toast";
+import toastStore from "./store/toastStore";
+import Exchange from "./pages/admin/Exchange";
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
+// Common
+const Home = lazy(() => import("./pages/Home"));
+const ExchangeDetails = lazy(() => import("./pages/ExchangeDetails"));
+const Login = lazy(() => import("./pages/Login"));
+const CreateAccount = lazy(() => import("./pages/CreateAccount"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
-    if (user) {
-      dispatch(login(JSON.parse(user)))
-    }
-  })
+export default function App() {
+  const notifications = toastStore((state) => state.notifications);
+  const isLogin = appStore((state) => state.isLogin);
+
+  const next = (Component) =>
+    isLogin ? <Component /> : <Navigate replace to={routes.login} />;
 
   return (
-    <div>
-      <NavBar />
-      <main className={'min-h-[65vh]'}>
-        <Views />
-      </main>
-      <Footer />
-    </div>
-  )
+    <ToastProvider swipeDirection="right">
+      <BrowserRouter>
+        <Routes>
+          <Route path={routes.home} element={<Routers />}>
+            <Route path={routes.home} element={<Home />} />
+            <Route
+              path={routes.exchange_details}
+              element={<ExchangeDetails />}
+            />
+            <Route path={routes.login} element={<Login />} />
+            <Route path={routes.create_account} element={<CreateAccount />} />
+            <Route path={routes.reset_password} element={<ResetPassword />} />
+            <Route path={routes.admin.dashboard} element={<Dashboard />} />
+            <Route path={routes.admin.exchange} element={<Exchange />} />
+            {/* 404 */}
+            {/* <Route path={routes.admin.notFound} element={next(<NotFound />)} /> */}
+            <Route path={routes.notFound} element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+
+      {/* Notification */}
+      {notifications.map((notification) => (
+        <Notification key={notification.id} {...notification} />
+      ))}
+      <ToastViewport />
+    </ToastProvider>
+  );
 }
 
-export default App;
+function Routers() {
+  return (
+    <Suspense fallback={<small>loading...</small>}>
+      <Outlet />
+    </Suspense>
+  );
+}
