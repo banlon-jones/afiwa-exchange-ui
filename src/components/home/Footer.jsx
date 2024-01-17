@@ -7,8 +7,14 @@ import logo from "../../assets/logo.png";
 
 import Container from "../container";
 import routes from "../../common/routes";
+import appStore from "../../store/appStore";
 
 const footer = () => {
+  const { isLogin, logout } = appStore((state) => ({
+    isLogin: state.isLogin,
+    logout: state.logout,
+  }));
+
   return (
     <Footer>
       <Container width="dynamic">
@@ -47,8 +53,14 @@ const footer = () => {
             <H2>account</H2>
             <LinkWrapper>
               <NavLink to={routes.profile}>Manage Account</NavLink>
-              <NavLink to={routes.login}>Login</NavLink>
-              <NavLink to={routes.create_account}>Regiser</NavLink>
+              {!isLogin ? (
+                <>
+                  <NavLink to={routes.login}>Login</NavLink>
+                  <NavLink to={routes.create_account}>Regiser</NavLink>
+                </>
+              ) : (
+                <NavLink onClick={() => logout()}>Logout</NavLink>
+              )}
               <NavLink to={routes.exchange}>My Exchanges</NavLink>
               <NavLink to={routes.profile}>Profile</NavLink>
             </LinkWrapper>

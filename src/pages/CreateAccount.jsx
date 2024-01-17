@@ -1,6 +1,9 @@
-import React, { memo, useState } from "react";
+import React, { memo, useEffect } from "react";
 import { blueA } from "@radix-ui/colors";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
 
 import Container from "../components/container";
 import Header from "../components/home/Header";
@@ -8,35 +11,79 @@ import Footer from "../components/home/Footer";
 import { styled } from "../common/stitches";
 import routes from "../common/routes";
 import AuthFormContainer from "../components/forms/AuthFormContainer";
-import { useRequestProcessor } from "../api/requestProcessor";
-import { signup } from "../api/auth";
+import toastStore from "../store/toastStore";
+import { useCreateAccount } from "../hooks/useSession";
+import appStore from "../store/appStore";
 
-import { useQuery } from "react-query";
-import client from "../api/client";
+const schema = Yup.object().shape({
+  email: Yup.string().required("Email is required").email("Invalid email"),
+  password: Yup.string()
+    .required("No password provided.")
+    .min(4, "Password is too short - should be 4 chars minimum."),
+  confirmPassword: Yup.string().oneOf(
+    [Yup.ref("password"), null],
+    "Passwords must match"
+  ),
+  agreed: Yup.bool().oneOf([true], "You must accept our terms and conditions"),
+});
 
 const SignUp = () => {
-  const { Mutate } = useRequestProcessor();
+  const navigate = useNavigate();
+  const { mutate, data, isError, error, isLoading } = useCreateAccount();
+  const addNotification = toastStore((state) => state.add);
+  const { isLogin, user } = appStore((state) => ({
+    isLogin: state.isLogin,
+    user: state.user,
+  }));
 
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-    confirm_password: "",
-    agree: false,
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isDirty },
+  } = useForm({ resolver: yupResolver(schema) });
 
-  const handleChange = (event) => {
-    setUser((prevState) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
+  const onSubmit = (user) => {
+    mutate(user);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    Mutate("user", () => signup(user)).mutate();
-  };
+  useEffect(() => {
+    if (isDirty) {
+      for (const key in errors) {
+        addNotification({
+          title: "Required",
+          message: errors[key].message,
+          type: "error",
+        });
+      }
+    }
+  }, [addNotification, errors, isDirty]);
 
-  const { email, password, confirm_password, agree } = user;
+  useEffect(() => {
+    if (isError) {
+      addNotification({
+        title: "Error",
+        message: error.response.data.message,
+        type: "error",
+      });
+    }
+  }, [error?.response, isError, addNotification]);
+
+  useEffect(() => {
+    if (isLogin) {
+      user.role.toLowerCase() === "admin"
+        ? navigate(routes.admin.exchange)
+        : navigate(routes.home);
+    }
+
+    if (data?.uid) {
+      addNotification({
+        title: "Signup Successful",
+        message: "Your signup was successful",
+        type: "success",
+      });
+      navigate("/login");
+    }
+  }, [data, addNotification, navigate, isLogin, user?.role]);
 
   return (
     <Main>
@@ -45,35 +92,36 @@ const SignUp = () => {
       </Container>
       <Container width="dynamic" add="headerMargin">
         <FormContainer>
-          <AuthFormContainer title="create account" handleSubmit={handleSubmit}>
+          <AuthFormContainer
+            title="create account"
+            handleSubmit={handleSubmit(onSubmit)}
+            isLoading={isLoading}
+          >
             <FormControl label="Email address" htmlFor="email">
               <Input
                 id="email"
                 placeholder="example@example.com"
-                name="email"
                 type="text"
-                onChange={handleChange}
-                value={email}
+                {...register("email")}
+                disabled={isLoading}
               />
             </FormControl>
             <FormControl label="Password" htmlFor="password">
               <Input
                 id="password"
-                name="password"
                 type="password"
-                onChange={handleChange}
-                value={password}
                 placeholder="Enter password"
+                {...register("password")}
+                disabled={isLoading}
               />
             </FormControl>
             <FormControl label="Confirm Password" htmlFor="new-password">
               <Input
                 id="new-password"
-                name="confirm_password"
                 type="password"
-                onChange={handleChange}
-                value={confirm_password}
                 placeholder="Enter password"
+                {...register("confirmPassword")}
+                disabled={isLoading}
               />
             </FormControl>
             <FormControl>
@@ -88,16 +136,10 @@ const SignUp = () => {
               >
                 <input
                   style={{ cursor: "pointer", borderRadius: 10 }}
-                  type="checkbox"
                   id="agree"
-                  name="agree"
-                  value={agree}
-                  onChange={() =>
-                    setUser((prevState) => ({
-                      ...prevState,
-                      agree: !prevState.agree,
-                    }))
-                  }
+                  type="checkbox"
+                  {...register("agreed")}
+                  disabled={isLoading}
                 />
                 <label htmlFor="agree">
                   I agree to the{" "}

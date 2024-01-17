@@ -8,7 +8,6 @@ const appStore = create(
     (set) => ({
       user: null,
       isLogin: false,
-      expires_at: 0,
       refresh_token: null,
       token: null,
 

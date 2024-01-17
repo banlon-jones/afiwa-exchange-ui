@@ -1,17 +1,21 @@
 import React, { memo } from "react";
 import { blueA } from "@radix-ui/colors";
 import { NavLink } from "react-router-dom";
+import { CgSpinner } from "react-icons/cg";
 
 import routes from "../../common/routes";
 import { styled } from "../../common/stitches";
 
-const AuthFormContainer = ({ title, children, handleSubmit }) => {
+const AuthFormContainer = ({ title, children, handleSubmit, isLoading }) => {
   return (
     <>
       <H1>{title}</H1>
       <Form onSubmit={handleSubmit}>
         {children}
-        <Submit type="submit">{title}</Submit>
+        <ButtonSpinner>
+          {!isLoading && <span>{title}</span>}
+          {isLoading && <CgSpinner className="spinner" size={25} />}
+        </ButtonSpinner>
         <p style={{ marginTop: 20, fontSize: 14 }}>
           {title !== "login" ? (
             <>
@@ -50,9 +54,12 @@ const CustomNavLink = styled(NavLink, {
   textDecoration: "underline",
 });
 
-const Submit = styled("button", {
-  height: 40,
+const ButtonSpinner = styled("button", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   textAlign: "center",
+  height: 40,
   backgroundColor: "dodgerblue",
   color: "white",
   width: "100%",

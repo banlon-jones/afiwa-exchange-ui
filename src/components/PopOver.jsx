@@ -8,55 +8,81 @@ import { NavLink } from "react-router-dom";
 import routes from "../common/routes";
 import Button from "./buttons/button";
 import { styled } from "../common/stitches";
+import appStore from "../store/appStore";
 
-const MenuToggleBar = ({ className }) => (
-  <Popover.Root className={className}>
-    <Popover.Trigger asChild className={className}>
-      <IconButton aria-label="Toggle menubar">
-        <MixerHorizontalIcon width={25} height={25} />
-      </IconButton>
-    </Popover.Trigger>
-    <Popover.Portal>
-      <PopoverContent sideOffset={5} id="public-header-popover-content">
-        <Flex css={{ flexDirection: "column", gap: 5 }}>
-          <NavLink to={routes.exchange} style={{ display: "block" }}>
-            Echange
-          </NavLink>
-          <NavLink to={routes.rates} style={{ display: "block" }}>
-            Rates
-          </NavLink>
-          <NavLink to={routes.reviews} style={{ display: "block" }}>
-            Reviews
-          </NavLink>
-          <NavigationMenuRoot>
-            <NavigationMenuList>
-              <NavigationMenu.Item>
-                <NavigationMenuLink href={routes.login} type="empty">
+const MenuToggleBar = ({ className }) => {
+  const { isLogin, logout } = appStore((state) => ({
+    isLogin: state.isLogin,
+    logout: state.logout,
+  }));
+
+  return (
+    <Popover.Root className={className}>
+      <Popover.Trigger asChild className={className}>
+        <IconButton aria-label="Toggle menubar">
+          <MixerHorizontalIcon width={25} height={25} />
+        </IconButton>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <PopoverContent sideOffset={5} id="public-header-popover-content">
+          <Flex css={{ flexDirection: "column", gap: 5 }}>
+            <NavLink to={routes.exchange} style={{ display: "block" }}>
+              Echange
+            </NavLink>
+            <NavLink to={routes.rates} style={{ display: "block" }}>
+              Rates
+            </NavLink>
+            <NavLink to={routes.reviews} style={{ display: "block" }}>
+              Reviews
+            </NavLink>
+            <NavigationMenuRoot>
+              <NavigationMenuList>
+                {!isLogin ? (
+                  <>
+                    <NavigationMenu.Item>
+                      <NavigationMenuLink href={routes.login} type="empty">
+                        <Button
+                          style={{
+                            padding: "7px 25px",
+                            border: "1px solid dodgerblue",
+                            marginBottom: 5,
+                          }}
+                        >
+                          Login
+                        </Button>
+                      </NavigationMenuLink>
+                    </NavigationMenu.Item>
+                    <NavigationMenu.Item>
+                      <NavigationMenuLink
+                        href={routes.create_account}
+                        type="empty"
+                      >
+                        <Button color="blue" style={{ padding: "7px 25px" }}>
+                          Create account
+                        </Button>
+                      </NavigationMenuLink>
+                    </NavigationMenu.Item>
+                  </>
+                ) : (
                   <Button
                     style={{
                       padding: "7px 25px",
                       border: "1px solid dodgerblue",
                       marginBottom: 5,
                     }}
+                    onClick={() => logout()}
                   >
-                    Login
+                    Logout
                   </Button>
-                </NavigationMenuLink>
-              </NavigationMenu.Item>
-              <NavigationMenu.Item>
-                <NavigationMenuLink href={routes.create_account} type="empty">
-                  <Button color="blue" style={{ padding: "7px 25px" }}>
-                    Create account
-                  </Button>
-                </NavigationMenuLink>
-              </NavigationMenu.Item>
-            </NavigationMenuList>
-          </NavigationMenuRoot>
-        </Flex>
-      </PopoverContent>
-    </Popover.Portal>
-  </Popover.Root>
-);
+                )}
+              </NavigationMenuList>
+            </NavigationMenuRoot>
+          </Flex>
+        </PopoverContent>
+      </Popover.Portal>
+    </Popover.Root>
+  );
+};
 
 const PopoverContent = styled(Popover.Content, {
   borderRadius: 4,
