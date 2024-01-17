@@ -122,7 +122,7 @@ const ToastRoot = styled(Toast.Root, {
         color: colors.white,
       },
       error: {
-        backgroundColor: red.red12,
+        backgroundColor: red.red10,
         color: colors.white,
       },
       info: {
