@@ -24,7 +24,10 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
   const notifications = toastStore((state) => state.notifications);
-  const isLogin = appStore((state) => state.isLogin);
+  const { isLogin, role } = appStore((state) => ({
+    isLogin: state.isLogin,
+    role: state.role,
+  }));
 
   const next = (Component) =>
     isLogin ? <Component /> : <Navigate replace to={routes.login} />;

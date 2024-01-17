@@ -13,6 +13,7 @@ import routes from "../common/routes";
 import AuthFormContainer from "../components/forms/AuthFormContainer";
 import toastStore from "../store/toastStore";
 import { useCreateAccount } from "../hooks/useSession";
+import appStore from "../store/appStore";
 
 const schema = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email"),
@@ -30,6 +31,10 @@ const SignUp = () => {
   const navigate = useNavigate();
   const { mutate, data, isError, error, isLoading } = useCreateAccount();
   const addNotification = toastStore((state) => state.add);
+  const { isLogin, user } = appStore((state) => ({
+    isLogin: state.isLogin,
+    user: state.user,
+  }));
 
   const {
     register,
@@ -64,6 +69,12 @@ const SignUp = () => {
   }, [error?.response, isError, addNotification]);
 
   useEffect(() => {
+    if (isLogin) {
+      user.role.toLowerCase() === "admin"
+        ? navigate(routes.admin.exchange)
+        : navigate(routes.home);
+    }
+
     if (data?.uid) {
       addNotification({
         title: "Signup Successful",
@@ -72,7 +83,7 @@ const SignUp = () => {
       });
       navigate("/login");
     }
-  }, [data, addNotification, navigate]);
+  }, [data, addNotification, navigate, isLogin, user?.role]);
 
   return (
     <Main>

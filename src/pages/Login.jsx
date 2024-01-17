@@ -27,7 +27,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [passwordType, setpasswordType] = useState("password");
   const addNotification = toastStore((state) => state.add);
-  const setUser = appStore((state) => state.setUser);
+  const { isLogin, user, setUser } = appStore((state) => ({
+    isLogin: state.isLogin,
+    user: state.user,
+    setUser: state.setUser,
+  }));
 
   const { mutate, data, isError, isLoading } = useLogin();
 
@@ -64,6 +68,12 @@ const Login = () => {
   }, [isError, addNotification]);
 
   useEffect(() => {
+    if (isLogin) {
+      user.role.toLowerCase() === "admin"
+        ? navigate(routes.admin.exchange)
+        : navigate(routes.home);
+    }
+
     if (data !== undefined) {
       addNotification({
         title: "Successful",
@@ -75,7 +85,7 @@ const Login = () => {
         ? navigate(routes.admin.exchange)
         : navigate(routes.home);
     }
-  }, [data, navigate, addNotification]);
+  }, [data, navigate, addNotification, isLogin, user?.role]);
 
   const togglePassword = () => {
     if (passwordType === "password") {

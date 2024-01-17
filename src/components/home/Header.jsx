@@ -13,8 +13,14 @@ import Container from "../container";
 import SelectLanguage from "../select/language";
 import MenuToggleBar from "../PopOver";
 import "../../style/popover-style.css";
+import appStore from "../../store/appStore";
 
 const header = () => {
+  const { isLogin, logout } = appStore((state) => ({
+    isLogin: state.isLogin,
+    logout: state.logout,
+  }));
+
   return (
     <Header>
       <Wrapper width="dynamic">
@@ -44,25 +50,39 @@ const header = () => {
             </NavigationMenu.Item>
           </NavBar>
           <NavBar className="disable">
-            <NavigationMenu.Item>
-              <NavigationMenuLink to={routes.login} type="empty">
-                <Button
-                  style={{
-                    padding: "7px 25px",
-                    border: "1px solid dodgerblue",
-                  }}
-                >
-                  Login
-                </Button>
-              </NavigationMenuLink>
-            </NavigationMenu.Item>
-            <NavigationMenu.Item>
-              <NavigationMenuLink to={routes.create_account} type="empty">
-                <Button color="blue" style={{ padding: "7px 25px" }}>
-                  Create account
-                </Button>
-              </NavigationMenuLink>
-            </NavigationMenu.Item>
+            {!isLogin ? (
+              <>
+                <NavigationMenu.Item>
+                  <NavigationMenuLink to={routes.login} type="empty">
+                    <Button
+                      style={{
+                        padding: "7px 25px",
+                        border: "1px solid dodgerblue",
+                      }}
+                    >
+                      Login
+                    </Button>
+                  </NavigationMenuLink>
+                </NavigationMenu.Item>
+                <NavigationMenu.Item>
+                  <NavigationMenuLink to={routes.create_account} type="empty">
+                    <Button color="blue" style={{ padding: "7px 25px" }}>
+                      Create account
+                    </Button>
+                  </NavigationMenuLink>
+                </NavigationMenu.Item>
+              </>
+            ) : (
+              <Button
+                style={{
+                  padding: "7px 25px",
+                  border: "1px solid dodgerblue",
+                }}
+                onClick={() => logout()}
+              >
+                Logout
+              </Button>
+            )}
           </NavBar>
           <MenuToggleBar className="enable" />
         </Flex>
