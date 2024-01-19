@@ -2,8 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import APIClient from "../services/api-client";
 
-const publicApiClient = new APIClient("/api/public/transactions");
-const privateApiClient = new APIClient("/api/protected/transactions");
+export const privateApiClient = new APIClient("/api/protected/transactions");
 
 export const useCreateTransaction = () =>
   useMutation({
@@ -17,3 +16,17 @@ export const useGetTransactionById = (id) =>
     queryFn: () => privateApiClient.get(`/${id}`),
     staleTime: 120000,
   });
+
+export const useGetTransactions = () =>
+  useQuery({
+    queryKey: ["transactions"],
+    queryFn: () => privateApiClient.get("/all"),
+    staleTime: 120000,
+  });
+
+export const useUpdateTransaction = (id) => {
+  useMutation({
+    mutationKey: ["transaction", id],
+    mutationFn: (data) => privateApiClient.put(`/${id}`, data),
+  });
+};

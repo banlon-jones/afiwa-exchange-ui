@@ -71,7 +71,7 @@ const Status = styled("div", {
       sending: {
         backgroundColor: "#FCFF80",
       },
-      complete: {
+      completed: {
         backgroundColor: "#66D48F",
         color: colors.white,
       },

@@ -46,7 +46,7 @@ export default function App() {
               path={routes.admin.dashboard}
               element={next(<Dashboard />)}
             />
-            <Route path={routes.admin.exchange} element={<Exchange />} />
+            <Route path={routes.admin.exchange} element={next(<Exchange />)} />
             <Route path={routes.notFound} element={<NotFound />} />
           </Route>
         </Routes>

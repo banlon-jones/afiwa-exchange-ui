@@ -25,7 +25,9 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response.status === 403) appStore.getState().logout();
+    if (parseInt(error.response.status) === 403) {
+      appStore.getState().logout();
+    }
   }
 );
 
@@ -47,6 +49,14 @@ class APIClient {
   get = async (endpoint = "") => {
     const res = await axiosInstance.get(`${this.baseEndPoint}${endpoint}`);
     return res.data;
+  };
+
+  put = async (endpoint = "", data) => {
+    const res = await axiosInstance.put(
+      `${this.baseEndPoint}${endpoint}`,
+      data
+    );
+    return res;
   };
 }
 
