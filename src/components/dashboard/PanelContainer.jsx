@@ -1,18 +1,25 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineDashboard, MdOutlineCurrencyExchange } from "react-icons/md";
 
 import { styled } from "../../common/stitches";
 import PanelHeader from "./PanelHeader";
 import routes from "../../common/routes";
+import appStore from "../../store/appStore";
 
 const PanelContainer = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [togglePanel, setTogglePanel] = useState(false);
+  const isLogin = appStore((state) => state.isLogin);
 
   const handleTogglePanel = () => {
     setTogglePanel(!togglePanel);
   };
+
+  useEffect(() => {
+    if (!isLogin) navigate(routes.login);
+  }, [isLogin, navigate]);
 
   return (
     <>

@@ -12,8 +12,11 @@ import Button from "../buttons/button";
 import routes from "../../common/routes";
 import Container from "../container";
 import SelectLanguage from "../select/language";
+import appStore from "../../store/appStore";
 
 const PanelHeader = ({ handleTogglePanel }) => {
+  const logout = appStore((state) => state.logout);
+
   return (
     <Header>
       <Wrapper width="admin">
@@ -44,7 +47,11 @@ const PanelHeader = ({ handleTogglePanel }) => {
                 sideOffset={5}
                 style={{ maxWidth: "fit-content" }}
               >
-                <Button color="blue" style={{ padding: "7px 25px" }}>
+                <Button
+                  color="blue"
+                  style={{ padding: "7px 25px" }}
+                  onClick={() => logout()}
+                >
                   Logout
                 </Button>
               </PopoverContent>

@@ -1,8 +1,6 @@
 import axios from "axios";
 import appStore from "../store/appStore";
 
-const token = appStore.getState().token;
-
 const axiosInstance = axios.create({
   baseURL: "http://ec2-3-92-51-85.compute-1.amazonaws.com:8080",
   headers: {
@@ -12,13 +10,24 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add a request interceptor
-if (token !== null) {
-  axiosInstance.interceptors.request.use(function (config) {
-    config.headers.Authorization = token;
+axiosInstance.interceptors.request.use(
+  (config) => {
+    config.headers["Authorization"] = `Bearer ${appStore.getState().token}`;
     return config;
-  });
-}
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response.status === 403) appStore.getState().logout();
+  }
+);
 
 class APIClient {
   baseEndPoint;
@@ -35,12 +44,8 @@ class APIClient {
     return res.data;
   };
 
-  get = async (endpoint = "", access_token = token) => {
-    const res = await axiosInstance.get(`${this.baseEndPoint}${endpoint}`, {
-      headers: {
-        Authorization: `${access_token}`,
-      },
-    });
+  get = async (endpoint = "") => {
+    const res = await axiosInstance.get(`${this.baseEndPoint}${endpoint}`);
     return res.data;
   };
 }

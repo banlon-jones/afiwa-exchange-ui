@@ -15,10 +15,14 @@ async function firebaseLogin(data, setUser) {
   );
   if (baseRes === undefined) return;
 
-  const userRes = await privateApiClient.get("", baseRes.user.accessToken);
-
   setUser({
     token: baseRes.user.accessToken,
+  });
+
+  setTimeout(() => {}, 1000);
+  const userRes = await privateApiClient.get();
+  setUser({
+    // token: baseRes.user.accessToken,
     isLogin: true,
     user: {
       name: userRes.name,
@@ -26,6 +30,7 @@ async function firebaseLogin(data, setUser) {
       emailVerified: userRes.emailVerified,
       phoneNumber: userRes.phoneNumber,
       role: userRes.role,
+      transactions: userRes.transactions,
     },
   });
 

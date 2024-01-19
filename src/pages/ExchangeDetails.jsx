@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { MdContentCopy } from "react-icons/md";
 import { ImWhatsapp } from "react-icons/im";
 import { FaTelegramPlane } from "react-icons/fa";
 import { RxCross2 } from "react-icons/rx";
+import { CgSpinner } from "react-icons/cg";
 
 import { styled } from "../common/stitches";
 import { blackA, violet, blueA } from "@radix-ui/colors";
@@ -15,11 +16,18 @@ import colors from "../common/colors";
 import routes from "../common/routes";
 import toastStore from "../store/toastStore";
 import ExchangeProgressBar from "../components/exchange/ExchangeProgressBar";
+import appStore from "../store/appStore";
+import { useCreateTransaction } from "../hooks/useTransaction";
 
 const ExchangeDetails = () => {
   const addNotification = toastStore((state) => state.add);
+  const { mutate, data, isLoading, isError, error } = useCreateTransaction();
+  const user = appStore((state) => state.user);
   const [isOverlay, setIsOverlay] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state;
+  const [transactionDetails, setTransactionDetails] = useState();
 
   const socialMediaContants = {
     email: "afiwa@gmail.com",
@@ -40,25 +48,46 @@ const ExchangeDetails = () => {
   };
 
   const handleSubmit = () => {
-    addNotification({
-      title: "successful",
-      type: "success",
-    });
-    setIsOverlay(true);
+    const payload = {
+      from: state.fromCurrency.id,
+      to: state.toCurrency.id,
+      amount: state.fromAmount,
+      email: user.email,
+      walletAddress: state.recipientWallet,
+      walletName: state.recipientName,
+    };
+
+    mutate(payload);
   };
 
-  const data = {
-    send: {
-      label: "Perfect Money USD",
-      amount: "15983.00 FCFA",
-      color: "#D9D9D9",
-    },
-    recieve: {
-      label: "Perfect Money USD",
-      amount: "15983.00 FCFA",
-      color: "blue",
-    },
-  };
+  useEffect(() => {
+    if (isError) {
+      const { data } = error.response;
+      data?.message.forEach((msg) => {
+        addNotification({
+          title: data.error,
+          message: msg,
+          type: "error",
+        });
+      });
+    }
+  }, [isError, addNotification, error]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      addNotification({
+        title: "Successful",
+        type: "success",
+      });
+
+      setTransactionDetails(data);
+      setIsOverlay(true);
+    }
+  }, [data, addNotification]);
+
+  // console.log(state);
+
+  if (state === null || user === null) return;
 
   return (
     <Main>
@@ -68,9 +97,16 @@ const ExchangeDetails = () => {
       <Container width="dynamic" add="headerMargin">
         <Card>
           <H1>Confirm Transaction</H1>
-          <ExchangeCard data={data} />
+          <ExchangeCard
+            fromCurrency={state.fromCurrency}
+            toCurrency={state.toCurrency}
+            amount={state.fromAmount}
+          />
           <FlexContainer title="Exchange rate">
-            <p style={{ fontSize: 15 }}>1 USD = 580 FCFA</p>
+            <p style={{ fontSize: 15 }}>
+              1 {state.fromCurrency.label} = {state.exchangeRate}{" "}
+              {state.toCurrency.label}
+            </p>
           </FlexContainer>
           <FlexContainer title="Status">
             <span
@@ -85,15 +121,15 @@ const ExchangeDetails = () => {
             </span>
           </FlexContainer>
           <FlexContainer title="Your Email">
-            <Input disabled value="example@example.com" />
+            <Input disabled value={user.email} />
           </FlexContainer>
           <Card type="initial">
             <H1>Recipient</H1>
             <FlexContainer title="Name">
-              <Input disabled value="John Doe" />
+              <Input disabled value={state.recipientName} />
             </FlexContainer>
-            <FlexContainer title="Orange Money Number">
-              <Input disabled value="+237698342564" />
+            <FlexContainer title="Recipient Wallet">
+              <Input disabled value={state.recipientWallet} />
             </FlexContainer>
           </Card>
           <FlexContainer
@@ -103,17 +139,19 @@ const ExchangeDetails = () => {
               alignItems: "center",
             }}
           >
-            <Button onClick={handleSubmit}>Submit</Button>
-            <Button type="transparent" onClick={() => history(routes.home)}>
-              Cancel
-            </Button>
+            {/* <Button onClick={handleSubmit}>Submit</Button> */}
+            <ButtonSpinner onClick={handleSubmit}>
+              {!isLoading && <span>Submit</span>}
+              {isLoading && <CgSpinner className="spinner" size={25} />}
+            </ButtonSpinner>
+            <Button onClick={() => navigate(routes.home)}>Cancel</Button>
           </FlexContainer>
         </Card>
       </Container>
       <Container>
         <Footer />
       </Container>
-      {isOverlay && (
+      {isOverlay && transactionDetails && (
         <OverLayer>
           <CardContainer>
             <Card type="maxWidth">
@@ -128,13 +166,13 @@ const ExchangeDetails = () => {
                   margin: "0 auto 1.5rem",
                 }}
               >
-                Transaction ID: 519435{" "}
+                Transaction ID: {transactionDetails.transactionId}{" "}
                 <RxCross2
                   style={{ cursor: "pointer" }}
                   onClick={handleCloseOverlay}
                 />
               </H1>
-              <ExchangeProgressBar />
+              <ExchangeProgressBar status={transactionDetails.status} />
               <p
                 style={{
                   textAlign: "center",
@@ -156,6 +194,7 @@ const ExchangeDetails = () => {
                       textAlign: "center",
                       height: 50,
                       borderRadius: 15,
+                      width: "100%",
                     }}
                     disabled
                     value={socialMediaContants.email}
@@ -320,24 +359,26 @@ const Button = styled("button", {
   alignItems: "center",
   gap: 10,
   borderRadius: "10px",
+  backgroundColor: violet.violet2,
+  color: blackA.blackA10,
+  width: "29%",
+  "&:hover": {
+    backgroundColor: violet.violet4,
+  },
+});
+
+const ButtonSpinner = styled("button", {
+  display: "flex",
+  padding: 10,
+  justifyContent: "center",
+  alignItems: "center",
+  gap: 10,
+  borderRadius: "10px",
   backgroundColor: blueA.blueA8,
   color: colors.white,
   width: "70%",
-
   "&:hover": {
     backgroundColor: blueA.blueA10,
-  },
-  variants: {
-    type: {
-      transparent: {
-        backgroundColor: violet.violet2,
-        color: blackA.blackA10,
-        width: "29%",
-        "&:hover": {
-          backgroundColor: violet.violet4,
-        },
-      },
-    },
   },
 });
 
