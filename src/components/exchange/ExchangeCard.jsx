@@ -1,16 +1,30 @@
 import React from "react";
 import { styled } from "../../common/stitches";
 import Box from "../box";
+import { calculateExchangeAmount } from "../../common/utils";
 
-const exchangecard = ({ data }) => {
+const ExchangeCard = ({ fromCurrency, toCurrency, amount }) => {
+  if (
+    fromCurrency === undefined ||
+    toCurrency === undefined ||
+    amount === undefined
+  )
+    return;
+
   return (
     <CardContainer>
       <Card>
         <CardWrapper>
-          <Box style={{ backgroundColor: data.send.color }} />
-          <p>{data.send.label}</p>
+          <OptionLabel>
+            {fromCurrency.logo ? (
+              <OptionLabelLogo src={fromCurrency.logo} alt="coin" />
+            ) : (
+              <Box style={{ width: 30, backgroundColor: "dodgerblue" }} />
+            )}
+            <span>{fromCurrency.label}</span>
+          </OptionLabel>
         </CardWrapper>
-        <p>{data.send.amount}</p>
+        <p>{parseFloat(amount).toPrecision(4)}</p>
       </Card>
       <div>
         <Svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -25,10 +39,22 @@ const exchangecard = ({ data }) => {
       </div>
       <Card>
         <CardWrapper>
-          <Box style={{ backgroundColor: data.recieve.color }} />
-          <p>{data.recieve.label}</p>
+          <OptionLabel>
+            {toCurrency.logo ? (
+              <OptionLabelLogo src={toCurrency.logo} alt="coin" />
+            ) : (
+              <Box style={{ width: 30, backgroundColor: "dodgerblue" }} />
+            )}
+            <span>{toCurrency.label}</span>
+          </OptionLabel>
         </CardWrapper>
-        <p>{data.recieve.amount}</p>
+        <p>
+          {calculateExchangeAmount(
+            fromCurrency.rate,
+            toCurrency.rate,
+            amount
+          )[1].toPrecision(6)}
+        </p>
       </Card>
     </CardContainer>
   );
@@ -75,4 +101,16 @@ const CardWrapper = styled("div", {
   alignItems: "center",
 });
 
-export default exchangecard;
+const OptionLabel = styled("div", {
+  display: "flex",
+  alignItems: "center",
+  gap: 3,
+});
+
+const OptionLabelLogo = styled("img", {
+  height: 30,
+  width: 30,
+  objectFit: "contain",
+});
+
+export default ExchangeCard;

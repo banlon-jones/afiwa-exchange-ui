@@ -1,43 +1,129 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { FaExchangeAlt } from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { styled } from "../../common/stitches";
-
-const options = [
-  { value: "chocolate", label: "Perfect Money USD", color: "#00B8D9" },
-  { value: "strawberry", label: "Perfect Money BTC", color: "#0052CC" },
-  { value: "vanilla", label: "Perfect Money ETC", color: "#5243AA" },
-];
+import { useGetCurrency } from "../../hooks/useCurrency";
+import Box from "../box";
+// import toastStore from "../../store/toastStore";
+import appStore from "../../store/appStore";
+import routes from "../../common/routes";
+import { calculateExchangeAmount } from "../../common/utils";
 
 const ExchangeFrom = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { data, isError } = useGetCurrency();
+  const [options, setOptions] = useState([]);
+  // const addNotification = toastStore((state) => state.add);
+  const isLogin = appStore((state) => state.isLogin);
+
   const [state, setState] = useState({
-    sendAmount: 1,
-    receiveAmount: 1,
-    recipientName: "",
-    recipientNumber: "",
-    sendTransactionType: options[0].value,
-    receiveTransactionType: options[1].value,
+    fromCurrency: location.state?.fromCurrency
+      ? location.state?.fromCurrency
+      : {},
+    toCurrency: location.state?.toCurrency ? location.state?.toCurrency : {},
+    fromAmount: location.state?.fromAmount ? location.state?.fromAmount : "",
+    toAmount: location.state?.toAmount ? location.state?.toAmount : "",
+    recipientName: location.state?.recipientName
+      ? location.state?.recipientName
+      : "",
+    recipientWallet: location.state?.recipientWallet
+      ? location.state?.recipientWallet
+      : "",
+    exchangeRate: location.state?.exchangeRate
+      ? location.state?.exchangeRate
+      : 0,
   });
+  const [baseExchangeRate, setBaseExchangeRate] = useState({});
 
   const handleChange = (event) => {
+    const value = numericInputValidator(event);
+
+    if (value === undefined) return;
     setState((prevState) => ({
       ...prevState,
-      [event.target.name]: event.target.value,
+      [event.target.name]: value,
     }));
+  };
+
+  const numericInputValidator = (event) => {
+    if (event.target.name === "fromAmount") {
+      const reg = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
+      if (reg.test(event.target.value)) return parseFloat(event.target.value);
+    } else return event.target.value;
   };
 
   const handleSelectChange = (newValue, actionMeta) => {
     setState((prevState) => ({
       ...prevState,
-      [actionMeta.name]: newValue.value,
+      [actionMeta.name]: newValue,
     }));
+
+    if (
+      (actionMeta.name === "fromCurrency" && state.fromAmount === "") ||
+      state.fromAmount === "0"
+    ) {
+      setState((prevState) => ({
+        ...prevState,
+        fromAmount: 1,
+      }));
+    }
   };
 
-  const { sendAmount, receiveAmount, recipientName, recipientNumber } = state;
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!isLogin) {
+      return navigate(routes.login, { state });
+    }
+
+    return navigate(routes.exchange_details, { state });
+  };
+
+  useEffect(() => {
+    if (
+      Object.keys(state.fromCurrency).length > 0 &&
+      Object.keys(state.toCurrency).length > 0
+    ) {
+      // const rate =
+      //   parseFloat(state.fromCurrency["rate"]) /
+      //   parseFloat(state.toCurrency["rate"]);
+      const [rate, amount] = calculateExchangeAmount(
+        state.fromCurrency.rate,
+        state.toCurrency.rate,
+        state.fromAmount
+      );
+
+      setState((prevState) => ({
+        ...prevState,
+        exchangeRate: rate,
+        toAmount: amount,
+      }));
+    }
+  }, [state.toCurrency, state.fromCurrency, state.fromAmount]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      const _object = Object.entries(data).map((_obj) => {
+        if (_obj[1].name === "United state (USD)") setBaseExchangeRate(_obj[1]);
+
+        return {
+          value: _obj[1].id,
+          label: _obj[1].name,
+          id: _obj[1].id,
+          rate: parseFloat(_obj[1].rate),
+          logo: String(_obj[1].logo).startsWith("http") ? _obj[1].logo : null,
+        };
+      });
+      setOptions(_object);
+    }
+  }, [data, location.state]);
+
+  if (isError) return;
 
   return (
-    <From>
+    <From onSubmit={handleSubmit}>
       <div style={{ gridArea: "send", width: "100%" }}>
         <Label htmlFor="react-select-2-input">Send</Label>
         <div>
@@ -47,17 +133,52 @@ const ExchangeFrom = () => {
             isSearchable
             isClearable
             options={options}
-            name="sendTransactionType"
-            defaultValue={options[0]}
+            name="fromCurrency"
             onChange={handleSelectChange}
+            defaultValue={
+              Object.keys(state.fromCurrency).length > 0
+                ? state.fromCurrency
+                : ""
+            }
+            formatOptionLabel={(coin) => (
+              <OptionLabel className="coin-option">
+                {coin["logo"] ? (
+                  <OptionLabelLogo src={coin.logo} alt="coin" />
+                ) : (
+                  <Box style={{ width: 30, backgroundColor: "dodgerblue" }} />
+                )}
+                <span>{coin.label}</span>
+              </OptionLabel>
+            )}
           />
           <Input
-            value={sendAmount}
-            name="sendAmount"
-            type="number"
+            value={state.fromAmount}
+            name="fromAmount"
+            type="text"
             onChange={handleChange}
+            inputMode="numeric"
+            pattern="[0-9]+"
+            required
           />
-          <p style={{ color: "#757575", padding: 3 }}>1USD = 590 FCFA</p>
+          {Object.keys(state.fromCurrency).length > 0 && (
+            <p style={{ color: "#757575", padding: 3 }}>
+              1 <span>{baseExchangeRate["name"]}</span> ={" "}
+              <span>
+                {
+                  // (
+                  //   parseFloat() /
+                  //   parseFloat()
+                  // ).toPrecision(4)
+                  calculateExchangeAmount(
+                    baseExchangeRate["rate"],
+                    state.fromCurrency["rate"],
+                    1
+                  )[0].toPrecision(4)
+                }{" "}
+                {state.fromCurrency["label"]}
+              </span>
+            </p>
+          )}
         </div>
       </div>
       <div style={{ gridArea: "icon", justifySelf: "center" }}>
@@ -72,17 +193,51 @@ const ExchangeFrom = () => {
             isSearchable
             isClearable
             options={options}
-            name="receiveTransactionType"
-            defaultValue={options[1]}
+            name="toCurrency"
             onChange={handleSelectChange}
+            defaultValue={
+              Object.keys(state.toCurrency).length > 0 ? state.toCurrency : ""
+            }
+            formatOptionLabel={(coin) => (
+              <OptionLabel className="coin-option">
+                {coin["logo"] ? (
+                  <OptionLabelLogo src={coin.logo} alt="coin" />
+                ) : (
+                  <Box style={{ width: 30, backgroundColor: "dodgerblue" }} />
+                )}
+                <span>{coin.label}</span>
+              </OptionLabel>
+            )}
           />
           <Input
-            value={receiveAmount}
-            name="receiveAmount"
-            type="number"
-            onChange={handleChange}
+            value={!isNaN(state.toAmount) ? state.toAmount : 0}
+            name="toAmount"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]+"
+            disabled
+            required
+            // onChange={handleChange}
           />
-          <p style={{ color: "#757575", padding: 3 }}>1USD = 590 FCFA</p>
+          {Object.keys(state.toCurrency).length > 0 && (
+            <p style={{ color: "#757575", padding: 3 }}>
+              1 <span>{baseExchangeRate["name"]}</span> ={" "}
+              <span>
+                {
+                  // (
+                  //   parseFloat(baseExchangeRate["rate"]) /
+                  //   parseFloat(state.toCurrency["rate"])
+                  // ).toPrecision(4)
+                  calculateExchangeAmount(
+                    baseExchangeRate["rate"],
+                    state.fromCurrency["rate"],
+                    1
+                  )[0].toPrecision(4)
+                }{" "}
+                {state.toCurrency["label"]}
+              </span>
+            </p>
+          )}
         </div>
       </div>
       <div style={{ gridArea: "recipient" }}>
@@ -93,14 +248,18 @@ const ExchangeFrom = () => {
             type="text"
             placeholder="Recipient Name"
             onChange={handleChange}
-            value={recipientName}
+            value={state.recipientName}
+            required
           />
           <Input2
+            value={state.recipientWallet}
+            name="recipientWallet"
             type="text"
-            name="recipientNumber"
-            value={recipientNumber}
+            inputMode="numeric"
+            pattern="[0-9]+"
             placeholder="Recipient Number"
             onChange={handleChange}
+            required
           />
         </InputFlexWrapper>
         <Submit type="submit">Exchange</Submit>
@@ -113,8 +272,8 @@ const From = styled("form", {
   flex: "1 1 auto",
   maxWidth: "60%",
   display: "grid",
-  gridTemplateAreas: `'send icon receive'
-  'recipient recipient recipient'
+  gridTemplateAreas: `'send send icon receive receive'
+  'recipient recipient recipient recipient recipient'
   `,
   columnGap: "1em",
   borderRadius: "15px",
@@ -122,7 +281,6 @@ const From = styled("form", {
   boxShadow: "0px 10px 20px 0px rgba(179, 187, 198, 0.45)",
   padding: 22,
   alignItems: "center",
-  justifyContent: "space-between",
   "@bp1024": {
     maxWidth: "100%",
   },
@@ -136,36 +294,17 @@ const From = styled("form", {
   },
 });
 
-const dot = (color = "transparent") => ({
-  alignItems: "center",
-  display: "flex",
-
-  ":before": {
-    backgroundColor: color,
-    borderRadius: 3,
-    content: '" "',
-    display: "block",
-    marginRight: 8,
-    width: 51,
-    height: 30,
-  },
-});
-
 const colourStyles = {
   control: (styles) => ({
     ...styles,
     backgroundColor: "white",
-    height: 55,
+    height: 53,
     borderRadius: 10,
   }),
-  option: (style) => ({ ...style, ...dot() }),
   input: (styles) => ({
     ...styles,
-    ...dot(),
-    marginLeft: 10,
+    marginLeft: 3,
   }),
-  placeholder: (styles) => ({ ...styles, ...dot("#ccc") }),
-  singleValue: (styles, { data }) => ({ ...styles, ...dot(data.color) }),
 };
 
 const Label = styled("label", {
@@ -180,14 +319,27 @@ const Label = styled("label", {
   },
 });
 
+const OptionLabel = styled("div", {
+  display: "flex",
+  alignItems: "center",
+  gap: 3,
+});
+
+const OptionLabelLogo = styled("img", {
+  height: 30,
+  width: 30,
+  objectFit: "contain",
+});
+
 const Input = styled("input", {
   width: "100%",
-  height: 55,
+  height: 53,
   borderRadius: 8,
   marginTop: 13,
   backgroundColor: "#F1F2F5",
   borderColor: "#d7d7d7",
-  fontSize: 24,
+  fontSize: 17,
+  color: "rgb(33 32 32)",
   "@bp1024": {
     fontSize: 18,
     height: 45,
@@ -202,6 +354,7 @@ const Input2 = styled("input", {
   borderColor: "#d7d7d7",
   marginTop: 5,
   fontSize: 17,
+  color: "rgb(33 32 32)",
   "@bp1024": {
     fontSize: 16,
     height: 45,

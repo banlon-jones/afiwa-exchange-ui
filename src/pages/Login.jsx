@@ -4,7 +4,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 import Container from "../components/container";
 import Header from "../components/home/Header";
@@ -23,8 +23,9 @@ const schema = Yup.object().shape({
     .min(4, "Password is too short - should be 4 chars minimum."),
 });
 
-const Login = () => {
+const Login = (props) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [passwordType, setpasswordType] = useState("password");
   const addNotification = toastStore((state) => state.add);
   const { isLogin, user, setUser } = appStore((state) => ({
@@ -71,7 +72,7 @@ const Login = () => {
     if (isLogin) {
       user.role.toLowerCase() === "admin"
         ? navigate(routes.admin.exchange)
-        : navigate(routes.home);
+        : navigate(routes.home, { state: location.state });
     }
 
     if (data !== undefined) {
@@ -83,9 +84,9 @@ const Login = () => {
 
       data.role.toLowerCase() === "admin"
         ? navigate(routes.admin.exchange)
-        : navigate(routes.home);
+        : navigate(routes.home, { state: location.state });
     }
-  }, [data, navigate, addNotification, isLogin, user?.role]);
+  }, [data, navigate, addNotification, isLogin, user?.role, location.state]);
 
   const togglePassword = () => {
     if (passwordType === "password") {

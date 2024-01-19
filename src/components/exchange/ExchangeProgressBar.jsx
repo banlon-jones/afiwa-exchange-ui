@@ -2,19 +2,19 @@ import React from "react";
 import { styled } from "../../common/stitches";
 import colors from "../../common/colors";
 
-const ExchangeProgressBar = () => {
-  const status = "pending";
+const ExchangeProgressBar = ({ status }) => {
+  const _status = String(status).toLowerCase();
 
   return (
     <ProgresBarContainer>
       <ProgressStateWrapper>
-        <ProgressState state={status === "pending"}>1</ProgressState>
-        <ProgressState state={status === "sending"}>2</ProgressState>
-        <ProgressState state={status === "complete"}>3</ProgressState>
+        <ProgressState state={_status === "pending"}>1</ProgressState>
+        <ProgressState state={_status === "sending"}>2</ProgressState>
+        <ProgressState state={_status === "complete"}>3</ProgressState>
       </ProgressStateWrapper>
       <ProgressStatusWrapper>
-        <Status status={status}>
-          {status}{" "}
+        <Status status={_status}>
+          {_status}{" "}
           <DotContainer>
             <Span></Span>
           </DotContainer>

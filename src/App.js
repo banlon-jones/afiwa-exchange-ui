@@ -24,13 +24,10 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
   const notifications = toastStore((state) => state.notifications);
-  const { isLogin, role } = appStore((state) => ({
-    isLogin: state.isLogin,
-    role: state.role,
-  }));
+  const isLogin = appStore((state) => state.isLogin);
 
   const next = (Component) =>
-    isLogin ? <Component /> : <Navigate replace to={routes.login} />;
+    isLogin ? Component : <Navigate replace to={routes.login} />;
 
   return (
     <ToastProvider swipeDirection="right">
@@ -40,15 +37,16 @@ export default function App() {
             <Route path={routes.home} element={<Home />} />
             <Route
               path={routes.exchange_details}
-              element={<ExchangeDetails />}
+              element={next(<ExchangeDetails />)}
             />
             <Route path={routes.login} element={<Login />} />
             <Route path={routes.create_account} element={<CreateAccount />} />
             <Route path={routes.reset_password} element={<ResetPassword />} />
-            <Route path={routes.admin.dashboard} element={<Dashboard />} />
+            <Route
+              path={routes.admin.dashboard}
+              element={next(<Dashboard />)}
+            />
             <Route path={routes.admin.exchange} element={<Exchange />} />
-            {/* 404 */}
-            {/* <Route path={routes.admin.notFound} element={next(<NotFound />)} /> */}
             <Route path={routes.notFound} element={<NotFound />} />
           </Route>
         </Routes>

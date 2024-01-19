@@ -17,3 +17,8 @@ export const uuid = () => {
   );
   return uuid;
 };
+
+export const calculateExchangeAmount = (fromRate, toRate, amount) => {
+  const rate = parseFloat(fromRate) / parseFloat(toRate);
+  return [rate, parseFloat(amount) * rate];
+};
