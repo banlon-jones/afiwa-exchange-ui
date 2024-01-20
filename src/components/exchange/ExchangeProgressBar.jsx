@@ -3,14 +3,17 @@ import { styled } from "../../common/stitches";
 import colors from "../../common/colors";
 
 const ExchangeProgressBar = ({ status }) => {
-  const _status = String(status).toLowerCase();
+  let _status = String(status).toLowerCase();
+  _status = _status === "pending" ? "sending" : _status;
 
   return (
     <ProgresBarContainer>
       <ProgressStateWrapper>
         <ProgressState state={_status === "pending"}>1</ProgressState>
         <ProgressState state={_status === "sending"}>2</ProgressState>
-        <ProgressState state={_status === "complete"}>3</ProgressState>
+        <ProgressState state={_status === "complete" || _status === "canceled"}>
+          3
+        </ProgressState>
       </ProgressStateWrapper>
       <ProgressStatusWrapper>
         <Status status={_status}>
@@ -68,11 +71,18 @@ const Status = styled("div", {
   textTransform: "capitalize",
   variants: {
     status: {
+      pending: {
+        backgroundColor: "#FCFF80",
+      },
       sending: {
         backgroundColor: "#FCFF80",
       },
       completed: {
         backgroundColor: "#66D48F",
+        color: colors.white,
+      },
+      canceled: {
+        backgroundColor: "#ff0505",
         color: colors.white,
       },
     },
