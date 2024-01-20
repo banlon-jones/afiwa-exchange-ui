@@ -38,10 +38,19 @@ const ExchangeFrom = () => {
   const [baseExchangeRate, setBaseExchangeRate] = useState({});
 
   const handleChange = (event) => {
+    const value = numericInputValidator(event);
+
     setState((prevState) => ({
       ...prevState,
-      [event.target.name]: event.target.value,
+      [event.target.name]: value,
     }));
+  };
+
+  const numericInputValidator = (event) => {
+    if (event.target.name === "fromAmount") {
+      const reg = new RegExp("^[-+]?[0-9]*.?[0-9]*$");
+      if (reg.test(event.target.value)) return event.target.value;
+    } else return event.target.value;
   };
 
   const handleSelectChange = (newValue, actionMeta) => {
