@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { MdContentCopy } from "react-icons/md";
-import { ImWhatsapp } from "react-icons/im";
-import { FaTelegramPlane } from "react-icons/fa";
-import { RxCross2 } from "react-icons/rx";
 import { CgSpinner } from "react-icons/cg";
 
 import { styled } from "../common/stitches";
@@ -15,9 +11,9 @@ import ExchangeCard from "../components/exchange/ExchangeCard";
 import colors from "../common/colors";
 import routes from "../common/routes";
 import toastStore from "../store/toastStore";
-import ExchangeProgressBar from "../components/exchange/ExchangeProgressBar";
 import appStore from "../store/appStore";
 import { useCreateTransaction } from "../hooks/useTransaction";
+import ExchangeOverview from "../components/exchange/ExchangeOverview";
 
 const ExchangeDetails = () => {
   const addNotification = toastStore((state) => state.add);
@@ -27,7 +23,6 @@ const ExchangeDetails = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state;
-  const [transactionDetails, setTransactionDetails] = useState();
 
   const socialMediaContants = {
     email: "afiwa@gmail.com",
@@ -35,16 +30,9 @@ const ExchangeDetails = () => {
     telegram_number: "+7 5666343234",
   };
 
-  const handleCopy = (value) => {
-    navigator.clipboard.writeText(value);
-    addNotification({
-      title: "INFO",
-      message: "Copied",
-    });
-  };
-
   const handleCloseOverlay = () => {
     setIsOverlay(false);
+    navigate(routes.recent_exchange);
   };
 
   const handleSubmit = () => {
@@ -62,14 +50,23 @@ const ExchangeDetails = () => {
 
   useEffect(() => {
     if (isError) {
-      const { data } = error.response;
-      data?.message.forEach((msg) => {
+      if (error.response) {
+        const { data } = error?.response;
+        data?.message.forEach((msg) => {
+          addNotification({
+            title: data.error,
+            message: msg,
+            type: "error",
+          });
+        });
+      } else {
         addNotification({
-          title: data.error,
-          message: msg,
+          title: "Error",
+          message:
+            "An error occured while processing request, please kind your transaction amount or contact admin",
           type: "error",
         });
-      });
+      }
     }
   }, [isError, addNotification, error]);
 
@@ -79,13 +76,9 @@ const ExchangeDetails = () => {
         title: "Successful",
         type: "success",
       });
-
-      setTransactionDetails(data);
       setIsOverlay(true);
     }
   }, [data, addNotification]);
-
-  // console.log(state);
 
   if (state === null || user === null) return;
 
@@ -139,7 +132,6 @@ const ExchangeDetails = () => {
               alignItems: "center",
             }}
           >
-            {/* <Button onClick={handleSubmit}>Submit</Button> */}
             <ButtonSpinner onClick={handleSubmit}>
               {!isLoading && <span>Submit</span>}
               {isLoading && <CgSpinner className="spinner" size={25} />}
@@ -151,97 +143,12 @@ const ExchangeDetails = () => {
       <Container>
         <Footer />
       </Container>
-      {isOverlay && transactionDetails && (
-        <OverLayer>
-          <CardContainer>
-            <Card type="maxWidth">
-              <H1
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  fontWeight: 600,
-                  fontSize: 16,
-                  width: "90%",
-                  margin: "0 auto 1.5rem",
-                }}
-              >
-                Transaction ID: {transactionDetails.transactionId}{" "}
-                <RxCross2
-                  style={{ cursor: "pointer" }}
-                  onClick={handleCloseOverlay}
-                />
-              </H1>
-              <ExchangeProgressBar status={transactionDetails.status} />
-              <p
-                style={{
-                  textAlign: "center",
-                  width: "90%",
-                  margin: "0 auto",
-                }}
-              >
-                You can contact us directly via our email or your preferred
-                social media.
-              </p>
-              <Platform>
-                <ViaEmail>
-                  <Input
-                    style={{
-                      fontSize: 17,
-                      backgroundColor: "#0052CC",
-                      color: colors.white,
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      height: 50,
-                      borderRadius: 15,
-                      width: "100%",
-                    }}
-                    disabled
-                    value={socialMediaContants.email}
-                  />
-                  <div
-                    style={{
-                      height: 50,
-                      borderRadius: 15,
-                      backgroundColor: "#F1F2F5",
-                      border: "1px solid #E0E1E5",
-                      fontSize: 15,
-                      padding: "2px 10px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: 65,
-                    }}
-                  >
-                    <MdContentCopy
-                      size={20}
-                      style={{ cursor: "pointer" }}
-                      onClick={() => handleCopy(socialMediaContants.email)}
-                    />
-                  </div>
-                </ViaEmail>
-                <SocialMediaContainer>
-                  <SocialMedia
-                    color="#25D366"
-                    number={socialMediaContants.whatsapp_number}
-                    name="whatsapp"
-                    handleCopy={handleCopy}
-                  >
-                    <ImWhatsapp size={55} color={colors.white} />
-                  </SocialMedia>
-                  <SocialMedia
-                    color="#0088cc"
-                    number={socialMediaContants.telegram_number}
-                    name="telegram"
-                    handleCopy={handleCopy}
-                  >
-                    <FaTelegramPlane size={55} color={colors.white} />
-                  </SocialMedia>
-                </SocialMediaContainer>
-              </Platform>
-            </Card>
-          </CardContainer>
-        </OverLayer>
+      {isOverlay && data !== undefined && !isError && (
+        <ExchangeOverview
+          transactionId={data.id}
+          handleCloseOverlay={handleCloseOverlay}
+          socialMediaContants={socialMediaContants}
+        />
       )}
     </Main>
   );
@@ -381,97 +288,5 @@ const ButtonSpinner = styled("button", {
     backgroundColor: blueA.blueA10,
   },
 });
-
-const OverLayer = styled("div", {
-  position: "fixed",
-  height: "100%",
-  width: "100%",
-  top: 0,
-  left: 0,
-  backgroundColor: blackA.blackA7,
-  zIndex: 2,
-  overflow: "hidden",
-});
-
-const CardContainer = styled("div", {
-  width: 500,
-  margin: "0 auto",
-  position: "absolute",
-  top: "40%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  "@bp1024": {
-    width: "100%",
-    maxWidth: "80%",
-  },
-  "@bp768": {
-    maxWidth: "90%",
-  },
-  "@bp640": {
-    maxWidth: "98%",
-  },
-});
-
-const Platform = styled("div", {
-  marginTop: 20,
-});
-
-const ViaEmail = styled("div", {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: 10,
-});
-
-const SocialMediaContainer = styled("div", {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: 10,
-  marginTop: 20,
-});
-
-const SocialMedia = ({ color, number, name, children, handleCopy }) => {
-  return (
-    <div
-      style={{
-        backgroundColor: color,
-        borderRadius: 30,
-        width: "50%",
-        padding: 15,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        color: colors.white,
-      }}
-    >
-      {children}
-      <p
-        style={{
-          marginTop: 20,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: 10,
-          gap: 15,
-          backgroundColor: "rgba(255, 255, 255, 0.2)",
-          borderRadius: 10,
-        }}
-      >
-        <input
-          value={number}
-          name={name}
-          style={{ backgroundColor: "transparent", width: "100%" }}
-          disabled
-        />
-        <MdContentCopy
-          style={{ cursor: "pointer" }}
-          size={25}
-          onClick={() => handleCopy(number)}
-        />
-      </p>
-    </div>
-  );
-};
 
 export default ExchangeDetails;

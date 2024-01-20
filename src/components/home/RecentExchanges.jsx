@@ -21,14 +21,18 @@ const RecentExchanges = () => {
           return {
             fromCurrency: {
               id: resFromCurrency.id,
-              logo: resFromCurrency.logo,
+              logo: resFromCurrency.logo.startsWith("http")
+                ? resFromCurrency.logo
+                : null,
               label: resFromCurrency.name,
               rate: parseFloat(resFromCurrency.rate),
               wallet: resFromCurrency.wallet,
             },
             toCurrency: {
               id: resToCurrency.id,
-              logo: resToCurrency.logo,
+              logo: resToCurrency.logo.startsWith("http")
+                ? resToCurrency.logo
+                : null,
               label: resToCurrency.name,
               rate: parseFloat(resToCurrency.rate),
               wallet: resToCurrency.wallet,

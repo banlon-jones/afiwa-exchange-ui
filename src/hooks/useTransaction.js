@@ -14,7 +14,8 @@ export const useGetTransactionById = (id) =>
   useQuery({
     queryKey: ["transaction", id],
     queryFn: () => privateApiClient.get(`/${id}`),
-    staleTime: 120000,
+    staleTime: 30000,
+    refetchIntervalInBackground: true,
   });
 
 export const useGetTransactions = () =>

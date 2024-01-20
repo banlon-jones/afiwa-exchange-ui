@@ -16,7 +16,6 @@ const ExchangeFrom = () => {
   const location = useLocation();
   const { data, isError } = useGetCurrency();
   const [options, setOptions] = useState([]);
-  // const addNotification = toastStore((state) => state.add);
   const isLogin = appStore((state) => state.isLogin);
 
   const [state, setState] = useState({
@@ -41,7 +40,6 @@ const ExchangeFrom = () => {
   const handleChange = (event) => {
     const value = numericInputValidator(event);
 
-    if (value === undefined) return;
     setState((prevState) => ({
       ...prevState,
       [event.target.name]: value,
@@ -50,8 +48,8 @@ const ExchangeFrom = () => {
 
   const numericInputValidator = (event) => {
     if (event.target.name === "fromAmount") {
-      const reg = new RegExp("^[-+]?[0-9]*\\.?[0-9]*$");
-      if (reg.test(event.target.value)) return parseFloat(event.target.value);
+      const reg = new RegExp("^[-+]?[0-9]*.?[0-9]*$");
+      if (reg.test(event.target.value)) return event.target.value;
     } else return event.target.value;
   };
 
@@ -86,9 +84,6 @@ const ExchangeFrom = () => {
       Object.keys(state.fromCurrency).length > 0 &&
       Object.keys(state.toCurrency).length > 0
     ) {
-      // const rate =
-      //   parseFloat(state.fromCurrency["rate"]) /
-      //   parseFloat(state.toCurrency["rate"]);
       const [rate, amount] = calculateExchangeAmount(
         state.fromCurrency.rate,
         state.toCurrency.rate,
@@ -131,7 +126,6 @@ const ExchangeFrom = () => {
             required
             styles={colourStyles}
             isSearchable
-            isClearable
             options={options}
             name="fromCurrency"
             onChange={handleSelectChange}
@@ -154,7 +148,7 @@ const ExchangeFrom = () => {
           <Input
             value={state.fromAmount}
             name="fromAmount"
-            type="text"
+            type="number"
             onChange={handleChange}
             inputMode="numeric"
             pattern="[0-9]+"
@@ -164,17 +158,11 @@ const ExchangeFrom = () => {
             <p style={{ color: "#757575", padding: 3 }}>
               1 <span>{baseExchangeRate["name"]}</span> ={" "}
               <span>
-                {
-                  // (
-                  //   parseFloat() /
-                  //   parseFloat()
-                  // ).toPrecision(4)
-                  calculateExchangeAmount(
-                    baseExchangeRate["rate"],
-                    state.fromCurrency["rate"],
-                    1
-                  )[0].toPrecision(4)
-                }{" "}
+                {calculateExchangeAmount(
+                  baseExchangeRate["rate"],
+                  state.fromCurrency["rate"],
+                  1
+                )[0].toPrecision(4)}{" "}
                 {state.fromCurrency["label"]}
               </span>
             </p>
@@ -191,7 +179,6 @@ const ExchangeFrom = () => {
             required
             styles={colourStyles}
             isSearchable
-            isClearable
             options={options}
             name="toCurrency"
             onChange={handleSelectChange}
@@ -212,28 +199,21 @@ const ExchangeFrom = () => {
           <Input
             value={!isNaN(state.toAmount) ? state.toAmount : 0}
             name="toAmount"
-            type="text"
+            type="number"
             inputMode="numeric"
             pattern="[0-9]+"
             disabled
             required
-            // onChange={handleChange}
           />
           {Object.keys(state.toCurrency).length > 0 && (
             <p style={{ color: "#757575", padding: 3 }}>
               1 <span>{baseExchangeRate["name"]}</span> ={" "}
               <span>
-                {
-                  // (
-                  //   parseFloat(baseExchangeRate["rate"]) /
-                  //   parseFloat(state.toCurrency["rate"])
-                  // ).toPrecision(4)
-                  calculateExchangeAmount(
-                    baseExchangeRate["rate"],
-                    state.fromCurrency["rate"],
-                    1
-                  )[0].toPrecision(4)
-                }{" "}
+                {calculateExchangeAmount(
+                  baseExchangeRate["rate"],
+                  state.fromCurrency["rate"],
+                  1
+                )[0].toPrecision(4)}{" "}
                 {state.toCurrency["label"]}
               </span>
             </p>
