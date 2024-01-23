@@ -1,14 +1,17 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { styled } from "../../common/stitches";
 
-const wrapper = ({ title, children }) => {
+const Wrapper = ({ title, children, url }) => {
   return (
-    <Wrapper>
+    <WrapperContainer>
       <H1>{title}</H1>
       <Container>
         {children}
         <div>
-          <p
+          <Link
+            to={url}
             style={{
               padding: 0,
               color: "blue",
@@ -17,14 +20,14 @@ const wrapper = ({ title, children }) => {
             }}
           >
             view more
-          </p>
+          </Link>
         </div>
       </Container>
-    </Wrapper>
+    </WrapperContainer>
   );
 };
 
-const Wrapper = styled("div", {
+const WrapperContainer = styled("div", {
   marginTop: "5rem",
   "@bp1024": {
     marginTop: 70,
@@ -45,4 +48,4 @@ const Container = styled("div", {
   gap: 20,
 });
 
-export default wrapper;
+export default Wrapper;

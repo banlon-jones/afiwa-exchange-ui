@@ -2,13 +2,13 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 
-import { Rate } from "./Rate";
-import { useGetCurrency } from "../../../../hooks/useCurrency";
-import PanelContainer from "../../PanelContainer";
-import AdminTable from "../../../table/AdminTable";
-import { styled } from "../../../../common/stitches";
+import { useGetCurrency } from "../../hooks/useCurrency";
+import PanelContainer from "../../components/dashboard/PanelContainer";
+import AdminTable from "../../components/table/AdminTable";
+import Rate from "../../components/dashboard/settings/rates/Rate";
+import { styled } from "../../common/stitches";
 
-const RatesSettings = () => {
+const Rates = () => {
   const { data, isError } = useGetCurrency();
   const [newRate, setNewRate] = useState();
 
@@ -55,4 +55,4 @@ const Container = styled("div", {
   margin: "2rem 1rem",
 });
 
-export default RatesSettings;
+export default Rates;

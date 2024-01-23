@@ -1,23 +1,44 @@
 import React, { useEffect, useState } from "react";
+import { QueryClient } from "@tanstack/react-query";
 
 import { styled } from "../../common/stitches";
 import ExchangeCard from "../exchange/ExchangeCard";
 import appStore from "../../store/appStore";
 import { publicApiClient } from "../../hooks/useCurrency";
 import { uuid } from "../../common/utils";
+import { Spinner } from "../spinner/Spinner";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 const RecentExchanges = () => {
   const user = appStore((state) => state.user);
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(true);
 
   const data = user?.transactions ? user.transactions : [];
 
   useEffect(() => {
-    const fetchDetails = () => {
+    const fetchDetails = async () => {
       try {
-        const _object = data.map(async (txn) => {
-          const resFromCurrency = await publicApiClient.get(`/${txn.from}`);
-          const resToCurrency = await publicApiClient.get(`/${txn.to}`);
+        const currencies = await queryClient.fetchQuery({
+          queryKey: ["currency"],
+          queryFn: () => publicApiClient.get(),
+        });
+
+        const _object = data.map((txn) => {
+          const resFromCurrency = Object.entries(currencies).filter(
+            (currency) => currency[1].id === txn.from
+          )[0][1];
+          const resToCurrency = Object.entries(currencies).filter(
+            (currency) => currency[1].id === txn.to
+          )[0][1];
+
           return {
             fromCurrency: {
               id: resFromCurrency.id,
@@ -41,15 +62,17 @@ const RecentExchanges = () => {
           };
         });
 
-        Promise.all(_object).then((res) => setTransactions(res));
+        setTransactions(_object);
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchDetails();
   }, []);
 
-  if (Object.keys(transactions).length < 1) {
+  if (transactions !== undefined && Object.keys(transactions).length < 1) {
     return (
       <ExchangeWrapper id="recent-exchange">
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
@@ -67,17 +90,25 @@ const RecentExchanges = () => {
           flexDirection: "column",
           gap: 20,
           maxHeight: 338,
+          // overflow: "hidden",
           overflowY: "scroll",
         }}
       >
-        {transactions.map((value) => (
-          <ExchangeCard
-            fromCurrency={value.fromCurrency}
-            toCurrency={value.toCurrency}
-            amount={value.amount}
-            key={uuid()}
-          />
-        ))}
+        {isLoading ? (
+          <div className="h-[1100%] min-h-[40vh] flex w-full items-center justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          transactions &&
+          transactions.map((value) => (
+            <ExchangeCard
+              fromCurrency={value.fromCurrency}
+              toCurrency={value.toCurrency}
+              amount={value.amount}
+              key={uuid()}
+            />
+          ))
+        )}
       </div>
     </ExchangeWrapper>
   );

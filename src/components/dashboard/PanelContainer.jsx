@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineDashboard, MdOutlineCurrencyExchange } from "react-icons/md";
+import { SiEmirates } from "react-icons/si";
 
 import { styled } from "../../common/stitches";
 import PanelHeader from "./PanelHeader";
 import routes from "../../common/routes";
 import appStore from "../../store/appStore";
+import { Spinner } from "../spinner/Spinner";
 
-const PanelContainer = ({ children }) => {
+const PanelContainer = ({ isLoading, children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [togglePanel, setTogglePanel] = useState(false);
@@ -45,11 +47,28 @@ const PanelContainer = ({ children }) => {
                 {!togglePanel && <p>Exchanges</p>}
               </PanelLink>
             </PanelItem>
+            <PanelItem>
+              <PanelLink
+                to={routes.admin.rates}
+                active={location.pathname.endsWith(routes.admin.rates)}
+              >
+                <SiEmirates size={24} />
+                {!togglePanel && <p>Rates</p>}
+              </PanelLink>
+            </PanelItem>
           </PanelRoot>
         </PanelWrapper>
       </Container>
       <Container>
-        <Wrapper toggle={togglePanel}>{children}</Wrapper>
+        <Wrapper toggle={togglePanel}>
+          {isLoading ? (
+            <div className="h-[1100%] min-h-[40vh] flex w-full items-center justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            children
+          )}
+        </Wrapper>
       </Container>
     </>
   );
