@@ -6,16 +6,18 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { styled } from "../../common/stitches";
 import { useGetCurrency } from "../../hooks/useCurrency";
 import Box from "../box";
-// import toastStore from "../../store/toastStore";
 import appStore from "../../store/appStore";
 import routes from "../../common/routes";
 import { calculateExchangeAmount } from "../../common/utils";
+import { Spinner } from "../spinner/Spinner";
 
 const ExchangeFrom = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data, isError } = useGetCurrency();
+  const { data, isError, isLoading } = useGetCurrency();
   const [options, setOptions] = useState([]);
+  const [recipientInfoPlaceholder, setRecipientInfoPlaceholder] =
+    useState("Momo Number");
   const isLogin = appStore((state) => state.isLogin);
 
   const [state, setState] = useState({
@@ -68,6 +70,13 @@ const ExchangeFrom = () => {
         fromAmount: 1,
       }));
     }
+
+    if (actionMeta.name === "toCurrency") {
+      const name = String(newValue.label);
+      if (name.toLowerCase().search("xaf") === -1)
+        setRecipientInfoPlaceholder("Wallet Address");
+      else setRecipientInfoPlaceholder("Momo Number");
+    }
   };
 
   const handleSubmit = (event) => {
@@ -76,7 +85,10 @@ const ExchangeFrom = () => {
       return navigate(routes.login, { state });
     }
 
-    return navigate(routes.exchange_details, { state });
+    localStorage.removeItem("stuff");
+    return navigate(routes.exchange_details, {
+      state: { ...state, recipientMode: recipientInfoPlaceholder },
+    });
   };
 
   useEffect(() => {
@@ -115,135 +127,149 @@ const ExchangeFrom = () => {
     }
   }, [data, location.state]);
 
+  useEffect(() => {}, [recipientInfoPlaceholder]);
+
   if (isError) return;
 
   return (
-    <From onSubmit={handleSubmit}>
-      <div style={{ gridArea: "send", width: "100%" }}>
-        <Label htmlFor="react-select-2-input">Send</Label>
-        <div>
-          <Select
-            required
-            styles={colourStyles}
-            isSearchable
-            options={options}
-            name="fromCurrency"
-            onChange={handleSelectChange}
-            defaultValue={
-              Object.keys(state.fromCurrency).length > 0
-                ? state.fromCurrency
-                : ""
-            }
-            formatOptionLabel={(coin) => (
-              <OptionLabel className="coin-option">
-                {coin["logo"] ? (
-                  <OptionLabelLogo src={coin.logo} alt="coin" />
-                ) : (
-                  <Box style={{ width: 30, backgroundColor: "dodgerblue" }} />
-                )}
-                <span>{coin.label}</span>
-              </OptionLabel>
-            )}
-          />
-          <Input
-            value={state.fromAmount}
-            name="fromAmount"
-            type="number"
-            onChange={handleChange}
-            inputMode="numeric"
-            pattern="[0-9]+"
-            required
-          />
-          {Object.keys(state.fromCurrency).length > 0 && (
-            <p style={{ color: "#757575", padding: 3 }}>
-              1 <span>{baseExchangeRate["name"]}</span> ={" "}
-              <span>
-                {calculateExchangeAmount(
-                  baseExchangeRate["rate"],
-                  state.fromCurrency["rate"],
-                  1
-                )[0].toPrecision(4)}{" "}
-                {state.fromCurrency["label"]}
-              </span>
-            </p>
-          )}
+    <From onSubmit={handleSubmit} justifyContentCenter={isLoading}>
+      {isLoading ? (
+        <div className="h-[1100%] min-h-[40vh] flex w-full items-center justify-center">
+          <Spinner />
         </div>
-      </div>
-      <div style={{ gridArea: "icon", justifySelf: "center" }}>
-        <FaExchangeAlt color="green" />
-      </div>
-      <div style={{ gridArea: "receive", width: "100%" }}>
-        <Label htmlFor="react-select-3-input">Receive</Label>
-        <div>
-          <Select
-            required
-            styles={colourStyles}
-            isSearchable
-            options={options}
-            name="toCurrency"
-            onChange={handleSelectChange}
-            defaultValue={
-              Object.keys(state.toCurrency).length > 0 ? state.toCurrency : ""
-            }
-            formatOptionLabel={(coin) => (
-              <OptionLabel className="coin-option">
-                {coin["logo"] ? (
-                  <OptionLabelLogo src={coin.logo} alt="coin" />
-                ) : (
-                  <Box style={{ width: 30, backgroundColor: "dodgerblue" }} />
+      ) : (
+        <>
+          <div style={{ gridArea: "send", width: "100%" }}>
+            <Label htmlFor="react-select-2-input">Send</Label>
+            <div>
+              <Select
+                required
+                styles={colourStyles}
+                isSearchable
+                options={options}
+                name="fromCurrency"
+                onChange={handleSelectChange}
+                defaultValue={
+                  Object.keys(state.fromCurrency).length > 0
+                    ? state.fromCurrency
+                    : ""
+                }
+                formatOptionLabel={(coin) => (
+                  <OptionLabel className="coin-option">
+                    {coin["logo"] ? (
+                      <OptionLabelLogo src={coin.logo} alt="coin" />
+                    ) : (
+                      <Box
+                        style={{ width: 30, backgroundColor: "dodgerblue" }}
+                      />
+                    )}
+                    <span>{coin.label}</span>
+                  </OptionLabel>
                 )}
-                <span>{coin.label}</span>
-              </OptionLabel>
-            )}
-          />
-          <Input
-            value={!isNaN(state.toAmount) ? state.toAmount : 0}
-            name="toAmount"
-            type="number"
-            inputMode="numeric"
-            pattern="[0-9]+"
-            disabled
-            required
-          />
-          {Object.keys(state.toCurrency).length > 0 && (
-            <p style={{ color: "#757575", padding: 3 }}>
-              1 <span>{baseExchangeRate["name"]}</span> ={" "}
-              <span>
-                {calculateExchangeAmount(
-                  baseExchangeRate["rate"],
-                  state.fromCurrency["rate"],
-                  1
-                )[0].toPrecision(4)}{" "}
-                {state.toCurrency["label"]}
-              </span>
-            </p>
-          )}
-        </div>
-      </div>
-      <div style={{ gridArea: "recipient" }}>
-        <Label htmlFor="recipientName">Recipient</Label>
-        <InputFlexWrapper>
-          <Input2
-            name="recipientName"
-            type="text"
-            placeholder="Recipient Name"
-            onChange={handleChange}
-            value={state.recipientName}
-            required
-          />
-          <Input2
-            value={state.recipientWallet}
-            name="recipientWallet"
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]+"
-            placeholder="Recipient Number"
-            onChange={handleChange}
-            required
-          />
-        </InputFlexWrapper>
-        <Submit type="submit">Exchange</Submit>
-      </div>
+              />
+              <Input
+                value={state.fromAmount}
+                name="fromAmount"
+                type="number"
+                onChange={handleChange}
+                inputMode="numeric"
+                pattern="[0-9]+"
+                required
+              />
+              {Object.keys(state.fromCurrency).length > 0 && (
+                <p style={{ color: "#757575", padding: 3 }}>
+                  1 <span>{baseExchangeRate["name"]}</span> ={" "}
+                  <span>
+                    {calculateExchangeAmount(
+                      baseExchangeRate["rate"],
+                      state.fromCurrency["rate"],
+                      1
+                    )[0].toPrecision(4)}{" "}
+                    {state.fromCurrency["label"]}
+                  </span>
+                </p>
+              )}
+            </div>
+          </div>
+          <div style={{ gridArea: "icon", justifySelf: "center" }}>
+            <FaExchangeAlt color="green" />
+          </div>
+          <div style={{ gridArea: "receive", width: "100%" }}>
+            <Label htmlFor="react-select-3-input">Receive</Label>
+            <div>
+              <Select
+                required
+                styles={colourStyles}
+                isSearchable
+                options={options}
+                name="toCurrency"
+                onChange={handleSelectChange}
+                defaultValue={
+                  Object.keys(state.toCurrency).length > 0
+                    ? state.toCurrency
+                    : ""
+                }
+                formatOptionLabel={(coin) => (
+                  <OptionLabel className="coin-option">
+                    {coin["logo"] ? (
+                      <OptionLabelLogo src={coin.logo} alt="coin" />
+                    ) : (
+                      <Box
+                        style={{ width: 30, backgroundColor: "dodgerblue" }}
+                      />
+                    )}
+                    <span>{coin.label}</span>
+                  </OptionLabel>
+                )}
+              />
+              <Input
+                value={!isNaN(state.toAmount) ? state.toAmount : 0}
+                name="toAmount"
+                type="number"
+                inputMode="numeric"
+                pattern="[0-9]+"
+                disabled
+                required
+              />
+              {Object.keys(state.toCurrency).length > 0 && (
+                <p style={{ color: "#757575", padding: 3 }}>
+                  1 <span>{baseExchangeRate["name"]}</span> ={" "}
+                  <span>
+                    {calculateExchangeAmount(
+                      baseExchangeRate["rate"],
+                      state.fromCurrency["rate"],
+                      1
+                    )[0].toPrecision(4)}{" "}
+                    {state.toCurrency["label"]}
+                  </span>
+                </p>
+              )}
+            </div>
+          </div>
+          <div style={{ gridArea: "recipient" }}>
+            <Label htmlFor="recipientName">Recipient</Label>
+            <InputFlexWrapper>
+              <Input2
+                name="recipientName"
+                type="text"
+                placeholder="Recipient Name"
+                onChange={handleChange}
+                value={state.recipientName}
+                required
+              />
+              <Input2
+                value={state.recipientWallet}
+                name="recipientWallet"
+                type="text"
+                placeholder={`Recipient ${recipientInfoPlaceholder}`}
+                onChange={handleChange}
+                required
+              />
+            </InputFlexWrapper>
+            <Submit type="submit">Exchange</Submit>
+          </div>
+        </>
+      )}
     </From>
   );
 };
@@ -271,6 +297,13 @@ const From = styled("form", {
     'icon icon icon'
     'receive receive receive'
     'recipient recipient recipient'`,
+  },
+  variants: {
+    justifyContentCenter: {
+      true: {
+        justifyContent: "center",
+      },
+    },
   },
 });
 

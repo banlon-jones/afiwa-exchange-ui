@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useLocation, useBeforeUnload } from "react-router-dom";
 import { CgSpinner } from "react-icons/cg";
 
 import { styled } from "../common/stitches";
@@ -22,25 +22,42 @@ const ExchangeDetails = () => {
   const [isOverlay, setIsOverlay] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location.state;
-
-  const socialMediaContants = {
-    email: "afiwa@gmail.com",
-    whatsapp_number: "+7 5666343234",
-    telegram_number: "+7 5666343234",
-  };
+  const [state, setState] = useState({
+    ...location.state,
+    email: user.email,
+  });
+  useBeforeUnload(
+    useCallback(() => {
+      localStorage.stuff = JSON.stringify({
+        ...data,
+        ...state,
+        isOverlay: isOverlay,
+      });
+    }, [data, state, isOverlay])
+  );
 
   const handleCloseOverlay = () => {
     setIsOverlay(false);
+    localStorage.removeItem("stuff");
     navigate(routes.recent_exchange);
   };
 
-  const handleSubmit = () => {
+  const handleChange = (event) => {
+    setState((prevState) => ({
+      ...prevState,
+      [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    localStorage.removeItem("stuff");
+    event.preventDefault();
+
     const payload = {
       from: state.fromCurrency.id,
       to: state.toCurrency.id,
       amount: state.fromAmount,
-      email: user.email,
+      email: state.email,
       walletAddress: state.recipientWallet,
       walletName: state.recipientName,
     };
@@ -71,14 +88,22 @@ const ExchangeDetails = () => {
   }, [isError, addNotification, error]);
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data !== undefined && !isError) {
       addNotification({
         title: "Successful",
         type: "success",
       });
       setIsOverlay(true);
     }
-  }, [data, addNotification]);
+  }, [data, isError, addNotification]);
+
+  useEffect(() => {
+    if (localStorage.stuff != null) {
+      const { isOverlay, ...rest } = JSON.parse(localStorage.stuff);
+      setState(rest);
+      setIsOverlay(isOverlay);
+    }
+  }, [isOverlay]);
 
   if (state === null || user === null) return;
 
@@ -113,41 +138,63 @@ const ExchangeDetails = () => {
               Pending
             </span>
           </FlexContainer>
-          <FlexContainer title="Your Email">
-            <Input disabled value={user.email} />
-          </FlexContainer>
-          <Card type="initial">
-            <H1>Recipient</H1>
-            <FlexContainer title="Name">
-              <Input disabled value={state.recipientName} />
+          <Form onSubmit={handleSubmit}>
+            <FlexContainer title="Your Email">
+              <Input
+                value={state.email}
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                required
+                onChange={handleChange}
+              />
             </FlexContainer>
-            <FlexContainer title="Recipient Wallet">
-              <Input disabled value={state.recipientWallet} />
+            <Card type="initial">
+              <H1>Recipient</H1>
+              <FlexContainer title="Recipient Name">
+                <Input
+                  name="recipientName"
+                  type="text"
+                  placeholder="Enter Recipient Name"
+                  onChange={handleChange}
+                  value={state.recipientName}
+                  required
+                />
+              </FlexContainer>
+              <FlexContainer title={`Recipient ${state.recipientMode}`}>
+                <Input
+                  value={state.recipientWallet}
+                  name="recipientWallet"
+                  type="text"
+                  placeholder={`Recipient ${state.recipientMode}`}
+                  onChange={handleChange}
+                  required
+                />
+              </FlexContainer>
+            </Card>
+            <FlexContainer
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <ButtonSpinner type="submit">
+                {!isLoading && <span>Submit</span>}
+                {isLoading && <CgSpinner className="spinner" size={25} />}
+              </ButtonSpinner>
+              <Button onClick={() => navigate(routes.home)}>Cancel</Button>
             </FlexContainer>
-          </Card>
-          <FlexContainer
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <ButtonSpinner onClick={handleSubmit}>
-              {!isLoading && <span>Submit</span>}
-              {isLoading && <CgSpinner className="spinner" size={25} />}
-            </ButtonSpinner>
-            <Button onClick={() => navigate(routes.home)}>Cancel</Button>
-          </FlexContainer>
+          </Form>
         </Card>
       </Container>
       <Container>
         <Footer />
       </Container>
-      {isOverlay && data !== undefined && !isError && (
+      {isOverlay && (
         <ExchangeOverview
-          transactionId={data.id}
+          transactionId={data !== undefined ? data.id : state.id}
           handleCloseOverlay={handleCloseOverlay}
-          socialMediaContants={socialMediaContants}
         />
       )}
     </Main>
@@ -215,6 +262,8 @@ const H1 = styled("h1", {
     },
   },
 });
+
+const Form = styled("form", {});
 
 const Input = styled("input", {
   width: 300,

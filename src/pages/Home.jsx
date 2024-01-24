@@ -11,6 +11,7 @@ import Reviews from "../components/home/Reviews";
 import OurReserve from "../components/home/OurReserve";
 
 import Wrapper from "../components/home/Wrapper";
+import routes from "../common/routes";
 
 export default function Index() {
   const { pathname, hash, key } = useLocation();
@@ -39,13 +40,13 @@ export default function Index() {
       </Container>
       <Container width="dynamic" add="headerMargin">
         <Exchange />
-        <Wrapper title="Recent Exchanges">
+        <Wrapper title="Recent Exchanges" url={routes.recent_exchange}>
           <RecentExchanges />
         </Wrapper>
-        <Wrapper title="Reviews">
+        <Wrapper title="Reviews" url={routes.reviews}>
           <Reviews />
         </Wrapper>
-        <Wrapper title="Our Reserve">
+        <Wrapper title="Our Reserve" url={routes.reviews}>
           <OurReserve />
         </Wrapper>
       </Container>

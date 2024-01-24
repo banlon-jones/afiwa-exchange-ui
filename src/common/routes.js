@@ -17,8 +17,9 @@ export default {
   reset_password: "/reset-password",
   profile: "/profile",
   admin: {
-    dashboard: "/admin/dashboard",
+    dashboard: "/admin",
     exchange: "/admin/exchange",
+    rates: "/admin/rates",
     reviews: "/admin/reviews",
     referrals: "/admin/referrals",
     profile: "/admin/profile",

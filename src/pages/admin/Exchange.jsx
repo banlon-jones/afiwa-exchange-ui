@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 import { greenA, redA } from "@radix-ui/colors";
+import moment from "moment";
+import { QueryClient } from "@tanstack/react-query";
 
 import PanelContainer from "../../components/dashboard/PanelContainer";
 import { styled } from "../../common/stitches";
@@ -11,13 +13,21 @@ import { privateApiClient as transactionAPI } from "../../hooks/useTransaction";
 import colors from "../../common/colors";
 import { calculateExchangeAmount } from "../../common/utils";
 import toastStore from "../../store/toastStore";
-import { FaUnderline } from "react-icons/fa";
+import AdminTable from "../../components/table/AdminTable";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+});
 
 const Exchange = () => {
-  const { data, isError, refetch } = useGetTransactions();
+  const { data, isError, refetch, error } = useGetTransactions();
   const [isLoading, setIsLoading] = useState(false);
   const addNotification = toastStore((state) => state.add);
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState(undefined);
   const [filterType, setFilterType] = useState("all");
 
   const handleUpdate = (updateType, tnxId) => {
@@ -65,11 +75,21 @@ const Exchange = () => {
   };
 
   useEffect(() => {
-    const fetchDetails = () => {
+    const fetchDetails = async () => {
       try {
-        const _object = data.map(async (txn) => {
-          const resFromCurrency = await currencyAPI.get(`/${txn.from}`);
-          const resToCurrency = await currencyAPI.get(`/${txn.to}`);
+        const currencies = await queryClient.fetchQuery({
+          queryKey: ["currency"],
+          queryFn: () => currencyAPI.get(),
+        });
+
+        const _object = data.map((txn) => {
+          const resFromCurrency = Object.entries(currencies).filter(
+            (currency) => currency[1].id === txn.from
+          )[0][1];
+          const resToCurrency = Object.entries(currencies).filter(
+            (currency) => currency[1].id === txn.to
+          )[0][1];
+
           return {
             fromCurrency: {
               id: resFromCurrency.id,
@@ -89,12 +109,10 @@ const Exchange = () => {
           };
         });
 
-        Promise.all(_object).then((res) =>
-          setTransactions({
-            allTransactions: res,
-            transactions: res,
-          })
-        );
+        setTransactions({
+          allTransactions: _object,
+          transactions: _object,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -103,148 +121,166 @@ const Exchange = () => {
     if (data !== undefined && Object.keys(data).length > 0) fetchDetails();
   }, [data]);
 
-  if (isError || transactions?.transactions === undefined) return;
+  useEffect(() => {
+    if (error !== null) {
+      addNotification({
+        title: "Error",
+        message: "Error loading data; Please contact admin",
+        type: "error",
+      });
+    }
+  }, [error, addNotification]);
+
+  if (isError) return;
 
   return (
-    <PanelContainer>
-      <Container>
-        <FilterWrapper>
-          <Filter
-            active={filterType === "all"}
-            onClick={() => handleFilter("all")}
-          >
-            All Exchanges
-          </Filter>
-          <Filter
-            active={filterType === "pending"}
-            onClick={() => handleFilter("pending")}
-          >
-            In Progress
-          </Filter>
-          <Filter
-            active={filterType === "completed"}
-            onClick={() => handleFilter("completed")}
-          >
-            Complete
-          </Filter>
-          <Filter
-            active={filterType === "canceled"}
-            onClick={() => handleFilter("canceled")}
-          >
-            Cancelled
-          </Filter>
-        </FilterWrapper>
-      </Container>
-      <Container>
-        <div style={{ overflow: "scroll" }}>
-          <Table>
-            <thead>
-              <tr>
-                <Thead>Send</Thead>
-                <Thead>Receive</Thead>
-                <Thead>Status</Thead>
-                <Thead>Details</Thead>
-                <Thead>Action</Thead>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions?.transactions.map(
-                ({ fromCurrency, toCurrency, details }, index) => (
-                  <Tdatarow key={index}>
-                    <Tdata>
-                      <OptionLabel>
-                        {fromCurrency.logo ? (
-                          <OptionLabelLogo src={fromCurrency.logo} alt="coin" />
-                        ) : (
-                          <Box
-                            style={{ width: 30, backgroundColor: "dodgerblue" }}
-                          />
-                        )}
-                        <span>{fromCurrency.label}</span>
-                      </OptionLabel>
-                    </Tdata>
-                    <Tdata>
-                      <OptionLabel>
-                        {toCurrency.logo ? (
-                          <OptionLabelLogo src={toCurrency.logo} alt="coin" />
-                        ) : (
-                          <Box
-                            style={{ width: 30, backgroundColor: "dodgerblue" }}
-                          />
-                        )}
-                        <span>{toCurrency.label}</span>
-                      </OptionLabel>
-                    </Tdata>
-                    <Tdata>
-                      <Status status={String(details.status).toLowerCase()}>
-                        {details.status}
-                      </Status>
-                    </Tdata>
-                    <Tdata>
-                      <p>
-                        <strong>Transcation ID:</strong> {details.transactionId}
-                      </p>
-                      <p>
-                        <strong>Date:</strong> {details.createdAt}
-                      </p>
-                      <p>
-                        <strong>Exchange rate:</strong>{" "}
-                        {parseFloat(details.exchangeRate).toPrecision(6)}
-                      </p>
-                      <p>
-                        <strong>Exchange:</strong> {details.amount}{" "}
-                        {fromCurrency.label} -{" "}
-                        {calculateExchangeAmount(
-                          fromCurrency.rate,
-                          toCurrency.rate,
-                          details.amount
-                        )[1].toPrecision(6)}{" "}
-                        {toCurrency.label}
-                      </p>
-                      <p>
-                        <strong>Email Address:</strong> {details.email}
-                      </p>
-                      <p>
-                        <strong>Our {fromCurrency.label} Address:</strong>{" "}
-                        {details.from}
-                      </p>
-                    </Tdata>
-                    <Tdata>
-                      <Flex>
-                        {String(details.status).toLowerCase() === "pending" ? (
-                          <>
-                            <ButtonSpinner
-                              onClick={() =>
-                                handleUpdate("completed", details.id)
-                              }
-                            >
-                              {!isLoading && <span>Approve</span>}
-                              {isLoading && (
-                                <CgSpinner className="spinner" size={25} />
-                              )}
-                            </ButtonSpinner>
-                            <ButtonSpinner
-                              type="danger"
-                              onClick={() => handleUpdate("cancel", details.id)}
-                            >
-                              {!isLoading && <span>Cancel</span>}
-                              {isLoading && (
-                                <CgSpinner className="spinner" size={25} />
-                              )}
-                            </ButtonSpinner>
-                          </>
-                        ) : (
-                          <p>Transaction Complete</p>
-                        )}
-                      </Flex>
-                    </Tdata>
-                  </Tdatarow>
-                )
-              )}
-            </tbody>
-          </Table>
-        </div>
-      </Container>
+    <PanelContainer isLoading={transactions === undefined}>
+      {transactions && (
+        <>
+          <Container>
+            <FilterWrapper>
+              <Filter
+                active={filterType === "all"}
+                onClick={() => handleFilter("all")}
+              >
+                All Exchanges
+              </Filter>
+              <Filter
+                active={filterType === "pending"}
+                onClick={() => handleFilter("pending")}
+              >
+                In Progress
+              </Filter>
+              <Filter
+                active={filterType === "completed"}
+                onClick={() => handleFilter("completed")}
+              >
+                Complete
+              </Filter>
+              <Filter
+                active={filterType === "canceled"}
+                onClick={() => handleFilter("canceled")}
+              >
+                Cancelled
+              </Filter>
+            </FilterWrapper>
+          </Container>
+          <Container>
+            <AdminTable
+              headers={["Send", "Receive", "Status", "Details", "Action"]}
+            >
+              {transactions &&
+                transactions?.transactions.map(
+                  ({ fromCurrency, toCurrency, details }, index) => (
+                    <Tdatarow key={index}>
+                      <Tdata>
+                        <OptionLabel>
+                          {fromCurrency.logo ? (
+                            <OptionLabelLogo
+                              src={fromCurrency.logo}
+                              alt="coin"
+                            />
+                          ) : (
+                            <Box
+                              style={{
+                                width: 30,
+                                backgroundColor: "dodgerblue",
+                              }}
+                            />
+                          )}
+                          <span>{fromCurrency.label}</span>
+                        </OptionLabel>
+                      </Tdata>
+                      <Tdata>
+                        <OptionLabel>
+                          {toCurrency.logo ? (
+                            <OptionLabelLogo src={toCurrency.logo} alt="coin" />
+                          ) : (
+                            <Box
+                              style={{
+                                width: 30,
+                                backgroundColor: "dodgerblue",
+                              }}
+                            />
+                          )}
+                          <span>{toCurrency.label}</span>
+                        </OptionLabel>
+                      </Tdata>
+                      <Tdata>
+                        <Status status={String(details.status).toLowerCase()}>
+                          {details.status}
+                        </Status>
+                      </Tdata>
+                      <Tdata>
+                        <p>
+                          <strong>Transcation ID:</strong>{" "}
+                          {details.transactionId}
+                        </p>
+                        <p>
+                          <strong>Date:</strong>{" "}
+                          {moment(details.createdAt).fromNow()}
+                        </p>
+                        <p>
+                          <strong>Exchange rate:</strong>{" "}
+                          {parseFloat(details.exchangeRate).toPrecision(6)}
+                        </p>
+                        <p>
+                          <strong>Exchange:</strong> {details.amount}{" "}
+                          {fromCurrency.label} -{" "}
+                          {calculateExchangeAmount(
+                            fromCurrency.rate,
+                            toCurrency.rate,
+                            details.amount
+                          )[1].toPrecision(6)}{" "}
+                          {toCurrency.label}
+                        </p>
+                        <p>
+                          <strong>Email Address:</strong> {details.email}
+                        </p>
+                        <p>
+                          <strong>Our {fromCurrency.label} Address:</strong>{" "}
+                          {details.from}
+                        </p>
+                      </Tdata>
+                      <Tdata>
+                        <Flex>
+                          {String(details.status).toLowerCase() ===
+                          "pending" ? (
+                            <>
+                              <ButtonSpinner
+                                onClick={() =>
+                                  handleUpdate("completed", details.id)
+                                }
+                              >
+                                {!isLoading && <span>Approve</span>}
+                                {isLoading && (
+                                  <CgSpinner className="spinner" size={25} />
+                                )}
+                              </ButtonSpinner>
+                              <ButtonSpinner
+                                type="danger"
+                                onClick={() =>
+                                  handleUpdate("cancel", details.id)
+                                }
+                              >
+                                {!isLoading && <span>Cancel</span>}
+                                {isLoading && (
+                                  <CgSpinner className="spinner" size={25} />
+                                )}
+                              </ButtonSpinner>
+                            </>
+                          ) : (
+                            <p>Transaction Complete</p>
+                          )}
+                        </Flex>
+                      </Tdata>
+                    </Tdatarow>
+                  )
+                )}
+            </AdminTable>
+          </Container>
+        </>
+      )}
     </PanelContainer>
   );
 };
@@ -263,7 +299,7 @@ const Filter = styled("li", {
   gap: 10,
   alignItems: "center",
   fontWeight: "bold",
-  fontSize: 16,
+  fontSize: 15,
   padding: "10px 15px",
   borderRadius: 16,
   color: "#757575",
@@ -281,23 +317,6 @@ const Filter = styled("li", {
   },
 });
 
-const Table = styled("table", {
-  width: "100%",
-  border: "1px solid rgb(209 206 206 / 70%)",
-  borderSpacing: 0,
-  borderCollapse: "separate",
-  overflow: "hidden",
-  color: "#757575",
-  overflowX: "scroll",
-  whiteSpace: "nowrap",
-});
-
-const Thead = styled("th", {
-  backgroundColor: "#EBECF0",
-  textAlign: "start",
-  padding: "12px 20px",
-});
-
 const Tdatarow = styled("tr", {
   "&:nth-child(even)": {
     backgroundColor: "#e7e7e76e",
@@ -309,7 +328,7 @@ const Tdatarow = styled("tr", {
 
 const Tdata = styled("td", {
   borderTop: "1px solid rgb(207 207 207 / 69%)",
-  fontSize: 15,
+  fontSize: 14,
   padding: "10px 20px",
 });
 

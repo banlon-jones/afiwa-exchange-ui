@@ -25,7 +25,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (parseInt(error.response.status) === 403) {
+    if (parseInt(error?.response.status) === 403) {
       appStore.getState().logout();
     }
   }
