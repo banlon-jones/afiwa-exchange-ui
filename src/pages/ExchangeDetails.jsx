@@ -39,7 +39,7 @@ const ExchangeDetails = () => {
   const handleCloseOverlay = () => {
     setIsOverlay(false);
     localStorage.removeItem("stuff");
-    navigate(routes.recent_exchange);
+    navigate(routes.home);
   };
 
   const handleChange = (event) => {

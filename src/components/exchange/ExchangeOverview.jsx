@@ -8,6 +8,8 @@ import ExchangeProgressBar from "./ExchangeProgressBar";
 import { ImWhatsapp } from "react-icons/im";
 import { FaTelegramPlane } from "react-icons/fa";
 import { useGetTransactionById } from "../../hooks/useTransaction";
+import { Link } from "react-router-dom";
+import routes from "../../common/routes";
 
 const socialMediaContants = {
   email: "afiwa@gmail.com",
@@ -57,30 +59,17 @@ const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
           </p>
           <Platform>
             <ViaEmail>
-              <button
-                style={{
-                  fontSize: 17,
-                  backgroundColor: "#0052CC",
-                  color: colors.white,
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  height: 50,
-                  borderRadius: 15,
-                  width: "100%",
-                  cursor: "pointer",
-                }}
+              <EmailButton
                 onClick={() =>
                   (window.location = `mailto:${socialMediaContants.email}`)
                 }
               >
                 Contact us via email
-              </button>
+              </EmailButton>
             </ViaEmail>
             <SocialMediaContainer>
               <SocialMediaButton
-                style={{
-                  backgroundColor: "#25D366",
-                }}
+                type={"whatsapp"}
                 onClick={() =>
                   openInNewTab(
                     `https://api.whatsapp.com/send?phone=${socialMediaContants.whatsapp_number}&text=transactionId: ${data.transactionId}`
@@ -90,9 +79,7 @@ const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
                 <ImWhatsapp size={55} color={colors.white} />
               </SocialMediaButton>
               <SocialMediaButton
-                style={{
-                  backgroundColor: "#0088cc",
-                }}
+                type={"telegram"}
                 onClick={() =>
                   openInNewTab(
                     `https://t.me/${socialMediaContants.telegram_number}&text=transactionId: ${data.transactionId}`
@@ -103,6 +90,21 @@ const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
               </SocialMediaButton>
             </SocialMediaContainer>
           </Platform>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignItems: "center",
+              marginTop: 20,
+              gap: 20,
+            }}
+          >
+            <CustomLink to={routes.home}>Start a new transaction</CustomLink>
+            <CustomLink to={routes.recent_exchange}>
+              view transactions
+            </CustomLink>
+          </div>
         </Card>
       </CardContainer>
     </OverLayer>
@@ -181,6 +183,21 @@ const ViaEmail = styled("div", {
   gap: 10,
 });
 
+const EmailButton = styled("button", {
+  fontSize: 17,
+  backgroundColor: "#0d69f3",
+  color: colors.white,
+  fontWeight: "bold",
+  textAlign: "center",
+  height: 50,
+  borderRadius: 15,
+  width: "100%",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: "#0052CC",
+  },
+});
+
 const SocialMediaContainer = styled("div", {
   display: "flex",
   justifyContent: "space-between",
@@ -199,6 +216,38 @@ const SocialMediaButton = styled("button", {
   alignItems: "center",
   color: colors.white,
   cursor: "pointer",
+  variants: {
+    type: {
+      whatsapp: {
+        backgroundColor: "#25D366",
+        "&:hover": {
+          backgroundColor: "#0ead4a",
+        },
+      },
+      telegram: {
+        backgroundColor: "#0088cc",
+        "&:hover": {
+          backgroundColor: "#076695",
+        },
+      },
+    },
+  },
+});
+
+const CustomLink = styled(Link, {
+  padding: "10px 20px",
+  fontSize: 14,
+  backgroundColor: "DodgerBlue",
+  borderRadius: 10,
+  color: "White",
+  textTransform: "capitalize",
+  fontWeight: "bold",
+  width: "50%",
+  textAlign: "center",
+  "&:hover": {
+    textDecoration: "underline",
+    backgroundColor: "#024f99",
+  },
 });
 
 export default ExchangeOverview;
