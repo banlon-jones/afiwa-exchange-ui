@@ -27,10 +27,20 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 
 export default function App() {
   const notifications = toastStore((state) => state.notifications);
-  const isLogin = appStore((state) => state.isLogin);
+  const { isLogin, user } = appStore((state) => ({
+    isLogin: state.isLogin,
+    user: state.user,
+  }));
 
   const next = (Component) =>
     isLogin ? Component : <Navigate replace to={routes.login} />;
+
+  const adminNext = (Component) =>
+    isLogin && String(user?.role).toLowerCase() === "admin" ? (
+      Component
+    ) : (
+      <Navigate replace to={routes.home} />
+    );
 
   return (
     <ToastProvider swipeDirection="right">
@@ -47,10 +57,13 @@ export default function App() {
             <Route path={routes.reset_password} element={<ResetPassword />} />
             <Route
               path={routes.admin.dashboard}
-              element={next(<Dashboard />)}
+              element={adminNext(<Dashboard />)}
             />
-            <Route path={routes.admin.exchange} element={next(<Exchange />)} />
-            <Route path={routes.admin.rates} element={next(<Rates />)} />
+            <Route
+              path={routes.admin.exchange}
+              element={adminNext(<Exchange />)}
+            />
+            <Route path={routes.admin.rates} element={adminNext(<Rates />)} />
             <Route path={routes.notFound} element={<NotFound />} />
           </Route>
         </Routes>
