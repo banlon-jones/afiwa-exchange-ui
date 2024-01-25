@@ -22,7 +22,7 @@ export const useGetTransactions = () =>
   useQuery({
     queryKey: ["transactions"],
     queryFn: () => privateApiClient.get("/all"),
-    staleTime: 120000,
+    staleTime: 60000,
   });
 
 export const useUpdateTransaction = (id) => {
