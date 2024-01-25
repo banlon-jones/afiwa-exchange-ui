@@ -3,10 +3,10 @@ import { QueryClient } from "@tanstack/react-query";
 
 import { styled } from "../../common/stitches";
 import ExchangeCard from "../exchange/ExchangeCard";
-import appStore from "../../store/appStore";
 import { publicApiClient } from "../../hooks/useCurrency";
 import { uuid } from "../../common/utils";
 import { Spinner } from "../spinner/Spinner";
+import { useGetUserTransactions } from "../../hooks/useSession";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,11 +17,9 @@ const queryClient = new QueryClient({
 });
 
 const RecentExchanges = () => {
-  const user = appStore((state) => state.user);
   const [transactions, setTransactions] = useState(undefined);
   const [isLoading, setIsLoading] = useState(true);
-
-  const data = user?.transactions ? user.transactions : [];
+  const { data, isError } = useGetUserTransactions();
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -31,7 +29,7 @@ const RecentExchanges = () => {
           queryFn: () => publicApiClient.get(),
         });
 
-        const _object = data.map((txn) => {
+        const _object = data?.transactions.map((txn) => {
           const resFromCurrency = Object.entries(currencies).filter(
             (currency) => currency[1].id === txn.from
           )[0][1];
@@ -69,10 +67,13 @@ const RecentExchanges = () => {
       }
     };
 
-    fetchDetails();
-  }, []);
+    if (data !== undefined) fetchDetails();
+  }, [data]);
 
-  if (transactions !== undefined && Object.keys(transactions).length < 1) {
+  if (
+    (transactions !== undefined && Object.keys(transactions).length < 1) ||
+    isError
+  ) {
     return (
       <ExchangeWrapper id="recent-exchange">
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>

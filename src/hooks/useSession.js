@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import APIClient from "../services/api-client";
@@ -44,4 +44,11 @@ export const useLogin = () =>
   useMutation({
     mutationFn: (data) => firebaseLogin(...data),
     mutationKey: ["user"],
+  });
+
+export const useGetUserTransactions = () =>
+  useQuery({
+    queryKey: ["user_transactions"],
+    queryFn: () => privateApiClient.get(),
+    staleTime: 60000,
   });
