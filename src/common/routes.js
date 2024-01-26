@@ -1,6 +1,6 @@
 export default {
   home: "/",
-  exchange: "/#exchange",
+  exchange: "/exchange",
   recent_exchange: "/#recent-exchange",
   exchange_details: "/exchange-details",
   rates: "/rates",

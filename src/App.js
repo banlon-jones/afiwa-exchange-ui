@@ -20,8 +20,9 @@ const Login = lazy(() => import("./pages/Login"));
 const CreateAccount = lazy(() => import("./pages/CreateAccount"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
-const Exchange = lazy(() => import("./pages/admin/Exchange"));
+const AdminExchange = lazy(() => import("./pages/admin/Exchange"));
 const Rates = lazy(() => import("./pages/admin/Rates"));
+const Exchange = lazy(() => import("./pages/Exchange"));
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -52,6 +53,7 @@ export default function App() {
               path={routes.exchange_details}
               element={next(<ExchangeDetails />)}
             />
+            <Route path={routes.exchange} element={next(<Exchange />)} />
             <Route path={routes.login} element={<Login />} />
             <Route path={routes.create_account} element={<CreateAccount />} />
             <Route path={routes.reset_password} element={<ResetPassword />} />
@@ -61,7 +63,7 @@ export default function App() {
             />
             <Route
               path={routes.admin.exchange}
-              element={adminNext(<Exchange />)}
+              element={adminNext(<AdminExchange />)}
             />
             <Route path={routes.admin.rates} element={adminNext(<Rates />)} />
             <Route path={routes.notFound} element={<NotFound />} />

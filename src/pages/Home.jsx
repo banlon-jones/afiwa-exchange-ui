@@ -40,7 +40,7 @@ export default function Index() {
       </Container>
       <Container width="dynamic" add="headerMargin">
         <Exchange />
-        <Wrapper title="Recent Exchanges" url={routes.recent_exchange}>
+        <Wrapper title="Recent Exchanges" url={routes.exchange}>
           <RecentExchanges />
         </Wrapper>
         <Wrapper title="Reviews" url={routes.reviews}>

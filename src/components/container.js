@@ -8,7 +8,7 @@ const Container = styled("div", {
     add: {
       headerMargin: {
         marginTop: "4.3rem",
-        paddingTop: 80,
+        paddingTop: 70,
         "@bp1024": {
           paddingTop: 60,
         },

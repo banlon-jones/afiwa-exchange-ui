@@ -22,3 +22,8 @@ export const calculateExchangeAmount = (fromRate, toRate, amount) => {
   const rate = parseFloat(fromRate) / parseFloat(toRate);
   return [rate, parseFloat(amount) * rate];
 };
+
+export const sortTransactionsByCreateDate = (data) =>
+  data.sort(
+    (a, b) => new Date(b.details.createdAt) - new Date(a.details.createdAt)
+  );

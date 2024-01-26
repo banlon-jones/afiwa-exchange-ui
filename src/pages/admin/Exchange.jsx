@@ -11,7 +11,10 @@ import { useGetTransactions } from "../../hooks/useTransaction";
 import { publicApiClient as currencyAPI } from "../../hooks/useCurrency";
 import { privateApiClient as transactionAPI } from "../../hooks/useTransaction";
 import colors from "../../common/colors";
-import { calculateExchangeAmount } from "../../common/utils";
+import {
+  calculateExchangeAmount,
+  sortTransactionsByCreateDate,
+} from "../../common/utils";
 import toastStore from "../../store/toastStore";
 import AdminTable from "../../components/table/AdminTable";
 
@@ -109,6 +112,7 @@ const Exchange = () => {
           };
         });
 
+        sortTransactionsByCreateDate(_object);
         setTransactions({
           allTransactions: _object,
           transactions: _object,
@@ -118,7 +122,7 @@ const Exchange = () => {
       }
     };
 
-    if (data !== undefined && Object.keys(data).length > 0) fetchDetails();
+    if (data !== undefined) fetchDetails();
   }, [data]);
 
   useEffect(() => {
@@ -167,116 +171,116 @@ const Exchange = () => {
           </Container>
           <Container>
             <AdminTable
-              headers={["Send", "Receive", "Status", "Details", "Action"]}
+              headers={[
+                "S/N",
+                "Send",
+                "Receive",
+                "Status",
+                "Details",
+                "Action",
+              ]}
             >
-              {transactions &&
-                transactions?.transactions.map(
-                  ({ fromCurrency, toCurrency, details }, index) => (
-                    <Tdatarow key={index}>
-                      <Tdata>
-                        <OptionLabel>
-                          {fromCurrency.logo ? (
-                            <OptionLabelLogo
-                              src={fromCurrency.logo}
-                              alt="coin"
-                            />
-                          ) : (
-                            <Box
-                              style={{
-                                width: 30,
-                                backgroundColor: "dodgerblue",
-                              }}
-                            />
-                          )}
-                          <span>{fromCurrency.label}</span>
-                        </OptionLabel>
-                      </Tdata>
-                      <Tdata>
-                        <OptionLabel>
-                          {toCurrency.logo ? (
-                            <OptionLabelLogo src={toCurrency.logo} alt="coin" />
-                          ) : (
-                            <Box
-                              style={{
-                                width: 30,
-                                backgroundColor: "dodgerblue",
-                              }}
-                            />
-                          )}
-                          <span>{toCurrency.label}</span>
-                        </OptionLabel>
-                      </Tdata>
-                      <Tdata>
-                        <Status status={String(details.status).toLowerCase()}>
-                          {details.status}
-                        </Status>
-                      </Tdata>
-                      <Tdata>
-                        <p>
-                          <strong>Transcation ID:</strong>{" "}
-                          {details.transactionId}
-                        </p>
-                        <p>
-                          <strong>Date:</strong>{" "}
-                          {moment(details.createdAt).fromNow()}
-                        </p>
-                        <p>
-                          <strong>Exchange rate:</strong>{" "}
-                          {parseFloat(details.exchangeRate).toPrecision(6)}
-                        </p>
-                        <p>
-                          <strong>Exchange:</strong> {details.amount}{" "}
-                          {fromCurrency.label} -{" "}
-                          {calculateExchangeAmount(
-                            fromCurrency.rate,
-                            toCurrency.rate,
-                            details.amount
-                          )[1].toPrecision(6)}{" "}
-                          {toCurrency.label}
-                        </p>
-                        <p>
-                          <strong>Email Address:</strong> {details.email}
-                        </p>
-                        <p>
-                          <strong>Our {fromCurrency.label} Address:</strong>{" "}
-                          {details.from}
-                        </p>
-                      </Tdata>
-                      <Tdata>
-                        <Flex>
-                          {String(details.status).toLowerCase() ===
-                          "pending" ? (
-                            <>
-                              <ButtonSpinner
-                                onClick={() =>
-                                  handleUpdate("completed", details.id)
-                                }
-                              >
-                                {!isLoading && <span>Approve</span>}
-                                {isLoading && (
-                                  <CgSpinner className="spinner" size={25} />
-                                )}
-                              </ButtonSpinner>
-                              <ButtonSpinner
-                                type="danger"
-                                onClick={() =>
-                                  handleUpdate("cancel", details.id)
-                                }
-                              >
-                                {!isLoading && <span>Cancel</span>}
-                                {isLoading && (
-                                  <CgSpinner className="spinner" size={25} />
-                                )}
-                              </ButtonSpinner>
-                            </>
-                          ) : (
-                            <p>Transaction Complete</p>
-                          )}
-                        </Flex>
-                      </Tdata>
-                    </Tdatarow>
-                  )
-                )}
+              {transactions?.transactions.map(
+                ({ fromCurrency, toCurrency, details }, index) => (
+                  <Tdatarow key={index}>
+                    <Tdata>{index + 1}</Tdata>
+                    <Tdata>
+                      <OptionLabel>
+                        {fromCurrency.logo ? (
+                          <OptionLabelLogo src={fromCurrency.logo} alt="coin" />
+                        ) : (
+                          <Box
+                            style={{
+                              width: 30,
+                              backgroundColor: "dodgerblue",
+                            }}
+                          />
+                        )}
+                        <span>{fromCurrency.label}</span>
+                      </OptionLabel>
+                    </Tdata>
+                    <Tdata>
+                      <OptionLabel>
+                        {toCurrency.logo ? (
+                          <OptionLabelLogo src={toCurrency.logo} alt="coin" />
+                        ) : (
+                          <Box
+                            style={{
+                              width: 30,
+                              backgroundColor: "dodgerblue",
+                            }}
+                          />
+                        )}
+                        <span>{toCurrency.label}</span>
+                      </OptionLabel>
+                    </Tdata>
+                    <Tdata>
+                      <Status status={String(details.status).toLowerCase()}>
+                        {details.status}
+                      </Status>
+                    </Tdata>
+                    <Tdata>
+                      <p>
+                        <strong>Transcation ID:</strong> {details.transactionId}
+                      </p>
+                      <p>
+                        <strong>Date:</strong>{" "}
+                        {moment(details.createdAt).fromNow()}
+                      </p>
+                      <p>
+                        <strong>Exchange rate:</strong>{" "}
+                        {parseFloat(details.exchangeRate).toPrecision(6)}
+                      </p>
+                      <p>
+                        <strong>Exchange:</strong> {details.amount}{" "}
+                        {fromCurrency.label} -{" "}
+                        {calculateExchangeAmount(
+                          fromCurrency.rate,
+                          toCurrency.rate,
+                          details.amount
+                        )[1].toPrecision(6)}{" "}
+                        {toCurrency.label}
+                      </p>
+                      <p>
+                        <strong>Email Address:</strong> {details.email}
+                      </p>
+                      <p>
+                        <strong>Our {fromCurrency.label} Account:</strong>{" "}
+                        {details.from}
+                      </p>
+                    </Tdata>
+                    <Tdata>
+                      <Flex>
+                        {String(details.status).toLowerCase() === "pending" ? (
+                          <>
+                            <ButtonSpinner
+                              onClick={() =>
+                                handleUpdate("completed", details.id)
+                              }
+                            >
+                              {!isLoading && <span>Approve</span>}
+                              {isLoading && (
+                                <CgSpinner className="spinner" size={25} />
+                              )}
+                            </ButtonSpinner>
+                            <ButtonSpinner
+                              type="danger"
+                              onClick={() => handleUpdate("cancel", details.id)}
+                            >
+                              {!isLoading && <span>Cancel</span>}
+                              {isLoading && (
+                                <CgSpinner className="spinner" size={25} />
+                              )}
+                            </ButtonSpinner>
+                          </>
+                        ) : (
+                          <p>Transaction Complete</p>
+                        )}
+                      </Flex>
+                    </Tdata>
+                  </Tdatarow>
+                )
+              )}
             </AdminTable>
           </Container>
         </>
@@ -387,6 +391,7 @@ const Status = styled("p", {
   color: "#757575",
   borderRadius: 8,
   fontWeight: 600,
+  textAlign: "center",
   variants: {
     status: {
       pending: {

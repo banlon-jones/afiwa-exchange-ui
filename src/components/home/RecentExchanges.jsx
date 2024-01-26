@@ -91,8 +91,8 @@ const RecentExchanges = () => {
           flexDirection: "column",
           gap: 20,
           maxHeight: 338,
-          // overflow: "hidden",
-          overflowY: "scroll",
+          overflow: "hidden",
+          // overflowY: "scroll",
         }}
       >
         {isLoading ? (
