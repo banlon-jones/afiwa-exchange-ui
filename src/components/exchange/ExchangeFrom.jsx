@@ -16,25 +16,31 @@ const ExchangeFrom = () => {
   const location = useLocation();
   const { data, isError, isLoading } = useGetCurrency();
   const [options, setOptions] = useState([]);
-  const [recipientInfoPlaceholder, setRecipientInfoPlaceholder] =
-    useState("Momo Number");
+  const [tnxInfo, setTnxInfo] = useState({
+    fromCurrency: location.state?.tnxInfo
+      ? location.state.tnxInfo.fromCurrency
+      : "Momo Number",
+    toCurrency: location.state?.tnxInfo
+      ? location.state.tnxInfo.toCurrency
+      : "Momo Number",
+  });
   const isLogin = appStore((state) => state.isLogin);
 
   const [state, setState] = useState({
     fromCurrency: location.state?.fromCurrency
-      ? location.state?.fromCurrency
+      ? location.state.fromCurrency
       : {},
-    toCurrency: location.state?.toCurrency ? location.state?.toCurrency : {},
-    fromAmount: location.state?.fromAmount ? location.state?.fromAmount : "",
-    toAmount: location.state?.toAmount ? location.state?.toAmount : "",
+    toCurrency: location.state?.toCurrency ? location.state.toCurrency : {},
+    fromAmount: location.state?.fromAmount ? location.state.fromAmount : "",
+    toAmount: location.state?.toAmount ? location.state.toAmount : "",
     recipientName: location.state?.recipientName
-      ? location.state?.recipientName
+      ? location.state.recipientName
       : "",
     recipientWallet: location.state?.recipientWallet
-      ? location.state?.recipientWallet
+      ? location.state.recipientWallet
       : "",
     exchangeRate: location.state?.exchangeRate
-      ? location.state?.exchangeRate
+      ? location.state.exchangeRate
       : 0,
   });
   const [baseExchangeRate, setBaseExchangeRate] = useState({});
@@ -71,23 +77,22 @@ const ExchangeFrom = () => {
       }));
     }
 
-    if (actionMeta.name === "toCurrency") {
-      const name = String(newValue.label);
-      if (name.toLowerCase().search("xaf") === -1)
-        setRecipientInfoPlaceholder("Wallet Address");
-      else setRecipientInfoPlaceholder("Momo Number");
-    }
+    const isMomo = String(newValue.label).toLowerCase().search("xaf") !== -1;
+    setTnxInfo((prevState) => ({
+      ...prevState,
+      [actionMeta.name]: isMomo ? "Momo Number" : "Wallet Address",
+    }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!isLogin) {
-      return navigate(routes.login, { state });
+      return navigate(routes.login, { state: { ...state, tnxInfo: tnxInfo } });
     }
 
     localStorage.removeItem("stuff");
     return navigate(routes.exchange_details, {
-      state: { ...state, recipientMode: recipientInfoPlaceholder },
+      state: { ...state, tnxInfo: tnxInfo },
     });
   };
 
@@ -121,13 +126,14 @@ const ExchangeFrom = () => {
           id: _obj[1].id,
           rate: parseFloat(_obj[1].rate),
           logo: String(_obj[1].logo).startsWith("http") ? _obj[1].logo : null,
+          wallet: _obj[1].wallet,
         };
       });
       setOptions(_object);
     }
   }, [data, location.state]);
 
-  useEffect(() => {}, [recipientInfoPlaceholder]);
+  useEffect(() => {}, [tnxInfo]);
 
   if (isError) return;
 
@@ -194,6 +200,25 @@ const ExchangeFrom = () => {
           <div style={{ gridArea: "icon", justifySelf: "center" }}>
             <FaExchangeAlt color="green" />
           </div>
+          {Object.keys(state.fromCurrency).length > 0 && (
+            <div style={{ gridArea: "wallet", margin: "10px 0" }}>
+              <Label>Deposit {tnxInfo?.fromCurrency}</Label>
+              <p
+                style={{
+                  width: "100%",
+                  borderRadius: 8,
+                  marginTop: 5,
+                  backgroundColor: "rgb(241, 242, 245)",
+                  borderColor: "rgb(215, 215, 215)",
+                  fontSize: 17,
+                  padding: "10px 15px",
+                  color: "rgb(33, 32, 32)",
+                }}
+              >
+                {state.fromCurrency.wallet}
+              </p>
+            </div>
+          )}
           <div style={{ gridArea: "receive", width: "100%" }}>
             <Label htmlFor="react-select-3-input">Receive</Label>
             <div>
@@ -247,7 +272,9 @@ const ExchangeFrom = () => {
             </div>
           </div>
           <div style={{ gridArea: "recipient" }}>
-            <Label htmlFor="recipientName">Recipient</Label>
+            <Label htmlFor="recipientName">
+              Recipient {tnxInfo.toCurrency}
+            </Label>
             <InputFlexWrapper>
               <Input2
                 name="recipientName"
@@ -261,7 +288,7 @@ const ExchangeFrom = () => {
                 value={state.recipientWallet}
                 name="recipientWallet"
                 type="text"
-                placeholder={`Recipient ${recipientInfoPlaceholder}`}
+                placeholder={`Recipient ${tnxInfo?.toCurrency}`}
                 onChange={handleChange}
                 required
               />
@@ -279,6 +306,7 @@ const From = styled("form", {
   maxWidth: "60%",
   display: "grid",
   gridTemplateAreas: `'send send icon receive receive'
+  'wallet wallet wallet wallet wallet'
   'recipient recipient recipient recipient recipient'
   `,
   columnGap: "1em",
@@ -296,6 +324,7 @@ const From = styled("form", {
     gridTemplateAreas: `'send send send'
     'icon icon icon'
     'receive receive receive'
+    'wallet wallet wallet'
     'recipient recipient recipient'`,
   },
   variants: {

@@ -150,7 +150,26 @@ const ExchangeDetails = () => {
               />
             </FlexContainer>
             <Card type="initial">
-              <H1>Recipient</H1>
+              <H1>Deposit {state.tnxInfo.fromCurrency}</H1>
+              <FlexContainer>
+                <p
+                  style={{
+                    width: "100%",
+                    borderRadius: 8,
+                    marginTop: 5,
+                    backgroundColor: "rgb(241, 242, 245)",
+                    borderColor: "rgb(215, 215, 215)",
+                    fontSize: 17,
+                    padding: "10px 15px",
+                    color: "rgb(33, 32, 32)",
+                  }}
+                >
+                  {state.fromCurrency.wallet}
+                </p>
+              </FlexContainer>
+            </Card>
+            <Card type="initial">
+              <H1>Recipient {state.tnxInfo.toCurrency}</H1>
               <FlexContainer title="Recipient Name">
                 <Input
                   name="recipientName"
@@ -161,12 +180,12 @@ const ExchangeDetails = () => {
                   required
                 />
               </FlexContainer>
-              <FlexContainer title={`Recipient ${state.recipientMode}`}>
+              <FlexContainer title={`Recipient ${state.tnxInfo.toCurrency}`}>
                 <Input
                   value={state.recipientWallet}
                   name="recipientWallet"
                   type="text"
-                  placeholder={`Recipient ${state.recipientMode}`}
+                  placeholder={`Recipient ${state.tnxInfo.toCurrency}`}
                   onChange={handleChange}
                   required
                 />
@@ -219,7 +238,7 @@ const Card = styled("div", {
         border: 0,
         boxShadow: "none",
         backgroundColor: "transparent",
-        padding: "6px 0px",
+        padding: "5px 0px",
       },
       maxWidth: {
         maxWidth: "100%",
@@ -241,7 +260,7 @@ const Card = styled("div", {
 const H1 = styled("h1", {
   fontSize: 22,
   fontWeight: "bold",
-  marginBottom: 15,
+  marginBottom: 5,
   "@bp1024": {
     fontSize: 18,
     marginTop: 10,

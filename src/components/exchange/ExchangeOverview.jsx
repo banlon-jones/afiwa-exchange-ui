@@ -160,8 +160,7 @@ const H1 = styled("h1", {
   justifyContent: "space-between",
   alignItems: "center",
   fontWeight: 600,
-  fontSize: 16,
-  // width: "90%",
+  fontSize: 15,
   margin: "0 auto 1.5rem",
   "@bp1024": {
     fontSize: 18,

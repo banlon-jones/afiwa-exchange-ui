@@ -23,7 +23,7 @@ const schema = Yup.object().shape({
     .min(4, "Password is too short - should be 4 chars minimum."),
 });
 
-const Login = (props) => {
+const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [passwordType, setpasswordType] = useState("password");
