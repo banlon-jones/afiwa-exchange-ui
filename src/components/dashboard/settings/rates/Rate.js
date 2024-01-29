@@ -1,17 +1,19 @@
 import { Icon } from "@iconify/react";
-// import { isEditable } from "@testing-library/user-event/dist/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Spinner } from "../../../spinner/Spinner";
 import { useMutation } from "@tanstack/react-query";
-import { useAxios } from "../../../../data/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { BsToggle2Off, BsToggle2On } from "react-icons/bs";
+
+import { Spinner } from "../../../spinner/Spinner";
+import { useAxios } from "../../../../data/api";
 import { InputField } from "../../../InputField";
 import { styled } from "../../../../common/stitches";
 import Box from "../../../box";
 
 const Rate = ({ rate, adding = false, removeTemoporary }) => {
+  const [isActive, setIsActive] = useState(rate.active === "true");
   const { editRate, addRate } = useAxios();
   const [editing, setEditing] = useState(adding);
 
@@ -30,11 +32,13 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
+
   const { mutate: editMutation, isLoading: isEditing } = useMutation(
     ({ id, ...rateData }) => {
       return editRate(rateData, id);
     }
   );
+
   const { mutate: addMutation, isLoading: isAdding } = useMutation(
     (rateData) => {
       return addRate(rateData);
@@ -51,11 +55,23 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
     adding && removeTemoporary(rate);
   };
 
+  const handleToggleRate = () => {
+    setIsActive(!isActive);
+  };
+
+  useEffect(() => {
+    rate.active = `${isActive}`;
+    editMutation(rate);
+  }, [isActive, rate]);
+
   return (
     <>
       <tr
         className={(editing ? "border-2 " : "") + " [&>*]:py-4"}
         key={rate.id}
+        style={{
+          backgroundColor: isActive ? "inherit" : "#30373f4f",
+        }}
       >
         <td className="align-top">
           <div className={"flex gap-3 items-start px-2"}>
@@ -134,13 +150,33 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
         <td className="align-top">
           <div className="px-2 pt-2">
             {!editing && (
-              <button
-                onClick={() => setEditing(true)}
-                type="button"
-                className="bg-secondary-1 py-2 px-4 rounded-xl"
+              <div
+                style={{
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "center",
+                }}
               >
-                <Icon height={24} icon={"mdi:edit-outline"} />
-              </button>
+                <button
+                  onClick={() => setEditing(true)}
+                  type="button"
+                  className="bg-secondary-1 py-2 px-4 rounded-xl"
+                >
+                  <Icon height={24} icon={"mdi:edit-outline"} />
+                </button>
+                <button
+                  onClick={() => handleToggleRate(rate.id)}
+                  type="button"
+                  style={{
+                    padding: "11px 20px",
+                    borderRadius: 10,
+                    backgroundColor: isActive ? "#dc3545" : "#6c757d",
+                    color: "white",
+                  }}
+                >
+                  {isActive ? <BsToggle2Off /> : <BsToggle2On />}
+                </button>
+              </div>
             )}
             {editing && (
               <div className="flex gap-2">
