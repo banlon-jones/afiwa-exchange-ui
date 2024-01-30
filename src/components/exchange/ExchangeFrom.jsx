@@ -117,18 +117,20 @@ const ExchangeFrom = () => {
 
   useEffect(() => {
     if (data !== undefined) {
-      const _object = Object.entries(data).map((_obj) => {
-        if (_obj[1].name === "United state (USD)") setBaseExchangeRate(_obj[1]);
-
-        return {
-          value: _obj[1].id,
-          label: _obj[1].name,
-          id: _obj[1].id,
-          rate: parseFloat(_obj[1].rate),
-          logo: String(_obj[1].logo).startsWith("http") ? _obj[1].logo : null,
-          wallet: _obj[1].wallet,
-        };
-      });
+      const _object = Object.entries(data)
+        .filter((_obj) => _obj[1].active === "true")
+        .map((_obj) => {
+          if (_obj[1].name === "United state (USD)")
+            setBaseExchangeRate(_obj[1]);
+          return {
+            value: _obj[1].id,
+            label: _obj[1].name,
+            id: _obj[1].id,
+            rate: parseFloat(_obj[1].rate),
+            logo: String(_obj[1].logo).startsWith("http") ? _obj[1].logo : null,
+            wallet: _obj[1].wallet,
+          };
+        });
       setOptions(_object);
     }
   }, [data, location.state]);

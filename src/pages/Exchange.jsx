@@ -3,6 +3,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { greenA, redA } from "@radix-ui/colors";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
+import { CiSearch } from "react-icons/ci";
 
 import { styled } from "../common/stitches";
 import Container from "../components/container";
@@ -31,6 +32,7 @@ const queryClient = new QueryClient({
 const RecentExchange = () => {
   const { pathname, hash, key } = useLocation();
   const [transactions, setTransactions] = useState(undefined);
+  const [searchInput, setSearchInput] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
   const addNotification = toastStore((state) => state.add);
@@ -50,6 +52,20 @@ const RecentExchange = () => {
       ...prevState,
       transactions: transactions.allTransactions.filter((tnx) => {
         return tnx.details.status === String(_filter).toUpperCase();
+      }),
+    }));
+  };
+
+  const handleChange = (event) => {
+    setSearchInput(event.target.value);
+    setTransactions((prevState) => ({
+      ...prevState,
+      transactions: transactions.allTransactions.filter((tnx) => {
+        return (
+          String(tnx.details.email).includes(event.target.value) ||
+          String(tnx.details.walletName).includes(event.target.value) ||
+          String(tnx.details.transactionId).includes(event.target.value)
+        );
       }),
     }));
   };
@@ -160,30 +176,41 @@ const RecentExchange = () => {
       <Container add="headerMargin" style={{ paddingTop: 0 }}>
         <Container>
           <FilterWrapper>
-            <Filter
-              active={filterType === "all"}
-              onClick={() => handleFilter("all")}
-            >
-              All Exchanges
-            </Filter>
-            <Filter
-              active={filterType === "pending"}
-              onClick={() => handleFilter("pending")}
-            >
-              In Progress
-            </Filter>
-            <Filter
-              active={filterType === "completed"}
-              onClick={() => handleFilter("completed")}
-            >
-              Complete
-            </Filter>
-            <Filter
-              active={filterType === "canceled"}
-              onClick={() => handleFilter("canceled")}
-            >
-              Cancelled
-            </Filter>
+            <div style={{ display: "flex", gap: 10 }}>
+              <Filter
+                active={filterType === "all"}
+                onClick={() => handleFilter("all")}
+              >
+                All Exchanges
+              </Filter>
+              <Filter
+                active={filterType === "pending"}
+                onClick={() => handleFilter("pending")}
+              >
+                In Progress
+              </Filter>
+              <Filter
+                active={filterType === "completed"}
+                onClick={() => handleFilter("completed")}
+              >
+                Complete
+              </Filter>
+              <Filter
+                active={filterType === "canceled"}
+                onClick={() => handleFilter("canceled")}
+              >
+                Cancelled
+              </Filter>
+            </div>
+            <SearchFilterWrapper>
+              <CiSearch size={20} />
+              <SearchInput
+                type="search"
+                value={searchInput}
+                placeholder="Search transaction by Name or ID"
+                onChange={handleChange}
+              />
+            </SearchFilterWrapper>
           </FilterWrapper>
         </Container>
         {transactions && (
@@ -310,8 +337,42 @@ const Main = styled("div", {});
 const FilterWrapper = styled("ul", {
   display: "flex",
   gap: 10,
-  justifyContent: "center",
+  justifyContent: "space-around",
+  alignItems: "center",
   padding: "20px 0",
+});
+
+const SearchFilterWrapper = styled("form", {
+  position: "relative",
+  width: "100%",
+  maxWidth: 350,
+  height: 45,
+  borderRadius: 40,
+  boxShadow: "0 6px 8px rgba(0, 0, 0, 0.15)",
+  backgroundColor: "#f4f5f5ad",
+  display: "flex",
+  alignItems: "center",
+  padding: 10,
+  "&:focus": {
+    boxShadow: "0 3px 4px rgba(0, 0, 0, 0.15)",
+  },
+});
+
+const SearchInput = styled("input", {
+  width: "100%",
+  fontSize: 14,
+  background: "none",
+  fontWeight: 500,
+  color: "#5a6674",
+  border: "none",
+  appearance: "none",
+  outline: "none",
+  "&:focus": {
+    outline: "none",
+  },
+  "&:-webkit-search-cancel-button": {
+    appearance: "none",
+  },
 });
 
 const Filter = styled("li", {
