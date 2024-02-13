@@ -25,9 +25,9 @@ export const useGetTransactions = () =>
     staleTime: 60000,
   });
 
-export const useUpdateTransaction = (id) => {
+export const useUpdateTransaction = () =>
   useMutation({
-    mutationKey: ["transaction", id],
-    mutationFn: (data) => privateApiClient.put(`/${id}`, data),
+    mutationKey: ["update_transaction"],
+    mutationFn: ({ tnxId, payload }) =>
+      privateApiClient.put(`/${tnxId}`, payload),
   });
-};

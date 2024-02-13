@@ -18,7 +18,7 @@ import {
 import toastStore from "../store/toastStore";
 import { useGetUserTransactions } from "../hooks/useSession";
 import { publicApiClient } from "../hooks/useCurrency";
-import { privateApiClient as transactionAPI } from "../hooks/useTransaction";
+import { useUpdateTransaction } from "../hooks/useTransaction";
 import { CgSpinner } from "react-icons/cg";
 
 const queryClient = new QueryClient({
@@ -37,6 +37,12 @@ const RecentExchange = () => {
   const [isLoading, setIsLoading] = useState(true);
   const addNotification = toastStore((state) => state.add);
   const { data, isError, refetch } = useGetUserTransactions();
+  const {
+    mutate,
+    isLoading: txnIsLoading,
+    isError: txnIsError,
+    isSuccess: txnIsSuccess,
+  } = useUpdateTransaction();
 
   const handleFilter = (filter) => {
     setFilterType(filter);
@@ -124,30 +130,29 @@ const RecentExchange = () => {
   }, [data, isLoading]);
 
   const handleUpdate = (tnxId) => {
-    setIsLoading(true);
     const payload = {
       status: "CANCELED",
     };
 
-    const updateTransaction = async () => {
-      await transactionAPI.put(`/${tnxId}`, payload).catch((error) => {
-        return addNotification({
-          title: "Error",
-          message: `An error occured while updating transaction with ID: ${tnxId}`,
-          type: "error",
-        });
-      });
-      await refetch();
-    };
-
-    updateTransaction();
-    addNotification({
-      title: "CANCELED",
-      message: `Transaction successfully canceled`,
-      type: "success",
-    });
-    setIsLoading(false);
+    mutate({ tnxId, payload });
   };
+
+  useEffect(() => {
+    if (txnIsSuccess) {
+      addNotification({
+        title: "CANCELED",
+        message: `Transaction successfully canceled`,
+        type: "success",
+      });
+    } else if (txnIsError) {
+      addNotification({
+        title: "Error",
+        message: `An error occured while updating transaction`,
+        type: "error",
+      });
+    }
+    refetch();
+  }, [txnIsError, addNotification, txnIsSuccess]);
 
   useEffect(() => {
     // if not a hash link, scroll to top
@@ -308,10 +313,10 @@ const RecentExchange = () => {
                           "pending" ? (
                             <ButtonSpinner
                               type="danger"
-                              onClick={() => handleUpdate("cancel", details.id)}
+                              onClick={() => handleUpdate(details.id)}
                             >
-                              {!isLoading && <span>Cancel</span>}
-                              {isLoading && (
+                              {!txnIsLoading && <span>Cancel</span>}
+                              {txnIsLoading && (
                                 <CgSpinner className="spinner" size={25} />
                               )}
                             </ButtonSpinner>

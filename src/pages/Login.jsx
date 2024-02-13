@@ -101,7 +101,7 @@ const Login = () => {
       <Container>
         <Header />
       </Container>
-      <Container width="dynamic" add="headerMargin">
+      <Container width="dynamic" add="headerMargin" style={{ flex: 1 }}>
         <FormContainer>
           <AuthFormContainer
             title="login"
@@ -144,7 +144,11 @@ const CustomNavLink = styled(NavLink, {
   textDecoration: "underline",
 });
 
-const Main = styled("div", {});
+const Main = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  minHeight: "100vh",
+});
 
 const FormContainer = styled("div", {
   margin: "0 auto",
