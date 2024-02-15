@@ -4,7 +4,7 @@ import axios from "axios";
 // import authStorage from "../store/appStore";
 
 const client = axios.create({
-  baseURL: "http://ec2-3-92-51-85.compute-1.amazonaws.com:8080",
+  baseURL: "http://www.afiwaexchange.com:8080",
 });
 
 // client.addAsyncRequestTransform(async (request) => {

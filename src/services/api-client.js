@@ -2,7 +2,7 @@ import axios from "axios";
 import appStore from "../store/appStore";
 
 const axiosInstance = axios.create({
-  baseURL: "http://ec2-3-92-51-85.compute-1.amazonaws.com:8080",
+  baseURL: "http://www.afiwaexchange.com:8080",
   headers: {
     common: {
       "Content-Type": "application/json",
