@@ -10,8 +10,11 @@ import appStore from "../../store/appStore";
 import routes from "../../common/routes";
 import { calculateExchangeAmount } from "../../common/utils";
 import { Spinner } from "../spinner/Spinner";
+import toastStore from "../../store/toastStore";
+import CopyToClipboard from "../CopyToClipboard";
 
 const ExchangeFrom = () => {
+  const addNotification = toastStore((state) => state.add);
   const navigate = useNavigate();
   const location = useLocation();
   const { data, isError, isLoading } = useGetCurrency();
@@ -19,10 +22,10 @@ const ExchangeFrom = () => {
   const [tnxInfo, setTnxInfo] = useState({
     fromCurrency: location.state?.tnxInfo
       ? location.state.tnxInfo.fromCurrency
-      : "Momo Number",
+      : "Number",
     toCurrency: location.state?.tnxInfo
       ? location.state.tnxInfo.toCurrency
-      : "Momo Number",
+      : "Number",
   });
   const isLogin = appStore((state) => state.isLogin);
 
@@ -80,7 +83,7 @@ const ExchangeFrom = () => {
     const isMomo = String(newValue.label).toLowerCase().search("xaf") !== -1;
     setTnxInfo((prevState) => ({
       ...prevState,
-      [actionMeta.name]: isMomo ? "Momo Number" : "Wallet Address",
+      [actionMeta.name]: isMomo ? "Number" : "Wallet Address",
     }));
   };
 
@@ -205,20 +208,38 @@ const ExchangeFrom = () => {
           {Object.keys(state.fromCurrency).length > 0 && (
             <div style={{ gridArea: "wallet", margin: "10px 0" }}>
               <Label>Deposit {tnxInfo?.fromCurrency}</Label>
-              <p
+              <div
                 style={{
-                  width: "100%",
-                  borderRadius: 8,
-                  marginTop: 5,
-                  backgroundColor: "rgb(241, 242, 245)",
-                  borderColor: "rgb(215, 215, 215)",
-                  fontSize: 17,
-                  padding: "10px 15px",
-                  color: "rgb(33, 32, 32)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 5,
+                  alignItems: "center",
                 }}
               >
-                {state.fromCurrency.wallet}
-              </p>
+                <p
+                  style={{
+                    width: "100%",
+                    borderRadius: 8,
+                    marginTop: 5,
+                    backgroundColor: "rgb(241, 242, 245)",
+                    borderColor: "rgb(215, 215, 215)",
+                    fontSize: 17,
+                    padding: "10px 15px",
+                    color: "rgb(33, 32, 32)",
+                  }}
+                >
+                  {state.fromCurrency.wallet}
+                </p>
+                <CopyToClipboard
+                  text={state.fromCurrency.wallet}
+                  style={{
+                    borderRadius: 8,
+                    marginTop: 5,
+                    fontSize: 17,
+                    padding: "14px 15px",
+                  }}
+                />
+              </div>
             </div>
           )}
           <div style={{ gridArea: "receive", width: "100%" }}>
@@ -278,22 +299,60 @@ const ExchangeFrom = () => {
               Recipient {tnxInfo.toCurrency}
             </Label>
             <InputFlexWrapper>
-              <Input2
-                name="recipientName"
-                type="text"
-                placeholder="Recipient Name"
-                onChange={handleChange}
-                value={state.recipientName}
-                required
-              />
-              <Input2
-                value={state.recipientWallet}
-                name="recipientWallet"
-                type="text"
-                placeholder={`Recipient ${tnxInfo?.toCurrency}`}
-                onChange={handleChange}
-                required
-              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 5,
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <Input2
+                  name="recipientName"
+                  type="text"
+                  placeholder="Recipient Name"
+                  onChange={handleChange}
+                  value={state.recipientName}
+                  required
+                />
+                <CopyToClipboard
+                  text={state.recipientName}
+                  style={{
+                    borderRadius: 8,
+                    marginTop: 5,
+                    fontSize: 17,
+                    padding: "16px 15px",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 5,
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <Input2
+                  value={state.recipientWallet}
+                  name="recipientWallet"
+                  type="text"
+                  placeholder={`Recipient ${tnxInfo?.toCurrency}`}
+                  onChange={handleChange}
+                  required
+                />
+                <CopyToClipboard
+                  text={state.recipientWallet}
+                  style={{
+                    borderRadius: 8,
+                    marginTop: 5,
+                    fontSize: 17,
+                    padding: "16px 15px",
+                  }}
+                />
+              </div>
             </InputFlexWrapper>
             <Submit type="submit">Exchange</Submit>
           </div>

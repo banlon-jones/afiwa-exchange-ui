@@ -97,7 +97,7 @@ const Grid = styled("div", {
 });
 
 const Footer = styled("div", {
-  marginTop: "5em",
+  marginTop: "5rem",
   padding: "3em 0 0",
   borderTop: "1px solid",
   borderColor: blackA.blackA2,

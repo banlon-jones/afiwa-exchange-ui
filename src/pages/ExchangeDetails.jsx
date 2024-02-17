@@ -14,6 +14,7 @@ import toastStore from "../store/toastStore";
 import appStore from "../store/appStore";
 import { useCreateTransaction } from "../hooks/useTransaction";
 import ExchangeOverview from "../components/exchange/ExchangeOverview";
+import CopyToClipboard from "../components/CopyToClipboard";
 
 const ExchangeDetails = () => {
   const addNotification = toastStore((state) => state.add);
@@ -140,55 +141,128 @@ const ExchangeDetails = () => {
           </FlexContainer>
           <Form onSubmit={handleSubmit}>
             <FlexContainer title="Your Email">
-              <Input
-                value={state.email}
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                required
-                onChange={handleChange}
-              />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 5,
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <Input
+                  value={state.email}
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  onChange={handleChange}
+                />
+                <CopyToClipboard
+                  text={state.email}
+                  style={{
+                    borderRadius: 8,
+                    fontSize: 17,
+                    padding: "12px 15px",
+                  }}
+                />
+              </div>
             </FlexContainer>
             <Card type="initial">
               <H1>Deposit {state.tnxInfo.fromCurrency}</H1>
               <FlexContainer>
-                <p
+                <div
                   style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 5,
+                    alignItems: "center",
                     width: "100%",
-                    borderRadius: 8,
-                    marginTop: 5,
-                    backgroundColor: "rgb(241, 242, 245)",
-                    borderColor: "rgb(215, 215, 215)",
-                    fontSize: 17,
-                    padding: "10px 15px",
-                    color: "rgb(33, 32, 32)",
                   }}
                 >
-                  {state.fromCurrency.wallet}
-                </p>
+                  <p
+                    style={{
+                      width: "100%",
+                      borderRadius: 8,
+                      marginTop: 5,
+                      backgroundColor: "rgb(241, 242, 245)",
+                      borderColor: "rgb(215, 215, 215)",
+                      fontSize: 17,
+                      padding: "10px 15px",
+                      color: "rgb(33, 32, 32)",
+                    }}
+                  >
+                    {state.fromCurrency.wallet}
+                  </p>
+                  <CopyToClipboard
+                    text={state.fromCurrency.wallet}
+                    style={{
+                      borderRadius: 8,
+                      marginTop: 3,
+                      fontSize: 17,
+                      padding: 15,
+                    }}
+                  />
+                </div>
               </FlexContainer>
             </Card>
             <Card type="initial">
               <H1>Recipient {state.tnxInfo.toCurrency}</H1>
               <FlexContainer title="Recipient Name">
-                <Input
-                  name="recipientName"
-                  type="text"
-                  placeholder="Enter Recipient Name"
-                  onChange={handleChange}
-                  value={state.recipientName}
-                  required
-                />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 5,
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <Input
+                    name="recipientName"
+                    type="text"
+                    placeholder="Enter Recipient Name"
+                    onChange={handleChange}
+                    value={state.recipientName}
+                    required
+                  />
+                  <CopyToClipboard
+                    text={state.recipientName}
+                    style={{
+                      borderRadius: 8,
+                      fontSize: 17,
+                      padding: "12px 15px",
+                    }}
+                  />
+                </div>
               </FlexContainer>
               <FlexContainer title={`Recipient ${state.tnxInfo.toCurrency}`}>
-                <Input
-                  value={state.recipientWallet}
-                  name="recipientWallet"
-                  type="text"
-                  placeholder={`Recipient ${state.tnxInfo.toCurrency}`}
-                  onChange={handleChange}
-                  required
-                />
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 5,
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <Input
+                    value={state.recipientWallet}
+                    name="recipientWallet"
+                    type="text"
+                    placeholder={`Recipient ${state.tnxInfo.toCurrency}`}
+                    onChange={handleChange}
+                    required
+                  />
+                  <CopyToClipboard
+                    text={state.recipientWallet}
+                    style={{
+                      borderRadius: 8,
+                      fontSize: 17,
+                      padding: "12px 15px",
+                    }}
+                  />
+                </div>
               </FlexContainer>
             </Card>
             <FlexContainer

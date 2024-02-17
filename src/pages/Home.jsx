@@ -38,7 +38,7 @@ export default function Index() {
       <Container>
         <Header />
       </Container>
-      <Container width="dynamic" add="headerMargin">
+      <Container width="dynamic" add="headerMargin" style={{ flex: 1 }}>
         <Exchange />
         <Wrapper title="Recent Exchanges" url={routes.exchange}>
           <RecentExchanges />
@@ -58,10 +58,9 @@ export default function Index() {
 }
 
 const Main = styled("main", {
-  width: "100%",
-  height: "100vh",
   display: "flex",
   flexDirection: "column",
+  minHeight: "100vh",
   "@bp640": {
     display: "block",
   },

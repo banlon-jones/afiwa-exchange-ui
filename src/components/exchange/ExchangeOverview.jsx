@@ -101,9 +101,7 @@ const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
             }}
           >
             <CustomLink to={routes.home}>Start a new transaction</CustomLink>
-            <CustomLink to={routes.recent_exchange}>
-              view transactions
-            </CustomLink>
+            <CustomLink to={routes.exchange}>view transactions</CustomLink>
           </div>
         </Card>
       </CardContainer>
