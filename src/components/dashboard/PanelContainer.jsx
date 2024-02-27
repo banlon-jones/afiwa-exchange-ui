@@ -29,7 +29,7 @@ const PanelContainer = ({ isLoading, children }) => {
       <Container>
         <PanelWrapper toggle={togglePanel}>
           <PanelRoot toggle={togglePanel}>
-            <PanelItem>
+            {/* <PanelItem>
               <PanelLink
                 to={routes.admin.dashboard}
                 active={location.pathname.endsWith(routes.admin.dashboard)}
@@ -37,7 +37,7 @@ const PanelContainer = ({ isLoading, children }) => {
                 <MdOutlineDashboard size={24} />
                 {!togglePanel && <p>Dashboard</p>}
               </PanelLink>
-            </PanelItem>
+            </PanelItem> */}
             <PanelItem>
               <PanelLink
                 to={routes.admin.exchange}
