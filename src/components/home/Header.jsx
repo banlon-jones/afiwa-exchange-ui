@@ -40,9 +40,9 @@ const header = () => {
                 Exchange
               </NavigationMenuLink>
             </NavigationMenu.Item>
-            <NavigationMenu.Item>
+            {/* <NavigationMenu.Item>
               <NavigationMenuLink to={routes.rates}>Rates</NavigationMenuLink>
-            </NavigationMenu.Item>
+            </NavigationMenu.Item> */}
             <NavigationMenu.Item>
               <NavigationMenuLink to={routes.reviews}>
                 Reviews
