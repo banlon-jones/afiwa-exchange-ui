@@ -18,7 +18,16 @@ const Rates = () => {
     <PanelContainer isLoading={data === undefined}>
       <Container>
         {data && (
-          <AdminTable headers={["Name", "wallet", "Rate per $", "Manage"]}>
+          <AdminTable
+            headers={[
+              "Name",
+              "wallet",
+              "Rate per $",
+              "Code",
+              "Symbol",
+              "Manage",
+            ]}
+          >
             {data.map((rate) => (
               <Rate rate={rate} key={rate.id} />
             ))}

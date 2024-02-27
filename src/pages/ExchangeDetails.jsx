@@ -123,8 +123,8 @@ const ExchangeDetails = () => {
           />
           <FlexContainer title="Exchange rate">
             <p style={{ fontSize: 15 }}>
-              1 {state.fromCurrency.label} = {state.exchangeRate}{" "}
-              {state.toCurrency.label}
+              {state.fromCurrency.symbol}1 = {state.toCurrency.symbol}
+              {state.exchangeRate}{" "}
             </p>
           </FlexContainer>
           <FlexContainer title="Status">

@@ -4,8 +4,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import APIClient from "../services/api-client";
 import { firebaseAuth } from "../libs/Firebase";
 
-const publicApiClient = new APIClient("/api/public/user");
-const privateApiClient = new APIClient("/api/protected/user");
+const publicApiClient = new APIClient("/public/user");
+const privateApiClient = new APIClient("/protected/user");
 
 async function firebaseLogin(data, setUser) {
   const baseRes = await signInWithEmailAndPassword(

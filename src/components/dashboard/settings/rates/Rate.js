@@ -1,25 +1,44 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+// import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { BsToggle2Off, BsToggle2On } from "react-icons/bs";
 
 import { Spinner } from "../../../spinner/Spinner";
-import { useAxios } from "../../../../data/api";
+// import { useAxios } from "../../../../data/api";
 import { InputField } from "../../../InputField";
 import { styled } from "../../../../common/stitches";
 import Box from "../../../box";
+import {
+  useCreateCurrency,
+  useUpdateCurrency,
+} from "../../../../hooks/useCurrency";
+import toastStore from "../../../../store/toastStore";
 
 const Rate = ({ rate, adding = false, removeTemoporary }) => {
+  const addNotification = toastStore((state) => state.add);
+
   const [isActive, setIsActive] = useState(rate.active === "true");
-  const { editRate, addRate } = useAxios();
+  const {
+    mutate: editCurrency,
+    data: editData,
+    isLoading: isEditing,
+    isError: isEditError,
+    error: editError,
+  } = useUpdateCurrency();
+  const {
+    mutate: createCurrency,
+    data,
+    isLoading,
+    error,
+    isError,
+  } = useCreateCurrency();
   const [editing, setEditing] = useState(adding);
 
   const schema = Yup.object().shape({
     id: Yup.string().required("ID is required"),
-    logo: Yup.string().url("Invalid Url").required("Logo is required"),
     name: Yup.string().required("A name is required"),
     wallet: Yup.string().required("Wallet address is required"),
     rate: Yup.number()
@@ -33,36 +52,79 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const { mutate: editMutation, isLoading: isEditing } = useMutation(
-    ({ id, ...rateData }) => {
-      return editRate(rateData, id);
-    }
-  );
-
-  const { mutate: addMutation, isLoading: isAdding } = useMutation(
-    (rateData) => {
-      return addRate(rateData);
-    }
-  );
-
   const submit = (formData) => {
-    adding ? addMutation(formData) : editMutation(formData);
-    setEditing(!editing);
+    if (adding) {
+      createCurrency({ data: { ...formData } });
+    } else {
+      editCurrency({ id: formData["id"], data: { ...formData } });
+    }
   };
+
+  useEffect(() => {
+    if (isError) {
+      if (error.response) {
+        const { data } = error?.response;
+        data?.message.forEach((msg) => {
+          addNotification({
+            title: data.error,
+            message: msg,
+            type: "error",
+          });
+        });
+      } else {
+        addNotification({
+          title: "Error",
+          message:
+            "An error occured while processing request, please kind your transaction amount or contact admin",
+          type: "error",
+        });
+      }
+    }
+
+    if (isEditError) {
+      if (editError.response) {
+        const { data } = editError?.response;
+        data?.message.forEach((msg) => {
+          addNotification({
+            title: data.error,
+            message: msg,
+            type: "error",
+          });
+        });
+      } else {
+        addNotification({
+          title: "Error",
+          message:
+            "An error occured while processing request, please kind your transaction amount or contact admin",
+          type: "error",
+        });
+      }
+    }
+  }, [addNotification, isError, isEditError]);
+
+  useEffect(() => {
+    if (
+      (data !== undefined && !isError) ||
+      (editData !== undefined && !isEditError)
+    ) {
+      addNotification({
+        title: "Successful",
+        type: "success",
+      });
+      setEditing(false);
+    }
+  }, [data, isError, editData, isEditError]);
 
   const handleCancelEdit = () => {
     setEditing(false);
     adding && removeTemoporary(rate);
   };
 
-  const handleToggleRate = () => {
+  const handleToggleRate = (formData) => {
     setIsActive(!isActive);
+    formData["active"] = `${!isActive}`;
+    editCurrency({ id: formData["id"], data: { ...formData } });
   };
-
-  useEffect(() => {
-    rate.active = `${isActive}`;
-    editMutation(rate);
-  }, [isActive, rate]);
 
   return (
     <>
@@ -148,6 +210,36 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
           </fieldset>
         </td>
         <td className="align-top">
+          <fieldset disabled={!editing}>
+            <InputField
+              clazz={
+                (editing ? "border" : "border-none py-0") +
+                " disabled:bg-transparent"
+              }
+              placeholder=""
+              errors={errors.code?.message}
+              type="text"
+              name="code"
+              formProps={register("code", { value: rate.code })}
+            />
+          </fieldset>
+        </td>
+        <td className="align-top">
+          <fieldset disabled={!editing}>
+            <InputField
+              clazz={
+                (editing ? "border" : "border-none py-0") +
+                " disabled:bg-transparent"
+              }
+              placeholder="$"
+              errors={errors.symbol?.message}
+              type="text"
+              name="symbol"
+              formProps={register("symbol", { value: rate.symbol })}
+            />
+          </fieldset>
+        </td>
+        <td className="align-top">
           <div className="px-2 pt-2">
             {!editing && (
               <div
@@ -165,7 +257,7 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
                   <Icon height={24} icon={"mdi:edit-outline"} />
                 </button>
                 <button
-                  onClick={() => handleToggleRate(rate.id)}
+                  onClick={() => handleToggleRate(rate)}
                   type="button"
                   style={{
                     padding: "11px 20px",
@@ -193,7 +285,7 @@ const Rate = ({ rate, adding = false, removeTemoporary }) => {
                   type="submit"
                 >
                   <span>{"Save"}</span>
-                  {(isEditing || isAdding) && <Spinner />}
+                  {(isEditing || isLoading) && <Spinner />}
                 </button>
               </div>
             )}

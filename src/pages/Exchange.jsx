@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { QueryClient } from "@tanstack/react-query";
-import { greenA, redA } from "@radix-ui/colors";
+// import { greenA, redA } from "@radix-ui/colors";
 import moment from "moment";
 import { useLocation } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
@@ -15,11 +15,11 @@ import {
   calculateExchangeAmount,
   sortTransactionsByCreateDate,
 } from "../common/utils";
-import toastStore from "../store/toastStore";
+// import toastStore from "../store/toastStore";
 import { useGetUserTransactions } from "../hooks/useSession";
 import { publicApiClient } from "../hooks/useCurrency";
-import { useUpdateTransaction } from "../hooks/useTransaction";
-import { CgSpinner } from "react-icons/cg";
+// import { useUpdateTransaction } from "../hooks/useTransaction";
+// import { CgSpinner } from "react-icons/cg";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,14 +35,14 @@ const RecentExchange = () => {
   const [searchInput, setSearchInput] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
-  const addNotification = toastStore((state) => state.add);
-  const { data, isError, refetch } = useGetUserTransactions();
-  const {
-    mutate,
-    isLoading: txnIsLoading,
-    isError: txnIsError,
-    isSuccess: txnIsSuccess,
-  } = useUpdateTransaction();
+  // const addNotification = toastStore((state) => state.add);
+  const { data, isError } = useGetUserTransactions();
+  // const {
+  //   mutate,
+  //   isLoading: txnIsLoading,
+  //   isError: txnIsError,
+  //   isSuccess: txnIsSuccess,
+  // } = useUpdateTransaction();
 
   const handleFilter = (filter) => {
     setFilterType(filter);
@@ -64,13 +64,19 @@ const RecentExchange = () => {
 
   const handleChange = (event) => {
     setSearchInput(event.target.value);
+    const query = String(event.target.value).toLowerCase();
+    const data =
+      query === "" ? transactions.allTransactions : transactions.transactions;
+
     setTransactions((prevState) => ({
       ...prevState,
-      transactions: transactions.allTransactions.filter((tnx) => {
+      transactions: data.filter((tnx) => {
         return (
-          String(tnx.details.email).includes(event.target.value) ||
-          String(tnx.details.walletName).includes(event.target.value) ||
-          String(tnx.details.transactionId).includes(event.target.value)
+          String(tnx.details.email).toLowerCase().includes(query) ||
+          String(tnx.details.walletName).toLowerCase().includes(query) ||
+          String(tnx.details.transactionId).toLowerCase().includes(query) ||
+          String(tnx.toCurrency.label).toLowerCase().includes(query) ||
+          String(tnx.fromCurrency.label).toLowerCase().includes(query)
         );
       }),
     }));
@@ -101,6 +107,8 @@ const RecentExchange = () => {
               label: resFromCurrency.name,
               rate: parseFloat(resFromCurrency.rate),
               wallet: resFromCurrency.wallet,
+              code: resFromCurrency.code,
+              symbol: resFromCurrency.symbol,
             },
             toCurrency: {
               id: resToCurrency.id,
@@ -110,6 +118,8 @@ const RecentExchange = () => {
               label: resToCurrency.name,
               rate: parseFloat(resToCurrency.rate),
               wallet: resToCurrency.wallet,
+              code: resToCurrency.code,
+              symbol: resToCurrency.symbol,
             },
             details: txn,
           };
@@ -129,30 +139,30 @@ const RecentExchange = () => {
     }
   }, [data, isLoading]);
 
-  const handleUpdate = (tnxId) => {
-    const payload = {
-      status: "CANCELED",
-    };
+  // const handleUpdate = (tnxId) => {
+  //   const payload = {
+  //     status: "CANCELED",
+  //   };
 
-    mutate({ tnxId, payload });
-  };
+  //   mutate({ tnxId, payload });
+  // };
 
-  useEffect(() => {
-    if (txnIsSuccess) {
-      addNotification({
-        title: "CANCELED",
-        message: `Transaction successfully canceled`,
-        type: "success",
-      });
-    } else if (txnIsError) {
-      addNotification({
-        title: "Error",
-        message: `An error occured while updating transaction`,
-        type: "error",
-      });
-    }
-    refetch();
-  }, [txnIsError, addNotification, txnIsSuccess]);
+  // useEffect(() => {
+  //   if (txnIsSuccess) {
+  //     addNotification({
+  //       title: "CANCELED",
+  //       message: `Transaction successfully canceled`,
+  //       type: "success",
+  //     });
+  //   } else if (txnIsError) {
+  //     addNotification({
+  //       title: "Error",
+  //       message: `An error occured while updating transaction`,
+  //       type: "error",
+  //     });
+  //   }
+  //   refetch();
+  // }, [txnIsError, addNotification, txnIsSuccess]);
 
   useEffect(() => {
     // if not a hash link, scroll to top
@@ -228,7 +238,7 @@ const RecentExchange = () => {
                   "Receive",
                   "Status",
                   "Details",
-                  "Action",
+                  // "Action",
                 ]}
               >
                 {transactions?.transactions.map(
@@ -273,7 +283,13 @@ const RecentExchange = () => {
                           {details.status}
                         </Status>
                       </Tdata>
-                      <Tdata>
+                      <Tdata
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: 10,
+                        }}
+                      >
                         <p>
                           <strong>Transcation ID:</strong>{" "}
                           {details.transactionId}
@@ -287,14 +303,13 @@ const RecentExchange = () => {
                           {parseFloat(details.exchangeRate).toPrecision(6)}
                         </p>
                         <p>
-                          <strong>Exchange:</strong> {details.amount}{" "}
-                          {fromCurrency.label} -{" "}
+                          <strong>Exchange:</strong> {fromCurrency.symbol}
+                          {details.amount} - {toCurrency.symbol}
                           {calculateExchangeAmount(
                             fromCurrency.rate,
                             toCurrency.rate,
                             details.amount
                           )[1].toPrecision(6)}{" "}
-                          {toCurrency.label}
                         </p>
                         <p>
                           <strong>Email Address:</strong> {details.email}
@@ -307,7 +322,7 @@ const RecentExchange = () => {
                           {details.walletAddress}
                         </p>
                       </Tdata>
-                      <Tdata>
+                      {/* <Tdata>
                         <Flex>
                           {String(details.status).toLowerCase() ===
                           "pending" ? (
@@ -324,7 +339,7 @@ const RecentExchange = () => {
                             <p>Transaction Complete</p>
                           )}
                         </Flex>
-                      </Tdata>
+                      </Tdata> */}
                     </Tdatarow>
                   )
                 )}
@@ -418,42 +433,42 @@ const Tdata = styled("td", {
   padding: "10px 20px",
 });
 
-const Flex = styled("div", {
-  display: "flex",
-  alignItems: "center",
-  gap: 10,
-});
+// const Flex = styled("div", {
+//   display: "flex",
+//   alignItems: "center",
+//   gap: 10,
+// });
 
-const ButtonSpinner = styled("button", {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  textAlign: "center",
-  color: "white",
-  width: "100%",
-  borderRadius: 8,
-  padding: "10px 25px",
-  fontWeight: "bold",
-  variants: {
-    type: {
-      default: {
-        backgroundColor: greenA.greenA10,
-        "&:hover": {
-          backgroundColor: greenA.greenA9,
-        },
-      },
-      danger: {
-        backgroundColor: redA.redA10,
-        "&:hover": {
-          backgroundColor: redA.redA9,
-        },
-      },
-    },
-  },
-  defaultVariants: {
-    type: "default",
-  },
-});
+// const ButtonSpinner = styled("button", {
+//   display: "flex",
+//   alignItems: "center",
+//   justifyContent: "center",
+//   textAlign: "center",
+//   color: "white",
+//   width: "100%",
+//   borderRadius: 8,
+//   padding: "10px 25px",
+//   fontWeight: "bold",
+//   variants: {
+//     type: {
+//       default: {
+//         backgroundColor: greenA.greenA10,
+//         "&:hover": {
+//           backgroundColor: greenA.greenA9,
+//         },
+//       },
+//       danger: {
+//         backgroundColor: redA.redA10,
+//         "&:hover": {
+//           backgroundColor: redA.redA9,
+//         },
+//       },
+//     },
+//   },
+//   defaultVariants: {
+//     type: "default",
+//   },
+// });
 
 const OptionLabel = styled("div", {
   display: "flex",
