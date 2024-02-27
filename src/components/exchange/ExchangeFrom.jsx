@@ -10,11 +10,11 @@ import appStore from "../../store/appStore";
 import routes from "../../common/routes";
 import { calculateExchangeAmount } from "../../common/utils";
 import { Spinner } from "../spinner/Spinner";
-import toastStore from "../../store/toastStore";
+// import toastStore from "../../store/toastStore";
 import CopyToClipboard from "../CopyToClipboard";
 
 const ExchangeFrom = () => {
-  const addNotification = toastStore((state) => state.add);
+  // const addNotification = toastStore((state) => state.add);
   const navigate = useNavigate();
   const location = useLocation();
   const { data, isError, isLoading } = useGetCurrency();
@@ -80,7 +80,7 @@ const ExchangeFrom = () => {
       }));
     }
 
-    const isMomo = String(newValue.label).toLowerCase().search("xaf") !== -1;
+    const isMomo = String(newValue.symbol).toLowerCase() === "xaf";
     setTnxInfo((prevState) => ({
       ...prevState,
       [actionMeta.name]: isMomo ? "Number" : "Wallet Address",
@@ -123,7 +123,7 @@ const ExchangeFrom = () => {
       const _object = Object.entries(data)
         .filter((_obj) => _obj[1].active === "true")
         .map((_obj) => {
-          if (_obj[1].name === "United state (USD)")
+          if (String(_obj[1].code).toLowerCase() === "usdt")
             setBaseExchangeRate(_obj[1]);
           return {
             value: _obj[1].id,
@@ -132,6 +132,8 @@ const ExchangeFrom = () => {
             rate: parseFloat(_obj[1].rate),
             logo: String(_obj[1].logo).startsWith("http") ? _obj[1].logo : null,
             wallet: _obj[1].wallet,
+            code: _obj[1].code,
+            symbol: _obj[1].symbol,
           };
         });
       setOptions(_object);
@@ -189,14 +191,14 @@ const ExchangeFrom = () => {
               />
               {Object.keys(state.fromCurrency).length > 0 && (
                 <p style={{ color: "#757575", padding: 3 }}>
-                  1 <span>{baseExchangeRate["name"]}</span> ={" "}
+                  <span>{baseExchangeRate["symbol"]}</span>1 ={" "}
                   <span>
+                    {state.fromCurrency["symbol"]}
                     {calculateExchangeAmount(
                       baseExchangeRate["rate"],
                       state.fromCurrency["rate"],
                       1
                     )[0].toPrecision(4)}{" "}
-                    {state.fromCurrency["label"]}
                   </span>
                 </p>
               )}
@@ -281,14 +283,14 @@ const ExchangeFrom = () => {
               />
               {Object.keys(state.toCurrency).length > 0 && (
                 <p style={{ color: "#757575", padding: 3 }}>
-                  1 <span>{baseExchangeRate["name"]}</span> ={" "}
+                  <span>{baseExchangeRate["symbol"]}</span>1 ={" "}
                   <span>
+                    {state.toCurrency["symbol"]}
                     {calculateExchangeAmount(
                       baseExchangeRate["rate"],
-                      state.fromCurrency["rate"],
+                      state.toCurrency["rate"],
                       1
                     )[0].toPrecision(4)}{" "}
-                    {state.toCurrency["label"]}
                   </span>
                 </p>
               )}

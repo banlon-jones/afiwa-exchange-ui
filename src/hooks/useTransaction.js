@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 
 import APIClient from "../services/api-client";
 
-export const privateApiClient = new APIClient("/api/protected/transactions");
+export const privateApiClient = new APIClient("/protected/transactions");
 
 export const useCreateTransaction = () =>
   useMutation({
