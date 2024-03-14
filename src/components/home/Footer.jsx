@@ -9,14 +9,14 @@ import Container from "../container";
 import routes from "../../common/routes";
 import appStore from "../../store/appStore";
 
-const footer = () => {
+const Footer = () => {
   const { isLogin, logout } = appStore((state) => ({
     isLogin: state.isLogin,
     logout: state.logout,
   }));
 
   return (
-    <Footer>
+    <FooterContainer>
       <Container width="dynamic">
         <Grid>
           <Address>
@@ -70,7 +70,7 @@ const footer = () => {
           <p>2023 AFIWA, All rights reserved</p>
         </CopyRights>
       </Container>
-    </Footer>
+    </FooterContainer>
   );
 };
 
@@ -96,7 +96,7 @@ const Grid = styled("div", {
   },
 });
 
-const Footer = styled("div", {
+const FooterContainer = styled("div", {
   marginTop: "5rem",
   padding: "3em 0 0",
   borderTop: "1px solid",
@@ -181,4 +181,4 @@ const CopyRights = styled("div", {
   },
 });
 
-export default footer;
+export default Footer;

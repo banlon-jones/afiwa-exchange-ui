@@ -16,6 +16,7 @@ export default {
   create_account: "/register",
   reset_password: "/reset-password",
   profile: "/profile",
+  change_password: "/profile/change_password",
   admin: {
     dashboard: "/admin",
     exchange: "/admin/exchange",

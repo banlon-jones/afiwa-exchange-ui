@@ -23,6 +23,12 @@ const Dashboard = lazy(() => import("./pages/admin/Dashboard"));
 const AdminExchange = lazy(() => import("./pages/admin/Exchange"));
 const Rates = lazy(() => import("./pages/admin/Rates"));
 const Exchange = lazy(() => import("./pages/Exchange"));
+const General = lazy(() => import("./pages/profile/General"));
+const Password = lazy(() => import("./pages/profile/Password"));
+const FAQ = lazy(() => import("./pages/Faq"));
+const TermAndCondition = lazy(() => import("./pages/TermAndCondition"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const Affiliate = lazy(() => import("./pages/Affiliate"));
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -49,11 +55,21 @@ export default function App() {
         <Routes>
           <Route path={routes.home} element={<Routers />}>
             <Route path={routes.home} element={<Home />} />
+            <Route path={routes.faq} element={<FAQ />} />
+            <Route
+              path={routes.terms_of_service}
+              element={<TermAndCondition />}
+            />
+            <Route path={routes.privacy_policy} element={<PrivacyPolicy />} />
+            <Route path={routes.affiliate} element={<Affiliate />} />
+
             <Route
               path={routes.exchange_details}
               element={next(<ExchangeDetails />)}
             />
             <Route path={routes.exchange} element={next(<Exchange />)} />
+            <Route path={routes.profile} element={next(<General />)} />
+            <Route path={routes.change_password} element={next(<Password />)} />
             <Route path={routes.login} element={<Login />} />
             <Route path={routes.create_account} element={<CreateAccount />} />
             <Route path={routes.reset_password} element={<ResetPassword />} />
