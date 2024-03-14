@@ -19,8 +19,10 @@ export const uuid = () => {
 };
 
 export const calculateExchangeAmount = (fromRate, toRate, amount) => {
-  const rate = parseFloat(fromRate) / parseFloat(toRate);
-  return [rate, parseFloat(amount) * rate];
+  const exchange_amount =
+    (parseFloat(amount) / parseFloat(fromRate)) * parseFloat(toRate);
+  const rate = parseFloat(amount) / exchange_amount;
+  return [rate, exchange_amount];
 };
 
 export const sortTransactionsByCreateDate = (data) =>
