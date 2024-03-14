@@ -29,6 +29,7 @@ const FAQ = lazy(() => import("./pages/Faq"));
 const TermAndCondition = lazy(() => import("./pages/TermAndCondition"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const Affiliate = lazy(() => import("./pages/Affiliate"));
+const News = lazy(() => import("./pages/News"));
 
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -62,7 +63,7 @@ export default function App() {
             />
             <Route path={routes.privacy_policy} element={<PrivacyPolicy />} />
             <Route path={routes.affiliate} element={<Affiliate />} />
-
+            <Route path={routes.news} element={<News />} />
             <Route
               path={routes.exchange_details}
               element={next(<ExchangeDetails />)}

@@ -4,7 +4,7 @@ import { styled } from "../common/stitches";
 import Container from "../components/container";
 import Header from "../components/home/Header";
 import Footer from "../components/home/Footer";
-import "../style/faq.css";
+import style from "../style/faq.module.css";
 
 const Faq = () => {
   const [faqs, setFaqs] = useState([
@@ -204,15 +204,17 @@ const Faq = () => {
         <Header />
       </Container>
       <Container width="dynamic" add="headerMargin" style={{ flex: 1 }}>
-        <List className="faqs">
+        <List className={style.faqs}>
           {faqs.map((faq, index) => (
             <ListItem
               key={index}
-              className={"faq " + (faq.open ? "open" : "")}
+              className={[style.faq, faq.open ? style.open : ""].join(" ")}
               onClick={() => toggleFAQ(index)}
             >
-              <Heading className="faq-question">{faq.question}</Heading>
-              <Text className="faq-answer">{ReactHtmlParser(faq.answer)}</Text>
+              <Heading className={style.faq_question}>{faq.question}</Heading>
+              <Text className={style.faq_answer}>
+                {ReactHtmlParser(faq.answer)}
+              </Text>
             </ListItem>
           ))}
         </List>

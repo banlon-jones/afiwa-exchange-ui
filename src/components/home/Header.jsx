@@ -12,7 +12,7 @@ import routes from "../../common/routes";
 import Container from "../container";
 import SelectLanguage from "../select/language";
 import MenuToggleBar from "../PopOver";
-import "../../style/popover-style.module.css";
+import "../../style/popover.module.css";
 import appStore from "../../store/appStore";
 
 const header = () => {

@@ -37,7 +37,7 @@ const Footer = () => {
             <LinkWrapper>
               <NavLink to={routes.terms_of_service}>Terms of Service</NavLink>
               <NavLink to={routes.privacy_policy}>Privacy Policy</NavLink>
-              <NavLink to={routes.about_us}>About Us</NavLink>
+              {/* <NavLink to={routes.about_us}>About Us</NavLink> */}
             </LinkWrapper>
           </LinkContainer>
           <LinkContainer gridArea="quick_link">
