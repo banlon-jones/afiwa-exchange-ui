@@ -4,6 +4,8 @@ import { styled } from "../../common/stitches";
 import toastStore from "../../store/toastStore";
 import appStore from "../../store/appStore";
 import { useUpdateUserPassword } from "../../hooks/useSession";
+import { NavLink } from "react-router-dom";
+import routes from "../../common/routes";
 
 const Password = () => {
   const { mutate, data, isError, error } = useUpdateUserPassword();
@@ -95,7 +97,12 @@ const Password = () => {
             onChange={handleChange}
           />
         </FormControl>
-        <Button>save changes</Button>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Button>save changes</Button>
+          <NavLink to={routes.home}>
+            <Button type="outline">back home</Button>
+          </NavLink>
+        </div>
       </Form>
     </Panel>
   );
@@ -143,10 +150,22 @@ const Button = styled("button", {
   backgroundColor: "#4253F0",
   color: "white",
   borderRadius: 20,
-  marginLeft: "auto",
+  transition: "all 0.2s ease-in-out",
   textTransform: "capitalize",
   "@bp1024": {
     padding: "5px 15px",
+  },
+  variants: {
+    type: {
+      outline: {
+        backgroundColor: "transparent",
+        border: "1px solid lightgrey",
+        color: "gray",
+        "&:hover": {
+          transform: "scale(0.9)",
+        },
+      },
+    },
   },
 });
 
