@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Panel from "./Panel";
 import { styled } from "../../common/stitches";
 import toastStore from "../../store/toastStore";
 import appStore from "../../store/appStore";
+import { useUpdateUserPassword } from "../../hooks/useSession";
 
 const Password = () => {
-  const { logout } = appStore((state) => ({ logout: state.logout }));
+  const { mutate, data, isError, error } = useUpdateUserPassword();
+  const { user, logout } = appStore((state) => ({
+    user: state.user,
+    logout: state.logout,
+  }));
   const addNotification = toastStore((state) => state.add);
   const [updatePassword, setUpdatePassword] = useState({
     password: "",
@@ -29,16 +34,43 @@ const Password = () => {
       });
       return;
     }
-    console.log(updatePassword);
 
-    addNotification({
-      title: "Update Successful",
-      message: "Password succesfully updated",
-      type: "success",
-    });
+    if (updatePassword.password !== updatePassword.new_password) {
+      addNotification({
+        title: "Password mismatch",
+        message: "New password and Confirm password do not match",
+        type: "error",
+      });
+      return;
+    }
 
-    logout();
+    mutate({ email: user.email, password: updatePassword.new_password });
   };
+
+  useEffect(() => {
+    if (isError) {
+      addNotification({
+        title: "Error",
+        message: error.response.data.message,
+        type: "error",
+      });
+    }
+  }, [error?.response, isError, addNotification]);
+
+  useEffect(() => {
+    if (data?.uid) {
+      addNotification({
+        title: "Password Changed",
+        message:
+          "Your password was changed successfully \nPlease login to continue",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        logout();
+      }, 5000);
+    }
+  }, [data, addNotification, logout]);
 
   return (
     <Panel active="password">
@@ -48,17 +80,17 @@ const Password = () => {
             id="password"
             type="password"
             name="password"
-            placeholder="Enter old password"
+            placeholder="Enter password"
             value={updatePassword.password}
             onChange={handleChange}
           />
         </FormControl>
-        <FormControl htmlFor="new_password" label="New Password">
+        <FormControl htmlFor="new_password" label="Confirm New Password">
           <Input
             id="new_password"
             type="password"
             name="new_password"
-            placeholder="New password"
+            placeholder="Confirm New Password"
             value={updatePassword.new_password}
             onChange={handleChange}
           />

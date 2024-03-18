@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "../../common/stitches";
 import Panel from "./Panel";
 import appStore from "../../store/appStore";
 import { useState } from "react";
 import toastStore from "../../store/toastStore";
+import { useUpdateUserProfile } from "../../hooks/useSession";
 
 const General = () => {
+  const { mutate, data, error, isError } = useUpdateUserProfile();
   const addNotification = toastStore((state) => state.add);
   const { user, setUser } = appStore((state) => ({
     user: state.user,
     setUser: state.setUser,
   }));
   const [updateUser, setUpdateUser] = useState({
-    email: user.email,
+    fullName: user.fullName,
     phoneNumber: user.phoneNumber,
   });
 
@@ -26,7 +28,7 @@ const General = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (
-      user.email === updateUser.email &&
+      user.fullName === updateUser.fullName &&
       user.phoneNumber === updateUser.phoneNumber
     ) {
       addNotification({
@@ -37,20 +39,53 @@ const General = () => {
       return;
     }
 
-    console.log(updateUser);
+    mutate({ ...updateUser, email: user.email });
   };
+
+  useEffect(() => {
+    if (isError) {
+      addNotification({
+        title: "Error",
+        message: error.response.data.message,
+        type: "error",
+      });
+    }
+  }, [error?.response, isError, addNotification]);
+
+  useEffect(() => {
+    if (data?.uid) {
+      addNotification({
+        title: "Profile updated",
+        message: "Your profile was updated successfully",
+        type: "success",
+      });
+
+      setUser({
+        user: {
+          ...user,
+          fullName: updateUser.fullName,
+          phoneNumber: updateUser.phoneNumber,
+        },
+      });
+    }
+  }, [data, addNotification]); // eslint-disable-line
 
   return (
     <Panel active="general">
       <Form onSubmit={handleSubmit}>
-        <FormControl htmlFor="email" label="Email">
+        <FormControl
+          htmlFor="fullName"
+          label="Full Name"
+          style={{ width: "100%" }}
+        >
           <Input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="example@example.com"
-            value={updateUser.email}
+            id="fullName"
+            type="text"
+            name="fullName"
+            placeholder="John Doe"
+            value={updateUser.fullName}
             onChange={handleChange}
+            style={{ width: "100%" }}
           />
         </FormControl>
         <FormControl htmlFor="phoneNumber" label="Number">
@@ -82,9 +117,9 @@ const FormWrapper = styled("div", {
   gap: 5,
 });
 
-const FormControl = ({ label, htmlFor, children }) => {
+const FormControl = ({ label, htmlFor, children, ...props }) => {
   return (
-    <FormWrapper>
+    <FormWrapper {...props}>
       <label htmlFor={htmlFor}>{label}</label>
       {children}
     </FormWrapper>
