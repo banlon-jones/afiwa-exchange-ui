@@ -198,7 +198,7 @@ const ExchangeFrom = () => {
                       baseExchangeRate["rate"],
                       state.fromCurrency["rate"],
                       1
-                    )[0].toPrecision(4)}{" "}
+                    )[1].toPrecision(4)}{" "}
                   </span>
                 </p>
               )}
@@ -290,7 +290,7 @@ const ExchangeFrom = () => {
                       baseExchangeRate["rate"],
                       state.toCurrency["rate"],
                       1
-                    )[0].toPrecision(4)}{" "}
+                    )[1].toPrecision(4)}{" "}
                   </span>
                 </p>
               )}

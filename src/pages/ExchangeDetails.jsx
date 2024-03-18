@@ -15,6 +15,7 @@ import appStore from "../store/appStore";
 import { useCreateTransaction } from "../hooks/useTransaction";
 import ExchangeOverview from "../components/exchange/ExchangeOverview";
 import CopyToClipboard from "../components/CopyToClipboard";
+import { calculateExchangeAmount } from "../common/utils";
 
 const ExchangeDetails = () => {
   const addNotification = toastStore((state) => state.add);
@@ -108,6 +109,8 @@ const ExchangeDetails = () => {
 
   if (state === null || user === null) return;
 
+  console.log(state);
+
   return (
     <Main>
       <Container>
@@ -124,7 +127,11 @@ const ExchangeDetails = () => {
           <FlexContainer title="Exchange rate">
             <p style={{ fontSize: 15 }}>
               {state.fromCurrency.symbol}1 = {state.toCurrency.symbol}
-              {state.exchangeRate}{" "}
+              {calculateExchangeAmount(
+                state.fromCurrency["rate"],
+                state.toCurrency["rate"],
+                1
+              )[1].toPrecision(4)}{" "}
             </p>
           </FlexContainer>
           <FlexContainer title="Status">

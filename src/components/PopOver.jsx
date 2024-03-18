@@ -24,7 +24,11 @@ const MenuToggleBar = ({ className }) => {
         </IconButton>
       </Popover.Trigger>
       <Popover.Portal>
-        <PopoverContent sideOffset={5} id="public-header-popover-content">
+        <PopoverContent
+          sideOffset={5}
+          id="public-header-popover-content"
+          className="PopoverContent"
+        >
           <Flex css={{ flexDirection: "column", gap: 5 }}>
             <NavLink to={routes.exchange} style={{ display: "block" }}>
               Echange

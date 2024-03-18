@@ -19,7 +19,7 @@ const schema = Yup.object().shape({
   email: Yup.string().required("Email is required").email("Invalid email"),
   password: Yup.string()
     .required("No password provided.")
-    .min(4, "Password is too short - should be 4 chars minimum."),
+    .min(6, "Password is too short - should be 6 chars minimum."),
   confirmPassword: Yup.string().oneOf(
     [Yup.ref("password"), null],
     "Passwords must match"

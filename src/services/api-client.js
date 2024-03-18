@@ -28,6 +28,7 @@ axiosInstance.interceptors.response.use(
     if (parseInt(error?.response.status) === 403) {
       appStore.getState().logout();
     }
+    return Promise.reject(error);
   }
 );
 
@@ -38,26 +39,20 @@ class APIClient {
     this.baseEndPoint = endpoint;
   }
 
-  post = async (endpoint = "", data) => {
-    const res = await axiosInstance.post(
-      `${this.baseEndPoint}${endpoint}`,
-      data
-    );
-    return res.data;
-  };
+  post = (endpoint = "", data) =>
+    axiosInstance
+      .post(`${this.baseEndPoint}${endpoint}`, data)
+      .then((res) => res.data);
 
-  get = async (endpoint = "") => {
-    const res = await axiosInstance.get(`${this.baseEndPoint}${endpoint}`);
-    return res.data;
-  };
+  get = (endpoint = "") =>
+    axiosInstance
+      .get(`${this.baseEndPoint}${endpoint}`)
+      .then((res) => res.data);
 
-  put = async (endpoint = "", data) => {
-    const res = await axiosInstance.put(
-      `${this.baseEndPoint}${endpoint}`,
-      data
-    );
-    return res;
-  };
+  put = async (endpoint = "", data) =>
+    axiosInstance
+      .put(`${this.baseEndPoint}${endpoint}`, data)
+      .then((res) => res.data);
 }
 
 export default APIClient;

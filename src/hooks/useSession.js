@@ -21,11 +21,11 @@ async function firebaseLogin(data, setUser) {
 
   setTimeout(() => {}, 1000);
   const userRes = await privateApiClient.get();
+
   setUser({
-    // token: baseRes.user.accessToken,
     isLogin: true,
     user: {
-      name: userRes.name,
+      fullName: userRes.fullName,
       email: userRes.email,
       emailVerified: userRes.emailVerified,
       phoneNumber: userRes.phoneNumber,
@@ -38,7 +38,10 @@ async function firebaseLogin(data, setUser) {
 }
 
 export const useCreateAccount = () =>
-  useMutation({ mutationFn: (data) => publicApiClient.post("/signup", data) });
+  useMutation({
+    mutationKey: ["user_signup"],
+    mutationFn: (data) => publicApiClient.post("/signup", data),
+  });
 
 export const useLogin = () =>
   useMutation({
@@ -51,4 +54,16 @@ export const useGetUserTransactions = () =>
     queryKey: ["user_transactions"],
     queryFn: () => privateApiClient.get(),
     staleTime: 60000,
+  });
+
+export const useUpdateUserProfile = () =>
+  useMutation({
+    mutationKey: ["user_update"],
+    mutationFn: (data) => privateApiClient.put("/update", data),
+  });
+
+export const useUpdateUserPassword = () =>
+  useMutation({
+    mutationKey: ["user_password"],
+    mutationFn: (data) => publicApiClient.put("/update-password", data),
   });
