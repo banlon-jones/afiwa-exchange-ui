@@ -73,15 +73,28 @@ const header = () => {
                 </NavigationMenu.Item>
               </>
             ) : (
-              <Button
-                style={{
-                  padding: "7px 25px",
-                  border: "1px solid dodgerblue",
-                }}
-                onClick={() => logout()}
-              >
-                Logout
-              </Button>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <NavLink to={routes.profile}>
+                  <Button
+                    color="blue"
+                    style={{
+                      padding: "7px 25px",
+                      border: "1px solid dodgerblue",
+                    }}
+                  >
+                    Profile
+                  </Button>
+                </NavLink>
+                <Button
+                  style={{
+                    padding: "7px 25px",
+                    border: "1px solid dodgerblue",
+                  }}
+                  onClick={() => logout()}
+                >
+                  Logout
+                </Button>
+              </div>
             )}
           </NavBar>
           <MenuToggleBar className="enable" />
