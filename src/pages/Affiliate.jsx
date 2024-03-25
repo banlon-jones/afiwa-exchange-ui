@@ -12,47 +12,44 @@ const PrivacyPolicy = () => {
       </Container>
       <Container width="dynamic" add="headerMargin" style={{ flex: 1 }}>
         <h1 style={{ fontWeight: 600, marginBottom: 5, fontSize: 25 }}>
-          PROGRAMME D'AFFILIATION
+          AFFILIATE PROGRAM
         </h1>
         <p>
-          Tout utilisateur enregistré sur AfiwaExchange a la possibilité de
-          participer à notre programme d'affiliation. Grâce à ce programme, vous
-          avez la possibilité de générer des revenus, pouvant aller jusqu'à 5%
-          de l'ensemble des transactions réalisées par le biais de votre lien
-          affilié. Vous avez la flexibilité totale de retirer vos gains à tout
-          moment, selon votre convenance. Les bénéfices seront traités et versés
-          dans un délai allant de 1 à 5 jours ouvrables.
+          Any registered user on AfiwaExchange has the opportunity to
+          participate in our affiliate program. Thanks to this program, you have
+          the opportunity to generate income of up to 5% of all transactions
+          carried out through your affiliate link. You have complete flexibility
+          to withdraw your winnings at any time as per your convenience. Profits
+          will be processed and paid within 1-5 business days.
         </p>
         <br />
         <p>
           <h3 style={{ fontWeight: 600, marginBottom: 5, fontSize: 18 }}>
-            Fonctionnement du Programme:
+            How the Program works:
           </h3>
-          Lorsqu'un nouvel utilisateur accède à notre plateforme via votre lien
-          affilié, notre système enregistre automatiquement votre numéro
-          d'identification. Si cet utilisateur effectue avec succès une
-          transaction sur notre plateforme, vous recevrez 2% du montant de la
-          différence entre les deux devises échangées. Par exemple, si un
-          utilisateur décide d'échanger 100 dollars avec un taux de change de 1
-          = 0,95, l'utilisateur recevra 95 dollars, et vous obtiendrez 5% de la
-          différence, soit 5% de 5.
+          When a new user accesses our platform through your affiliate link, our
+          system automatically records your ID number. If this user successfully
+          completes a transaction on our platform, you will receive 2% of the
+          difference amount between the two currencies exchanged. For example,
+          if a user decides to exchange 100 dollars with an exchange rate of 1 =
+          0.95, the user will receive 95 dollars, and you will get 5% of the
+          difference, or 5% of 5 .
         </p>
         <br />
         <p>
           <h3 style={{ fontWeight: 600, marginBottom: 5, fontSize: 18 }}>
-            Comment utiliser le Programme d'Affiliation:
+            How to use the Affiliate Program:
           </h3>
-          - Connectez-vous à votre compte.
-          <br />- Rendez-vous dans l'onglet "Affiliation."
-          <br />- Copiez le lien d'affiliation généré et partagez-le avec vos
-          amis, sur les réseaux sociaux, ou tout autre endroit pertinent.
-          Attendez-vous à générer des revenus grâce à ce partage.
+          - Sign into your account.
+          <br />- Go to the “Affiliation” tab.
+          <br />- Copy the generated affiliate link and share it with your
+          friends, on social networks, or any other relevant place. Expect to
+          generate revenue from this sharing.
         </p>
         <br />
         <p>
-          N'hésitez pas à nous contacter si vous avez des questions ou besoin
-          d'informations supplémentaires. Nous sommes à votre disposition pour
-          vous assister.
+          Please do not hesitate to contact us if you have any questions or need
+          additional information. We are at your disposal to assist you.
         </p>
       </Container>
       <Container>

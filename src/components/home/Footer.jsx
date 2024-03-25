@@ -157,13 +157,14 @@ const H2 = styled("h2", {
   fontWeight: "bold",
   textTransform: "uppercase",
   color: blackA.blackA10,
+  marginBottom: 10,
 });
 
 const LinkWrapper = styled("div", {
   display: "flex",
   flexDirection: "column",
   color: "#757575",
-  gap: 15,
+  gap: 10,
 });
 
 const CopyRights = styled("div", {

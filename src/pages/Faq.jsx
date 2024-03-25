@@ -10,176 +10,270 @@ const Faq = () => {
   const [faqs, setFaqs] = useState([
     {
       question:
-        "Pièces transférées en deux transactions. À combien s'élèvera l'échange?",
+        "Coins transferred in two transactions. How much will the exchange be?",
       answer:
-        "Dans le cas où les pièces ont été transférées en deux transactions, l'échange sera automatiquement ajusté au montant de la transaction qui recevra en premier la confirmation. L'échange sera complété pour ce montant, contrairement à ce que vous avez indiqué dans la demande. Veuillez noter que la deuxième transaction ne sera pas prise en compte par l'échangeur. Pour obtenir un remboursement de l'excédent, veuillez contacter le service d'assistance d'AfiwaExchange. Les remboursements seront effectués conformément à notre politique AfiwaExchange.",
+        "In case the coins were transferred in two transactions, the exchange will automatically be adjusted to the amount of the transaction that receives confirmation first. The exchange will be completed for this amount, contrary to what you indicated in the request. Please note that the second transaction will not be considered by the exchanger. To obtain a refund of the excess, please contact AfiwaExchange Support. Refunds will be made in accordance with our AfiwaExchange policy.",
       open: false,
     },
     {
-      question:
-        "Par erreur, j'ai transféré plus de pièces à l'échangeur que ce que j'avais indiqué dans la demande. Que dois-je faire?",
-      answer:
-        "Si vous avez transféré plus de pièces que ce que vous aviez indiqué dans la demande, l'échange sera traité automatiquement pour le montant spécifié dans la demande. Nous ne pouvons pas ajuster automatiquement et augmenter le montant de la demande pour verser plus de fonds que ce qui est indiqué, en raison de diverses restrictions et limites. Pour restituer la différence, veuillez contacter le service d'assistance AfiwaExchange. Les remboursements seront effectués conformément à notre politique AfiwaExchange.",
+      question: `By mistake, I transferred more coins to the exchanger than I indicated in the request. What should I do?`,
+      answer: `If you transferred more coins than you indicated in the request, the exchange will be
+      processed automatically for the amount specified in the request. We cannot automatically adjust and
+      increase the request amount to pay out more funds than indicated, due to various restrictions and
+      limitations. To return the difference, please contact the AfiwaExchange support service. Refunds will
+      be made in accordance with our AfiwaExchange policy.`,
       open: false,
     },
     {
-      question:
-        "J'ai transféré moins de pièces que ce que j'avais indiqué lors du remplissage de la demande sur le site Web. Mon échange sera-t-il complété ?",
-      answer:
-        "Si le montant du paiement est inférieur au seuil minimum précisé sur le site, la demande ne sera pas traitée automatiquement. Pour résoudre le problème, vous devez contacter le service d'assistance AfiwaExchange. L'opérateur vous proposera des options pour résoudre le problème. Dans d'autres cas, lorsque le client a payé moins que ce qui est indiqué dans la demande, le montant sera ajusté, et l'échange sera complété automatiquement sans l'intervention de l'opérateur. Il n'est pas nécessaire de contacter le service d'assistance.",
+      question: `I transferred fewer coins than I indicated when filling out the application on the website. Will my exchange be completed?`,
+      answer: `If the payment amount is lower than the minimum threshold specified on the site, the request
+        will not be processed automatically. To resolve the issue, you need to contact AfiwaExchange
+        Support. The operator will offer you options to resolve the problem. In other cases, when the customer
+        has paid less than indicated in the request, the amount will be adjusted, and the exchange will be
+        completed automatically without operator intervention. There is no need to contact support.`,
       open: false,
     },
     {
-      question:
-        "Le temps de payer pour l'application est compté, et mon échange cryptographique retarde le transfert des pièces. Que dois-je faire?",
-      answer:
-        "Pas besoin de s'inquiéter ! L'adresse attribuée pour le paiement de la demande reste active dans notre système en permanence. Si les pièces arrivent à l'adresse de l'échangeur après l'annulation de la commande en raison d'un délai d'attente, l'échange ne sera pas terminé automatiquement. Vous devez attendre que la bourse ait fini de transférer les fonds, et la transaction dans la blockchain reçoive le nombre de confirmations requis par l'échangeur. Après cela, vous pouvez contacter le support AfiwaExchange. Les opérateurs vérifieront la réception des pièces à votre adresse et traiteront l'échange manuellement.",
+      question: `The time to pay for the app is running out, and my crypto exchange is delaying the transfer of coins. What should I do?`,
+      answer: `No need to worry! The address assigned for payment of the request remains active in our
+        system permanently. If the parts arrive at the exchanger's address after the order is canceled due to a
+        waiting time, the exchange will not be completed automatically. You need to wait until the exchange
+        finishes transferring the funds, and the transaction in the blockchain receives the number of
+        confirmations required by the exchanger. After that, you can contact AfiwaExchange support.
+        Operators will verify receipt of coins at your address and process the exchange manually.`,
       open: false,
     },
     {
-      question:
-        "Je ne peux pas vous payer en Litecoin car mon échange crypto ne prend pas en charge ce format d'adresse.",
-      answer:
-        "Depuis l'ajout du support SegWit à Litecoin en avril 2017, les adresses commençant par M ont été associées à des adresses commençant par 3. Nous générons des adresses au format P2WSH commençant par M, qui sont des adresses compatibles SegWit. Nous n'utilisons pas l'ancien format d'adresse P2SH. Actuellement, le problème ne devrait pas affecter le réseau Litecoin dans son ensemble, car tous les participants étaient tenus de mettre à jour leur logiciel. Si un échange cryptographique ou un portefeuille n'utilise pas l'ancien format d'adresse, cela devrait provoquer l'indignation des utilisateurs, car il y a eu largement le temps de changer. Cependant, si vous avez des problèmes pour transférer des fonds vers des adresses P2WSH commençant par M, vous pouvez utiliser des convertisseurs, comme AfiwaExchange. Il est important de noter que c'est un logiciel tiers, et l'échangeur n'est pas responsable de son fonctionnement.",
+      question: `I can't pay you in Litecoin because my crypto exchange doesn't support this address format.`,
+      answer: `Since SegWit support was added to Litecoin in April 2017, addresses starting with M have
+        been mapped to addresses starting with 3. We generate addresses in P2WSH format starting with M,
+        which are SegWit compatible addresses. We do not use the old P2SH address format. Currently, the
+        issue is not expected to affect the Litecoin network as a whole, as all participants were required to
+        update their software. If a crypto exchange or wallet does not use the old address format, it should
+        cause outrage among users, as there has been plenty of time to change. However, if you have
+        problems transferring funds to P2WSH addresses starting with M, you can use converters, like
+        AfiwaExchange. It is important to note that this is third-party software, and the exchanger is not
+        responsible for its operation.`,
       open: false,
     },
     {
-      question:
-        "J'ai payé à l'échangeur Ripple, mais ma demande a été annulée. Que dois-je faire?",
-      answer: `Cela peut se produire pour plusieurs raisons. Voici trois raisons courantes et les étapes à suivre :
-        <ol>
-          <br/><li>1. Le montant que vous avez payé à l'échangeur diffère du montant que vous avez indiqué lors du remplissage de la demande. L'échangeur s'attend à une correspondance à 100 % entre le montant spécifié dans la demande et le montant du transfert. Si ces montants diffèrent, le paiement n'est pas automatiquement reconnu par le système. Contactez le support de l'échangeur pour résoudre ce problème. Les opérateurs ajusteront le montant de la demande et termineront l'échange manuellement.</li>
-          <br/><li>2. Le client n'a pas indiqué de "Tag" lors du paiement. Une étiquette de paiement est importante pour identifier automatiquement le paiement du client. Si le "Tag" n'est pas spécifié ou s'il est modifié, le système ne trouvera pas le paiement. Contactez le support de l'échangeur pour résoudre ce problème. Les opérateurs trouveront votre paiement et termineront l'échange manuellement.</li>
-          <br/><li>3. Le paiement a été effectué après l'annulation de la demande en raison d'un délai d'attente. Cela se produit généralement lorsque vous effectuez un transfert vers l'adresse de l'échangeur à partir du compte d'une bourse de cryptomonnaies qui peut avoir des délais. Une fois la transaction enregistrée dans le navigateur de blocs, contactez le support de l'échangeur. Les opérateurs trouveront votre paiement et termineront l'échange manuellement.</li>
-        </ol>`,
+      question: `I paid to the Ripple exchanger, but my request was canceled. What should I do?`,
+      answer: `This can happen for several reasons. Here are three common reasons and steps to follow:
+      <ol>
+        <br/><li>The amount you paid to the exchanger differs from the amount you indicated when filling out the
+          application. The exchanger expects a 100% match between the amount specified in the request and
+          the transfer amount. If these amounts differ, the payment is not automatically recognized by the
+          system. Contact exchanger support to resolve this issue. Operators will adjust the request amount
+          and complete the exchange manually.
+        </li>
+        <br/><li>The customer did not indicate a "Tag" when paying. A payment label is important to automatically
+          identify the customer's payment. If the "Tag" is not specified or if it is modified, the system will not find
+          the payment. Contact exchanger support to resolve this issue. Operators will find your payment and
+          complete the exchange manually.
+        </li>
+          <br/><li>Payment was made after the request was canceled due to a timeout. This usually happens when
+          you make a transfer to the exchanger's address from the account of a cryptocurrency exchange which
+          may have delays. After the transaction is saved in the block browser, contact the exchanger's support.
+          Operators will find your payment and complete the exchange manually.
+        </li>
+      </ol>`,
       open: false,
     },
     {
-      question:
-        "Par quel réseau dois-je transférer les pièces Tether ERC20 (USDT), Ethereum, XRP, BTC, TRC, LTC, etc. ?",
-      answer: `Lors du choix du sens d'échange, faites attention à la valeur du réseau de cryptomonnaie affichée sur la vitrine. Si le réseau "Binance" n'est pas affiché dans la fenêtre de sélection du changement de cryptomonnaie, alors vous devez transférer les tokens dans le réseau standard de la devise sélectionnée.
-        <br/>Si vous transférez d'autres tokens qui ne sont pas sur le réseau standard, nous ne les verrons pas, car l'adresse de paiement accepte uniquement les tokens sur un certain réseau. Vous devez donc vous assurer que vous utilisez le réseau correct pour transférer des fonds.`,
+      question: `Through which network should I transfer Tether ERC20 (USDT), Ethereum, XRP, BTC,
+TRC, LTC, etc. coins?`,
+      answer: `When choosing the direction of exchange, pay attention to the value of the cryptocurrency
+network displayed on the showcase. If the "Binance" network is not displayed in the cryptocurrency
+change selection window, then you need to transfer the tokens to the standard network of the
+selected currency.<br/>If you transfer other tokens that are not on the standard network, we will not see them, because the
+payment address only accepts tokens on a certain network. So you need to make sure that you are
+using the correct network to transfer funds.`,
       open: false,
     },
     {
-      question: "L'inscription est-elle obligatoire sur votre site ?",
-      answer:
-        "Non, l'inscription n'est pas obligatoire. Cependant, si vous vous inscrivez, vous pourrez suivre l'historique de vos échanges dans votre compte personnel.",
+      question: `Is registration required on your site?`,
+      answer: `No, registration is not compulsory. However, if you register, you will be able to track your
+trading history in your personal account.`,
       open: false,
     },
     {
-      question: "Avez-vous des réductions ou des offres spéciales ?",
-      answer:
-        "Toute condition particulière doit être négociée en privé. En général, elles sont offertes pour des montants d'échange importants. Pour convenir de ces conditions, créez un ticket dans notre système d'assistance AfiwaExchange en précisant le sens de l'échange et le montant.",
+      question: `Do you have any discounts or special offers?`,
+      answer: `Any special conditions must be negotiated privately. Generally, they are offered for large
+exchange amounts. To agree to these conditions, create a ticket in our AfiwaExchange support
+system specifying the direction of the exchange and the amount.`,
       open: false,
     },
     {
-      question:
-        "J'ai choisi une devise à échanger, mais maintenant je veux en obtenir une autre. Pouvez-vous faire un remplacement ?",
-      answer:
-        "Un tel changement n'est pas prévu par notre règlement de travail. Si vous ne pouvez pas recevoir de fonds de l'échangeur, vers le portefeuille spécifié dans l'application et dans la devise que vous avez choisie, il vous sera demandé d'effectuer un remboursement conformément à notre politique AfiwaExchange.",
+      question: `I chose a currency to trade, but now I want to get another one. Can you make a
+replacement?`,
+      answer: `Such a change is not provided for in our work regulations. If you are unable to receive funds
+from the exchanger, to the wallet specified in the app and in your chosen currency, you will be asked
+to make a refund in accordance with our AfiwaExchange policy.`,
       open: false,
     },
     {
-      question: "L'échange des candidatures a commencé. Quel est le problème?",
-      answer: `Parmi les principales raisons pour lesquelles cette situation peut se produire, les plus courantes sont :
-      <br/>- Erreur dans les détails du destinataire ;
-      <br/>- Dépassement de la limite du solde des fonds ;
-      <br/>- Défaillance technique du service ;
-      <br/>- Problèmes du côté des systèmes de paiement.
-      <br/>Dans tous les cas, il est important de comprendre que les fonds reçus par l'échangeur ne peuvent pas simplement disparaître. Si vous rencontrez une telle situation, veuillez contacter le service support AfiwaExchange. Les opérateurs vous aideront à résoudre le problème.`,
+      question: `The exchange of applications has begun. What is the problem?`,
+      answer: `Among the main reasons why this situation can occur, the most common are:
+      <ul>
+      <br/><li>- Error in recipient details;</li>
+      <br/><li>- Exceeding the fund balance limit;</li>
+      <br/><li>- Technical failure of the service;</li>
+      <br/><li>- Problems with payment systems.</li>
+      </ul>In any case, it is important to understand that the funds received by the exchanger cannot simply
+disappear. If you encounter such a situation, please contact the AfiwaExchange support service. The
+operators will help you resolve the problem.`,
       open: false,
     },
     {
-      question: "L'échange a été suspendu. Pourquoi?",
-      answer:
-        "Le service AfiwaExchange a le droit de suspendre le fonctionnement et de retenir les fonds de l'utilisateur afin d'éviter des actions frauduleuses et d'autres activités qui pourraient entraîner des pertes financières et de réputation pour le service ou l'utilisateur. Si vous rencontrez une telle situation, veuillez contacter le service support AfiwaExchange. Les opérateurs vérifieront, identifieront la cause et suggéreront des moyens de résoudre le problème. Veuillez noter que certaines activités telles que la création d'un grand nombre de demandes d'échange pour attraper un taux préférentiel sans effectuer la majorité des échanges payants peuvent entraîner la suspension de vos échanges, conformément à nos conditions d'utilisation.",
+      question: `The exchange has been suspended. For what?`,
+      answer: `The AfiwaExchange Service has the right to suspend operation and withhold User funds in
+order to avoid fraudulent actions and other activities that could lead to financial and reputationallosses for the Service or the User. If you encounter such a situation, please contact the
+AfiwaExchange support service. Operators will check, identify the cause and suggest ways to resolve
+the problem. Please note that certain activities such as creating a large number of trade requests to
+catch a preferred rate without completing the majority of paid trades may result in your trades being
+suspended, in accordance with our Terms of Service.`,
       open: false,
     },
     {
-      question:
-        "Pourquoi le taux de change indiqué sur ma demande a-t-il été modifié ?",
-      answer:
-        "AfiwaExchange est un service d'échange automatique qui traite les échanges avec intervention manuelle. La politique de prix d'AfiwaExchange repose sur un algorithme automatique capable de modifier les taux de change à tout moment en fonction des conditions du marché. Le taux de conversion est généralement fixé lorsque l'utilisateur remplit le formulaire d'échange. Cependant, le taux peut changer avant que l'utilisateur procède au paiement. Le taux auquel l'échange est effectué est celui qui est affiché lorsque l'utilisateur clique sur 'Procéder au paiement'. Le service explique que le taux peut changer pour des raisons diverses et insiste sur l'importance de surveiller le taux tout au long du processus d'échange.",
+      question: `Why has the exchange rate shown on my application changed?`,
+      answer: `AfiwaExchange is an automatic exchange service that processes exchanges with manual
+intervention. AfiwaExchange's pricing policy is based on an automatic algorithm capable of changing
+exchange rates at any time based on market conditions. The conversion rate is usually set when the
+user fills out the redemption form. However, the rate may change before the user makes the payment.
+The rate at which the exchange is made is the one displayed when the user clicks on "Proceed to
+payment". The service explains that the rate can change for various reasons and emphasizes the
+importance of monitoring the rate throughout the exchange process.`,
       open: false,
     },
     {
-      question: "Une fois mon paiement effectué, le taux de change a changé.",
-      answer:
-        "AfiwaExchange est un service d'échange entièrement automatique qui attend 20 minutes pour que les fonds arrivent à son adresse ou compte. Si les fonds n'arrivent pas dans ce délai, l'échange est annulé, et les fonds de l'échange sont retirés de la réserve. Pour résoudre ce problème, l'utilisateur doit contacter le support AfiwaExchange. Deux options sont généralement proposées : des remboursements conformément à la politique de remboursement d'AfiwaExchange ou la reprise et la finalisation de l'échange avec un éventuel changement du taux. Le taux actuel d'une devise sur AfiwaExchange peut différer des taux du marché sur d'autres plateformes d'échange de crypto-monnaie, car AfiwaExchange se base sur sa propre politique de prix. Si l'utilisateur n'est pas satisfait du nouveau taux de change, il peut refuser de poursuivre l'échange et opter pour le remboursement.",
+      question: `After I made my payment, the exchange rate changed.`,
+      answer: `AfiwaExchange is a fully automatic exchange service that waits 20 minutes for funds to arrive
+at its address or account. If the funds do not arrive within this time, the exchange is canceled, and the
+funds from the exchange are removed from the reserve. To resolve this issue, the user should contact
+AfiwaExchange support. Two options are generally offered: refunds in accordance with the
+AfiwaExchange refund policy or resumption and finalization of the exchange with a possible change in
+the rate. The current rate of a currency on AfiwaExchange may differ from the market rates on other
+cryptocurrency exchange platforms, because AfiwaExchange is based on its own pricing policy. If the
+user is not satisfied with the new exchange rate, they can refuse to continue with the exchange and
+opt for refund.`,
       open: false,
     },
     {
-      question:
-        "Vous écrivez que l'échange s'est déroulé avec succès, mais je n'ai pas reçu de fonds sur ma carte bancaire ?",
-      answer:
-        "AfiwaExchange travaille avec des systèmes de paiement internationaux tels que Visa, MasterCard, MIR, Mobile Money pour transférer de l'argent vers des cartes bancaires. Généralement, les fonds sont crédités instantanément sur les cartes des clients. Cependant, le Ministère des Chemins de fer a des réglementations qui garantissent le crédit des fonds sur les cartes des clients dans un délai de 5 jours ouvrables. Bien que les retards soient rares, il peut arriver que les clients reçoivent des virements avec un léger retard, généralement dû à des problèmes temporaires au sein de la chaîne de paiement, impliquant des banques émettrices, des banques acquéreuses et des intégrateurs. Si un client n'a pas reçu de fonds sur sa carte dans les 5 jours ouvrables, il peut contacter le support AfiwaExchange pour lancer le processus de recherche de paiement. AfiwaExchange n'a pas connu de cas de perte de paiement, et si un paiement est manquant, le service rembourse les fonds au client.",
+      question: `You write that the exchange was successful, but I did not receive funds on my bank card?`,
+      answer: `AfiwaExchange works with international payment systems such as Visa, MasterCard, MIR,
+Mobile Money to transfer money to bank cards. Typically, funds are credited instantly to customer
+cards. However, the Ministry of Railways has regulations that guarantee the crediting of funds to
+customers' cards within 5 working days. Although delays are rare, customers may receive transfers
+with a slight delay, usually due to temporary issues within the payment chain, involving issuing banks,
+acquiring banks and integrators. If a customer has not received funds on their card within 5 business
+days, they can contact AfiwaExchange support to initiate the payment tracing process.
+AfiwaExchange has not experienced any cases of lost payments, and if a payment is missing, the
+service refunds the funds to the customer.`,
       open: false,
     },
     {
-      question:
-        "Est-il possible de retirer sur des cartes de banques non russes/africaines ?",
-      answer:
-        "AfiwaExchange effectue des échanges de cartes de banques de la Fédération de Russie et d'Afrique. Il n'est pas spécifié si les cartes de banques non russes ou non africaines sont prises en charge. Il serait recommandé de contacter le support AfiwaExchange pour obtenir des informations spécifiques sur les options de retrait disponibles.",
+      question: `Is it possible to withdraw to cards of non-Russian/African banks?`,
+      answer: `AfiwaExchange carries out card exchanges of banks of the Russian Federation and Africa. It
+is not specified whether cards from non-Russian or non-African banks are supported. It would be
+recommended to contact AfiwaExchange support for specific information on available withdrawal
+options.`,
       open: false,
     },
     {
-      question:
-        "Est-il possible de restituer les pièces envoyées à l'adresse de l'escroc ?",
-      answer:
-        "Si le statut de la demande est complété, il est techniquement impossible d'annuler l'échange. Cependant, si l'échange n'est pas encore terminé, c'est-à-dire que l'échangeur n'a pas encore envoyé les fonds d'échange vers le portefeuille spécifié dans la demande, les fonds peuvent être restitués. Pour cela, l'utilisateur doit contacter le support AfiwaExchange.",
+      question: `Is it possible to return the coins sent to the scammer's address?`,
+      answer: `If the request status is completed, it is technically impossible to cancel the exchange.
+However, if the exchange has not yet been completed, that is, the exchanger has not yet sent the
+exchange funds to the wallet specified in the request, the funds can be returned. For this, the user
+must contact AfiwaExchange support.`,
       open: false,
     },
+
     {
-      question: "Attention ! Les sites frauduleux opèrent sous notre nom.",
-      answer:
-        "AfiwaExchange met en garde les utilisateurs contre les sites frauduleux qui copient leur interface et sont enregistrés sur des domaines similaires. Ces fraudeurs proposent généralement des offres non lucratives pour attirer des victimes. Les échanges sur ces sites frauduleux ne sont pas effectués, et personne ne répond aux demandes des victimes. AfiwaExchange conseille aux utilisateurs d'ajouter leur site officiel aux favoris de leur navigateur et de ne pas utiliser de sites douteux. Ils encouragent également les utilisateurs à signaler les sites de phishing afin de les neutraliser.",
+      question: `Be careful! Fraudulent sites operate under our name.`,
+      answer: `AfiwaExchange warns users about fraudulent sites that copy their interface and are
+registered on similar domains. These scammers usually offer non-lucrative offers to lure victims.
+Exchanges on these fraudulent sites are not carried out, and no one responds to victims' requests.
+AfiwaExchange advises users to bookmark their official site in their browser and not use dubious
+sites. They also encourage users to report phishing sites in order to neutralize them.`,
       open: false,
     },
+
     {
-      question:
-        "Attention ! Les fraudeurs proposent du travail au nom de l'échangeur.",
-      answer:
-        "AfiwaExchange met en garde contre les fraudes liées à de prétendues offres d'emploi au nom de leur service d'échange, notamment pour des postes d'opérateurs du service client et autres spécialistes. Ces offres d'emploi frauduleuses demandent généralement aux victimes de payer pour leur formation. AfiwaExchange souligne que ces annonces d'embauche ne sont pas émises par eux et que toute demande de fonds de la part d'AfiwaExchange sur des ressources tierces est une action frauduleuse.",
+      question: `Be careful! Scammers offer work on behalf of the exchanger.`,
+      answer: `AfiwaExchange warns of fraud related to purported job offers on behalf of their exchange
+service, including for positions for customer service operators and other specialists. These fraudulent
+job offers typically ask victims to pay for their training. AfiwaExchange emphasizes that these job
+advertisements are not issued by them and that any request for funds from AfiwaExchange on third-
+party resources is a fraudulent action.`,
       open: false,
     },
+
     {
-      question: "Pourquoi n'acceptons-nous pas les 'pièces sales' ?",
-      answer:
-        "AfiwaExchange n'accepte pas les 'pièces sales' pour des raisons de conformité aux recommandations de l'organisation intergouvernementale GAFI (Groupe d'action financière internationale) visant à protéger le système financier international contre le blanchiment d'argent, le financement du terrorisme et le financement de la prolifération des armes de destruction massive. Ces recommandations sont reconnues comme la norme internationale en matière de lutte contre le blanchiment de capitaux et le financement du terrorisme (LAB/CFT). AfiwaExchange vérifie les actifs transférés par les clients pour s'assurer qu'ils ne sont pas associés à des activités illégales et protéger ainsi ses utilisateurs. Ils n'acceptent pas les pièces qui ont été obtenues de manière frauduleuse, utilisées pour des activités illégales ou qui sont associées à des crimes tels que le trafic de drogue ou le financement du terrorisme. En acceptant ces pièces, les utilisateurs pourraient avoir des problèmes, et leur réputation pourrait en souffrir. AfiwaExchange prend la sécurité de ses utilisateurs très au sérieux et s'engage à lutter contre les activités illégales.",
+      question: `Why don't we accept "dirty parts"?`,
+      answer: `AfiwaExchange does not accept "dirty coins" for reasons of compliance with the
+recommendations of the intergovernmental organization FATF (International Financial Action Task
+Force) aimed at protecting the international financial system against money laundering, financing of
+terrorism and the financing of the proliferation of weapons of mass destruction. These
+recommendations are recognized as the international standard for combating money laundering and
+the financing of terrorism (AML/CFT). AfiwaExchange verifies assets transferred by customers to
+ensure that they are not associated with illegal activities and thus protect its users. They do not accept
+coins that have been fraudulently obtained, used for illegal activities, or are associated with crimes
+such as drug trafficking or terrorist financing. By accepting these coins, users could get into trouble,
+and their reputation could suffer. AfiwaExchange takes the security of its users very seriously and is
+committed to combating illegal activities.`,
       open: false,
     },
+
     {
-      question:
-        "Est-il possible de retirer sur des cartes de banques non russes/africaines ?",
-      answer:
-        "AfiwaExchange effectue des échanges de cartes de banques de la Fédération de Russie et d'Afrique. Il n'est pas spécifié si les cartes de banques non russes ou non africaines sont prises en charge. Il serait recommandé de contacter le support AfiwaExchange pour obtenir des informations spécifiques sur les options de retrait disponibles.",
+      question: `Is it possible to withdraw to cards of non-Russian/African banks?`,
+      answer: `AfiwaExchange carries out card exchanges of banks of the Russian Federation and Africa. It
+is not specified whether cards from non-Russian or non-African banks are supported. It would be
+recommended to contact AfiwaExchange support for specific information on available withdrawal
+options.`,
       open: false,
     },
+
     {
-      question:
-        "Est-il possible de restituer les pièces envoyées à l'adresse de l'escroc ?",
-      answer:
-        "Si le statut de la demande est complété, il est techniquement impossible d'annuler l'échange. Cependant, si l'échange n'est pas encore terminé, c'est-à-dire que l'échangeur n'a pas encore envoyé les fonds d'échange vers le portefeuille spécifié dans la demande, les fonds peuvent être restitués. Pour cela, l'utilisateur doit contacter le support AfiwaExchange.",
+      question: `Is it possible to return the coins sent to the scammer's address?`,
+      answer: `If the request status is completed, it is technically impossible to cancel the exchange.
+However, if the exchange has not yet been completed, that is, the exchanger has not yet sent the
+exchange funds to the wallet specified in the request, the funds can be returned. For this, the user
+must contact AfiwaExchange support.`,
       open: false,
     },
+
     {
-      question: "Attention ! Les sites frauduleux opèrent sous notre nom.",
-      answer:
-        "AfiwaExchange met en garde les utilisateurs contre les sites frauduleux qui copient leur interface et sont enregistrés sur des domaines similaires. Ces fraudeurs proposent généralement des offres non lucratives pour attirer des victimes. Les échanges sur ces sites frauduleux ne sont pas effectués, et personne ne répond aux demandes des victimes. AfiwaExchange conseille aux utilisateurs d'ajouter leur site officiel aux favoris de leur navigateur et de ne pas utiliser de sites douteux. Ils encouragent également les utilisateurs à signaler les sites de phishing afin de les neutraliser.",
+      question: `Be careful! Fraudulent sites operate under our name.`,
+      answer: `AfiwaExchange warns users about fraudulent sites that copy their interface and are
+registered on similar domains. These scammers usually offer non-lucrative offers to lure victims.
+Exchanges on these fraudulent sites are not carried out, and no one responds to victims' requests.
+AfiwaExchange advises users to bookmark their official site in their browser and not use dubious
+sites. They also encourage users to report phishing sites in order to neutralize them.`,
       open: false,
     },
+
     {
-      question:
-        "Attention ! Les fraudeurs proposent du travail au nom de l'échangeur.",
-      answer:
-        "AfiwaExchange met en garde contre les fraudes liées à de prétendues offres d'emploi au nom de leur service d'échange, notamment pour des postes d'opérateurs du service client et autres spécialistes. Ces offres d'emploi frauduleuses demandent généralement aux victimes de payer pour leur formation. AfiwaExchange souligne que ces annonces d'embauche ne sont pas émises par eux et que toute demande de fonds de la part d'AfiwaExchange sur des ressources tierces est une action frauduleuse.",
+      question: `Be careful! Scammers offer work on behalf of the exchanger.`,
+      answer: `AfiwaExchange warns of fraud related to purported job offers on behalf of their exchange
+service, including for positions for customer service operators and other specialists. These fraudulent
+job offers typically ask victims to pay for their training. AfiwaExchange emphasizes that these jobadvertisements are not issued by them and that any request for funds from AfiwaExchange on third-
+party resources is a fraudulent action.`,
       open: false,
     },
+
     {
-      question: "Pourquoi n'acceptons-nous pas les 'pièces sales' ?",
-      answer:
-        "AfiwaExchange n'accepte pas les 'pièces sales' pour des raisons de conformité aux recommandations de l'organisation intergouvernementale GAFI (Groupe d'action financière internationale) visant à protéger le système financier international contre le blanchiment d'argent, le financement du terrorisme et le financement de la prolifération des armes de destruction massive. Ces recommandations sont reconnues comme la norme internationale en matière de lutte contre le blanchiment de capitaux et le financement du terrorisme (LAB/CFT). AfiwaExchange vérifie les actifs transférés par les clients pour s'assurer qu'ils ne sont pas associés à des activités illégales et protéger ainsi ses utilisateurs. Ils n'acceptent pas les pièces qui ont été obtenues de manière frauduleuse, utilisées pour des activités illégales ou qui sont associées à des crimes tels que le trafic de drogue ou le financement du terrorisme. En acceptant ces pièces, les utilisateurs pourraient avoir des problèmes, et leur réputation pourrait en souffrir. AfiwaExchange prend la sécurité de ses utilisateurs très au sérieux et s'engage à lutter contre les activités illégales.",
+      question: `Why don't we accept "dirty parts"?`,
+      answer: `AfiwaExchange does not accept "dirty coins" for reasons of compliance with the
+recommendations of the intergovernmental organization FATF (International Financial Action Task
+Force) aimed at protecting the international financial system against money laundering, financing of
+terrorism and the financing of the proliferation of weapons of mass destruction. These
+recommendations are recognized as the international standard for combating money laundering and
+the financing of terrorism (AML/CFT). AfiwaExchange verifies assets transferred by customers to
+ensure that they are not associated with illegal activities and thus protect its users. They do not accept
+coins that have been fraudulently obtained, used for illegal activities, or that are associated with
+crimes such as drug trafficking or terrorist financing. By accepting these coins, users could get into
+trouble, and their reputation could suffer. AfiwaExchange takes the security of its users very seriously
+and is committed to combating illegal activities.`,
       open: false,
     },
   ]);
@@ -251,6 +345,7 @@ const Heading = styled("h3", {
   fontSize: 16,
   "&:hover": {
     borderLeftColor: "green",
+    color: "green",
   },
 });
 

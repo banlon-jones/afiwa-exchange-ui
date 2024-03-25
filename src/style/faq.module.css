@@ -29,6 +29,7 @@
 
 .faqs .faq.open .faq_question {
   margin-bottom: 10px;
+  color: green;
 }
 
 .faqs .faq.open .faq_question::after {

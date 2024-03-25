@@ -1,52 +1,80 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
 import Container from "../components/container";
 import Header from "../components/home/Header";
 import Footer from "../components/home/Footer";
 import { styled } from "../common/stitches";
 
 const PrivacyPolicy = () => {
+  const { pathname, hash, key } = useLocation();
+
+  useEffect(() => {
+    // if not a hash link, scroll to top
+    if (hash === "") {
+      window.scrollTo(0, 0);
+    }
+    // else scroll to id
+    else {
+      setTimeout(() => {
+        const id = hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView();
+        }
+      }, 0);
+    }
+  }, [pathname, hash, key]);
+
   return (
     <Main>
       <Container>
         <Header />
       </Container>
       <Container width="dynamic" add="headerMargin" style={{ flex: 1 }}>
-        <h1 style={{ fontWeight: 600, marginBottom: 5, fontSize: 25 }}>
-          Politique de retour
+        <h1
+          style={{
+            fontWeight: 600,
+            marginBottom: 5,
+            fontSize: 25,
+            color: "red",
+          }}
+        >
+          Return policy
         </h1>
         <p>
-          Les actifs sont toutes les monnaies électroniques, les monnaies
-          nationales fiduciaires non monétaires et monétaires, les
-          crypto-monnaies et les jetons;
+          This policy describes the procedures for returning assets to users and
+          the fees associated with processing these returns. Here is a summary
+          of the main points of this policy:
           <br />
-          Le service d'échange (Service) est un logiciel situé sur Internet pour
-          l'échange d'actifs;
+          1. Assets include all electronic currencies, fiat national currencies
+          (non-monetary and monetary), cryptocurrencies and tokens.
           <br />
-          L'échange est un transfert d'actifs entre les comptes du Service et de
-          l'Utilisateur;
+          2. The Exchange Service (Service) is an Internet-based software
+          enabling the exchange of assets.
           <br />
-          L'Utilisateur est toute personne qui a utilisé le Service et a envoyé
-          les Actifs sur les comptes du Service intentionnellement pour
-          effectuer l'Échange ou par erreur;
+          3. Exchange is the transfer of assets between the accounts of the
+          Service and the User.
           <br />
-          L'ordre est le désir du client d'échanger des actifs, exécuté
-          électroniquement via les interfaces utilisateur sur les sites Web du
-          service;
+          4. The User is any person who has used the Service to make an
+          exchange.
           <br />
-          Le Timeout est le temps imparti à l'Utilisateur pour transférer les
-          Actifs vers les comptes du Service afin d'effectuer l'Echange;
+          5. Order is the User's request to make a trade, submitted
+          electronically through the Service's website interfaces.
           <br />
-          Les Fonds non comptabilisés sont les Actifs crédités sur les comptes
-          de Service sans passer de Commande sur les sites Internet du Service
-          ou les Actifs crédités sur les comptes de Service au-delà des montants
-          spécifiés dans la Commande;
+          6. The Timeout is the time allowed for the User to transfer the assets
+          to the Service accounts for exchange.
           <br />
-          Le retour désigne les actions du Service pour transférer les actifs ou
-          les fonds non comptabilisés des comptes de service vers les comptes
-          d'utilisateurs;
+          7. Unaccounted Funds are assets credited to the accounts of the
+          Service without an order having been placed via the site interfaces or
+          in excess of the amounts specified in the order.
           <br />
-          Le remboursement désigne les actions du Service visant à annuler un
-          échange terminé aux fins du retour.
+          8. Return means the Service's actions to transfer unaccounted assets
+          or funds from the Service's accounts to users' accounts.
+          <br />
+          9. Refund means the actions of the Service to cancel a completed
+          exchange for the purpose of return. Here are the key points of the
+          asset return policy:
         </p>
         <br />
         <p>
@@ -54,203 +82,58 @@ const PrivacyPolicy = () => {
           restitution des Actifs aux Utilisateurs, ainsi que les frais facturés
           par le Service pour le traitement des Retours. Cette politique fait
           partie intégrante des Conditions d'utilisation;
-        </p>
-        <br />
-        <p>
-          2. Le Retour ne peut être effectué que pour un montant n'excédant pas
-          le montant de l'Actif envoyé par l'Utilisateur sur les comptes du
-          Service d'Échange;
-        </p>
-        <br />
-        <p>
-          3. Le Retour ne peut être effectué que sur le compte de l'Utilisateur
-          spécifié dans la Commande ou à partir duquel le Service a accepté les
-          Actifs, sauf dans les cas énumérés à la clause #7.4 de la politique;
-        </p>
-        <br />
-        <p>
-          4. Les frais de service pour effectuer le retour sont déduits du
-          montant de l'actif restitué à l'utilisateur;
-        </p>
-        <br />
-        <p>
-          <h3 style={{ fontWeight: 600, marginBottom: 5, fontSize: 18 }}>
-            5. Obligations du Service:
-          </h3>
-          5.1. Le Service s'engage à restituer les Actifs envoyés par
-          l'Utilisateur sur les comptes du Service uniquement si l'Échange n'a
-          pas été effectué. L'Utilisateur n'a pas reçu les Actifs du Service sur
-          ses comptes;
-          <br />
-          5.2. Le Service s'engage à restituer les Fonds non comptabilisés à
-          l'Utilisateur;
-        </p>
-        <br />
-        <p>
-          <h3 style={{ fontWeight: 600, marginBottom: 5, fontSize: 18 }}>
-            6. Le Service dispose des droits suivants:
-          </h3>
-          6.1. Ne pas restituer les actifs ou les fonds non comptabilisés avant
-          que l'utilisateur ne demande le retour. Toute action du Service de
-          restitution des Actifs conformément à la politique en vigueur n'est
-          entreprise qu'après que l'Utilisateur a contacté le service
-          d'assistance. Cela signifie que le Service n'agit pas en relation avec
-          le Retour sans la demande de l'Utilisateur ;
-          <br />
-          6.2. Ne pas rembourser à l'Utilisateur les frais des systèmes de
-          paiement en cas de Retour ;
-          <br />
-          6.3. Refuser l'Utilisateur dans la procédure de Remboursement, sauf
-          dans les cas prévus à la clause #7.3 de la politique ;
-          <br />
-          6.4. Facturer des frais pour le retour des fonds non comptabilisés
-          spécifiés à la clause 8.
-          <br />
-          6.5. Facturer des frais pour le retour spécifiés à la clause 8 si
-          l'échange ne peut être effectué pour des raisons indépendantes de la
-          volonté du service, en particulier lorsque le service n'est pas en
-          mesure de terminer l'échange sur un compte bloqué ou limité de
-          l'utilisateur ;
-          <br />
-          6.6. Facturez des frais pour le retour spécifiés dans la clause 8 pour
-          les commandes annulées en raison du délai d'attente. L'Utilisateur a
-          envoyé les Actifs sur les comptes du Service après l'annulation de la
-          Commande et exige le Retour ;
-          <br />
-          6.7. Ne pas payer de commissions supplémentaires à l'Utilisateur
-          conformément à la clause #7.2 de la présente politique ;
-        </p>
-        <br />
-        <p>
-          <h3 style={{ fontWeight: 600, marginBottom: 5, fontSize: 18 }}>
-            7. Conditions particulières:
-          </h3>
-          7.1. Le Service stocke gratuitement les Biens de l'Utilisateur à
-          restituer ;
-          <br />
-          7.2. Le Service ne dispose pas des actifs de l'utilisateur à restituer
-          à des fins commerciales et n'extrait aucun investissement ni aucun
-          autre profit de ces actifs de quelque manière que ce soit ;
-          <br />
-          7.3. Le Service peut faire des concessions et effectuer le Retour en
-          cas d'erreur de l'Utilisateur, à savoir lorsque l'Utilisateur a
-          effectué l'Échange vers un compte inaccessible – par exemple, vers le
-          compte de quelqu'un d'autre ; Pour effectuer le retour, l'utilisateur
-          doit organiser de manière indépendante le retour de l'actif transféré
-          par erreur sur le compte de service et négocier le retour avec le
-          propriétaire du compte ou le système de paiement. Le Service commence
-          à traiter le Retour de l'Utilisateur dans les conditions décrites dans
-          la politique en vigueur et seulement après avoir reçu le montant total
-          de l'Actif transféré à tort. Le Service facture des frais pour la
-          restitution des actifs, spécifiés à la clause 8 de la police ;
-          <br />
-          7.4. Le Service peut faire des concessions et effectuer un Retour sur
-          le compte de l'Utilisateur autre que celui spécifié dans la Commande,
-          s'il est nécessaire de restituer l'Actif ou les tokens de
-          cryptomonnaie.
-        </p>
-        <br />
-        <p>
-          <h3 style={{ fontWeight: 600, marginBottom: 5, fontSize: 18 }}>
-            8. Frais:
-          </h3>
-          8.1. Le Service facture des frais conformément au tarif des Retours
-          prévus par le contrat : 1,5-2%
-        </p>
-        <br />
-        <h1 style={{ fontWeight: 600, marginBottom: 5, fontSize: 25 }}>
-          À propos
-        </h1>
-        <p>
-          AfiwaExchange est un service d'échange électronique qui se distingue
-          par son fonctionnement automatisé, garantissant ainsi à ses clients
-          des transactions instantanées vers des portefeuilles électroniques,
-          Mobile Money ou des cartes bancaires. AfiwaExchange se positionne en
-          tant que service d'échange multidevises polyvalent, en partenariat
-          officiel avec divers systèmes de paiement internationaux. À l'heure
-          actuelle, AfiwaExchange propose plus de 20 directions d'échange.
-        </p>
-        <br />
-        <p>
-          Nous accordons une importance particulière aux opérations de retrait
-          de devises électroniques. AfiwaExchange est l'un des rares services
-          d'échange à offrir des retraits instantanés vers des portefeuilles
-          électroniques, Mobile Money ou des cartes bancaires. Ces transactions
-          sont automatisées, et nos clients reçoivent presque immédiatement des
-          notifications par SMS concernant la réception des fonds sur leur
-          carte. Le traitement des paiements par carte est conforme à la norme
-          de l'industrie PCI DSS.
-        </p>
-        <br />
-        <p>
-          Notre équipe de professionnels possède une vaste expérience dans le
-          domaine des cryptomonnaies. AfiwaExchange traite un grand nombre de
-          transactions en bitcoins, et à cette fin, nous développons et
-          maintenons en permanence le bon fonctionnement de notre serveur
-          Bitcoin, ce qui nous distingue de la plupart des services d'échange
-          qui utilisent des API tierces. AfiwaExchange permet à nos clients de
-          retirer des cryptomonnaies vers un portefeuille électronique, Mobile
-          Money ou une carte bancaire en quelques secondes.
-        </p>
-        <br />
-        <p>
-          Pour répondre à la demande élevée de transactions d'échange, nous
-          assurons un service continu 24 heures sur 24, 7 jours sur 7.
-          AfiwaExchange s'appuie sur des ressources informatiques robustes et
-          des fonctionnalités riches. En fonctionnant dans des services cloud,
-          nous sommes en mesure de traiter des transactions en continu.
-        </p>
-        <br />
-        <p>
-          Nous mettons l'accent sur le coût des opérations d'échange, affirmant
-          ainsi qu'AfiwaExchange propose certaines des meilleures conditions
-          pour la plupart des transactions d'échange. Nous offrons les taux de
-          change les plus compétitifs pour les transactions populaires. Ces
-          économies sont possibles grâce à notre vaste expérience dans le
-          domaine.
-        </p>
-        <br />
-        <p>
-          Nous garantissons des économies de coûts en automatisant nos processus
-          commerciaux. Notre système de trading exclusif analyse les taux de
-          change des concurrents et présente les meilleurs taux de change aux
-          clients. Les petits services qui effectuent des échanges manuels n'ont
-          aucune chance de rivaliser avec AfiwaExchange.
-        </p>
-        <br />
-        <p>
-          Même avec les meilleurs tarifs, nous offrons des avantages
-          supplémentaires à nos clients réguliers grâce à notre programme de
-          fidélité. L'inscription sur notre plateforme permet d'accéder à des
-          remises cumulatives, ce qui permet aux clients de réaliser des
-          échanges encore plus avantageux. Les remises peuvent aller jusqu'à 25
-          % du bénéfice du service d'échange sur la transaction d'échange et
-          sont appliquées lors de l'initiation d'une opération d'échange.
-        </p>
-        <br />
-        <p>
-          Fournir un support professionnel à nos clients est d'une importance
-          capitale. AfiwaExchange dispose d'un solide système de support avec un
-          système de ticket dédié pour chaque demande de client. Toute
-          communication avec le client se déroule au sein du ticket,
-          garantissant ainsi qu'aucune correspondance ne soit perdue ou
-          interrompue avant que le client n'obtienne une assistance qualifiée.
-          Notre équipe de spécialistes traite rapidement les demandes des
-          clients au quotidien, résolvant les questions ou les problèmes en
-          quelques minutes dans la plupart des cas.
-        </p>
-        <br />
-        <p>
-          La majorité de la correspondance avec les clients se déroule dans un
-          environnement privé et sécurisé. L'ouverture et l'engagement
-          d'AfiwaExchange envers la confiance des clients font de notre service
-          un choix exceptionnel.
-        </p>
-        <br />
-        <p>
-          Nous attachons une grande importance à la confidentialité des données
-          des clients. Les données personnelles saisies par les clients lors du
-          processus de demande sont sécurisées grâce à des certificats SSL.
+          <ul>
+            <li>
+              - Returns can only be made for an amount not exceeding the amount
+              of the asset sent by the User to the Exchange Service accounts.
+            </li>
+            <li>
+              - Returns can only be made to the account of the User specified in
+              the order or from which the Service accepted the assets, except in
+              certain specific cases.
+            </li>
+            <li>
+              - The service fee for making a return is deducted from the amount
+              of the asset returned to the user.
+            </li>
+            <li>
+              - The Service undertakes to return the assets only if the exchange
+              has not been carried out, that is to say if the User has not
+              received the assets from the Service on their accounts.
+            </li>
+            <li>
+              - The Service does not reimburse the User for payment system fees
+              in the event of a return.
+            </li>
+            <li>
+              - The Service has the right to refuse the User in the refund
+              procedure, except in certain specific cases.
+            </li>
+            <li>
+              - The Service may charge a fee for the return of unaccounted funds
+              in certain situations.
+            </li>
+            <li>
+              - The Service does not benefit from holding the User's assets to
+              be returned.
+            </li>
+            <li>
+              - The Service can make concessions and make returns in the event
+              of an error by the User, in particular when he has made the
+              exchange to an inaccessible account.
+            </li>
+            <li>
+              - The Service may also make concessions and make returns to an
+              account of the User other than that specified in the order, if
+              necessary.
+            </li>
+            <li>
+              - Return costs are specified in the policy. In summary, this
+              policy describes the procedures for returning assets to users,
+              including associated fees. Returns are only made under certain
+              conditions and according to the terms described in the policy.
+            </li>
+          </ul>
         </p>
       </Container>
       <Container>
