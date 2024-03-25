@@ -103,10 +103,10 @@ const Exchange = () => {
 
         const _object = data.map((txn) => {
           const resFromCurrency = Object.entries(currencies).filter(
-            (currency) => currency[1].id === txn.from
+            (currency) => currency[1].id === txn.from.id
           )[0][1];
           const resToCurrency = Object.entries(currencies).filter(
-            (currency) => currency[1].id === txn.to
+            (currency) => currency[1].id === txn.to.id
           )[0][1];
 
           return {
@@ -116,6 +116,8 @@ const Exchange = () => {
               label: resFromCurrency.name,
               rate: parseFloat(resFromCurrency.rate),
               wallet: resFromCurrency.wallet,
+              code: resFromCurrency.code,
+              symbol: resFromCurrency.symbol,
             },
             toCurrency: {
               id: resToCurrency.id,
@@ -123,6 +125,8 @@ const Exchange = () => {
               label: resToCurrency.name,
               rate: parseFloat(resToCurrency.rate),
               wallet: resToCurrency.wallet,
+              code: resToCurrency.code,
+              symbol: resToCurrency.symbol,
             },
             details: txn,
           };
@@ -135,6 +139,7 @@ const Exchange = () => {
         });
       } catch (error) {
         console.log(error);
+        
       }
     };
 
@@ -259,21 +264,30 @@ const Exchange = () => {
                         {parseFloat(details.exchangeRate).toPrecision(6)}
                       </p>
                       <p>
-                        <strong>Exchange:</strong> {details.amount}{" "}
-                        {fromCurrency.label} -{" "}
+                        <strong>Exchange:</strong> { fromCurrency.symbol}{details.amount} - {toCurrency.symbol}
                         {calculateExchangeAmount(
                           fromCurrency.rate,
                           toCurrency.rate,
                           details.amount
-                        )[1].toPrecision(6)}{" "}
-                        {toCurrency.label}
+                        )[1].toPrecision(6)}
                       </p>
                       <p>
                         <strong>Email Address:</strong> {details.email}
                       </p>
                       <p>
                         <strong>Our {fromCurrency.label} Account:</strong>{" "}
-                        {details.from}
+                        {details.from.wallet}
+                      </p>
+
+                      <p>
+                        <strong>Client Transaction Id:</strong>{" "}
+                        {details.clientTransactionId}
+                      </p>
+
+                      <p>
+                        <strong>Client Deposit Details:</strong>{" "}<br />
+                        <strong>Recipient Name: </strong>{details.walletName}<br/> 
+                        <strong>Recipient Address: </strong>{details.walletAddress}
                       </p>
                     </Tdata>
                     <Tdata>

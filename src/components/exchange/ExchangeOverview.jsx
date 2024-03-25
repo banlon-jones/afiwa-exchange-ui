@@ -10,12 +10,7 @@ import { FaTelegramPlane } from "react-icons/fa";
 import { useGetTransactionById } from "../../hooks/useTransaction";
 import { Link } from "react-router-dom";
 import routes from "../../common/routes";
-
-const socialMediaContants = {
-  email: "afiwa@gmail.com",
-  whatsapp_number: "+798957721`36",
-  telegram_number: "afiwa_exchange",
-};
+import { Accounts, telegram_url, whatsapp_url } from "../../constants/Accounts";
 
 const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
   const { data, isError } = useGetTransactionById(transactionId);
@@ -60,9 +55,7 @@ const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
           <Platform>
             <ViaEmail>
               <EmailButton
-                onClick={() =>
-                  (window.location = `mailto:${socialMediaContants.email}`)
-                }
+                onClick={() => (window.location = `mailto:${Accounts.email}`)}
               >
                 Contact us via email
               </EmailButton>
@@ -70,21 +63,13 @@ const ExchangeOverview = ({ transactionId, handleCloseOverlay }) => {
             <SocialMediaContainer>
               <SocialMediaButton
                 type={"whatsapp"}
-                onClick={() =>
-                  openInNewTab(
-                    `https://api.whatsapp.com/send?phone=${socialMediaContants.whatsapp_number}&text=transactionId: ${data.transactionId}`
-                  )
-                }
+                onClick={() => openInNewTab(whatsapp_url(data.transactionId))}
               >
                 <ImWhatsapp size={55} color={colors.white} />
               </SocialMediaButton>
               <SocialMediaButton
                 type={"telegram"}
-                onClick={() =>
-                  openInNewTab(
-                    `https://t.me/${socialMediaContants.telegram_number}&text=transactionId: ${data.transactionId}`
-                  )
-                }
+                onClick={() => openInNewTab(telegram_url(transactionId))}
               >
                 <FaTelegramPlane size={55} color={colors.white} />
               </SocialMediaButton>

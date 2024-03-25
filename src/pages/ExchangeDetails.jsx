@@ -27,6 +27,7 @@ const ExchangeDetails = () => {
   const [state, setState] = useState({
     ...location.state,
     email: user.email,
+    clientTransactionId: ""
   });
   useBeforeUnload(
     useCallback(() => {
@@ -62,6 +63,7 @@ const ExchangeDetails = () => {
       email: state.email,
       walletAddress: state.recipientWallet,
       walletName: state.recipientName,
+      clientTransactionId: state.clientTransactionId
     };
 
     mutate(payload);
@@ -175,6 +177,7 @@ const ExchangeDetails = () => {
                 />
               </div>
             </FlexContainer>
+            <div style={{display: "flex", justifyContent: "space-between"}}>
             <Card type="initial">
               <H1>Deposit {state.tnxInfo.fromCurrency}</H1>
               <FlexContainer>
@@ -214,7 +217,41 @@ const ExchangeDetails = () => {
               </FlexContainer>
             </Card>
             <Card type="initial">
-              <H1>Recipient {state.tnxInfo.toCurrency}</H1>
+              <H1>Transaction ID</H1>
+              <FlexContainer>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 5,
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                  >
+                    <Input
+                  value={state.clientTransactionId}
+                  name="clientTransactionId"
+                  type="text"
+                  placeholder="Enter Your Deposit Transaction ID"
+                  required
+                  onChange={handleChange}
+                />
+                  
+                  <CopyToClipboard
+                    text={state.clientTransactionId}
+                    style={{
+                      borderRadius: 8,
+                      marginTop: 3,
+                      fontSize: 17,
+                      padding: 15,
+                    }}
+                  />
+                </div>
+              </FlexContainer>
+              </Card>
+              </div>
+            <Card type="initial">
+              <H1>Recipient Details</H1>
               <FlexContainer title="Recipient Name">
                 <div
                   style={{

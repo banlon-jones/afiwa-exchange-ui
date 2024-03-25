@@ -1,13 +1,11 @@
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-// import { useMutation } from "@tanstack/react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { BsToggle2Off, BsToggle2On } from "react-icons/bs";
 
 import { Spinner } from "../../../spinner/Spinner";
-// import { useAxios } from "../../../../data/api";
 import { InputField } from "../../../InputField";
 import { styled } from "../../../../common/stitches";
 import Box from "../../../box";

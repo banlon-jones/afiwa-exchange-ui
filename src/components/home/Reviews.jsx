@@ -4,32 +4,17 @@ import { styled } from "../../common/stitches";
 const reviews = () => {
   const data = [
     {
-      image_url:
-        "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop",
-      full_name: "James Ron",
       biolograph:
-        "Developed by the Intel Corporation, HDCP stands for high-bandwidth digital content protection. As the descriptive name implies, HDCP is all about protecting the integrity of various audio. Add more text here for an ddditonal something",
+        "The service was great. The speed was really awesome and all my questions were answered. Will be coming back! Thank you so much.",
+    },
+    
+    {
+      biolograph:
+        "AfiwaExchange has really automated some of our company’s processes. We now spend less time doing manual transactions. It’s making money transfer and payments very easy for us. Thanks to its speed, we don’t need partners to worry about getting payments with delays.",
     },
     {
-      image_url:
-        "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop",
-      full_name: "James Ron",
       biolograph:
-        "Developed by the Intel Corporation, HDCP stands for high-bandwidth digital content protection. As the descriptive name implies, HDCP is all about protecting the integrity of various audio. Add more text here for an ddditonal something",
-    },
-    {
-      image_url:
-        "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop",
-      full_name: "James Ron",
-      biolograph:
-        "Developed by the Intel Corporation, HDCP stands for high-bandwidth digital content protection. As the descriptive name implies, HDCP is all about protecting the integrity of various audio. Add more text here for an ddditonal something",
-    },
-    {
-      image_url:
-        "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop",
-      full_name: "James Ron",
-      biolograph:
-        "Developed by the Intel Corporation, HDCP stands for high-bandwidth digital content protection. As the descriptive name implies, HDCP is all about protecting the integrity of various audio. Add more text here for an ddditonal something",
+        "If you’re in search of a reliable, innovative software for payments and money transfer, look no further than AfiwaExchange. Their team of seasoned professionals consistently exceeds expectations, offering cutting-edge solutions and exceptional customer service. They took the time to understand my specific needs and provided a tailor-made solution that greatly improved our operations. I am thrilled with the results and highly recommend AfiwaExchange for any payment and money transfer needs.",
     },
   ];
 
@@ -38,11 +23,11 @@ const reviews = () => {
       {data.map((user, index) => (
         <ProfileContainer key={index}>
           <Profile>
-            <Img src={user.image_url}></Img>
-            <h3 style={{ fontWeight: "bold" }}>{user.full_name}</h3>
+            {user.image_url && <Img src={user.image_url}></Img>}
+            {user.full_name && <h3 style={{ fontWeight: "bold" }}>{user.full_name}</h3>}
           </Profile>
           <P>{user.biolograph}</P>
-          <P type="showMore">1h ago</P>
+          {/* <P type="showMore">1h ago</P> */}
         </ProfileContainer>
       ))}
     </ReviewWrapper>

@@ -8,6 +8,7 @@ import logo from "../../assets/logo.png";
 import Container from "../container";
 import routes from "../../common/routes";
 import appStore from "../../store/appStore";
+import { Accounts } from "../../constants/Accounts";
 
 const Footer = () => {
   const { isLogin, logout } = appStore((state) => ({
@@ -23,13 +24,9 @@ const Footer = () => {
             <NavLink to={routes.home}>
               <Img src={logo} type="logo" alt="Afiwa Exchange" />
             </NavLink>
-            <p>
-              mply dummy text of the printing and typesetting industry. Lorem
-              Ipsum has been
-            </p>
             <InfoLine>
-              <p>contac@email.com</p>
-              <p>+5 56161d651/61</p>
+              <p>whatsapp: {Accounts.whatsapp_number}</p>
+              <p>telegram: {Accounts.telegram_number}</p>
             </InfoLine>
           </Address>
           <LinkContainer gridArea="about_us">
@@ -114,7 +111,7 @@ const Img = styled("img", {
 
 const Address = styled("div", {
   display: "flex",
-  gap: 15,
+  gap: 10,
   flexDirection: "column",
   color: "#757575",
   maxWidth: 300,
@@ -127,7 +124,8 @@ const Address = styled("div", {
 
 const InfoLine = styled("div", {
   display: "flex",
-  gap: 20,
+  flexDirection: "column",
+  gap: 10,
   "@bp768": {
     width: "100%",
   },
@@ -139,7 +137,6 @@ const InfoLine = styled("div", {
 
 const LinkContainer = styled("div", {
   display: "flex",
-  gap: 10,
   flexDirection: "column",
   variants: {
     gridArea: {
